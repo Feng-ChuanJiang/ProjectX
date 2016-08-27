@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:pylon-context="http://pylon.wlw.com/schema/context"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://pylon.wlw.com/schema/context http://pylon.wlw.com/schema/context/pylon-context-1.0.0.xsd">
+        
+     <pylon-context:property-placeholder ignore-resource-not-found="true"/>
+       
+	<!--scan all @Controller class only-->
+    <context:component-scan base-package="com.cci.**.controller" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:include-filter type="annotation" expression="com.wlw.pylon.web.rest.annotation.RestApiController"/>
+        <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.RestController"/>
+        <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+		<context:include-filter type="annotation" expression="com.wlw.pylon.web.framework.annotation.FrameworkController"/>
+	</context:component-scan>
+	
+	<bean id="restApiControllerHandlerMapping" class="com.wlw.pylon.web.rest.RestApiControllerHandlerMapping">
+    </bean>
+    
+    <bean id="frameworkControllerHandlerMapping" class="com.wlw.pylon.web.framework.FrameworkControllerHandlerMapping">
+    </bean>
+    
+    <bean id="restApiResponseEntityExceptionHandler" class="com.wlw.pylon.web.rest.exception.RestApiResponseEntityExceptionHandler">
+    	<property name="messageSource" ref="messageSource"/>
+    	<property name="logAsError" value="false"/>
+    </bean>
+	
+	<!--annotation driven-->
+    <mvc:annotation-driven validator="validator">
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value = "text/plain;charset=UTF-8" />
+            </bean>
+        </mvc:message-converters>
+        <mvc:argument-resolvers>
+            <bean class="org.springframework.data.web.PageableHandlerMethodArgumentResolver">
+            </bean>
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
+    
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="viewResolvers">
+			<list>
+				<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" />
+				<!--use jsp view resolver-->
+				<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+			    	<property name="prefix" value="/WEB-INF/views/"/>  
+			    	<property name="suffix" value=".jsp"/>
+			    	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />  
+			   </bean>
+			</list>
+		</property>
+		<property name="defaultViews">
+			<list>
+				<bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- multipart Resolver -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!--property name="maxUploadSize" value="100000"/-->
+	</bean>
+    
+	<mvc:view-controller path="/" view-name="redirect:/frontend/index.html" />
+	
+	<mvc:resources mapping="/frontend/**" location="/frontend/" />
+	
+</beans>

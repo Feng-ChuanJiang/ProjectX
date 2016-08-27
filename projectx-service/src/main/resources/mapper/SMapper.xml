@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cci.projectx.core.repository.SRepository">
+  <resultMap id="BaseResultMap" type="com.cci.projectx.core.entity.S">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="creat_time" jdbcType="TIMESTAMP" property="creatTime" />
+    <result column="U" jdbcType="DOUBLE" property="u" />
+    <result column="V" jdbcType="DOUBLE" property="v" />
+    <result column="M" jdbcType="DOUBLE" property="m" />
+    <result column="N" jdbcType="DOUBLE" property="n" />
+    <result column="A" jdbcType="DOUBLE" property="a" />
+    <result column="B" jdbcType="DOUBLE" property="b" />
+    <result column="C" jdbcType="DOUBLE" property="c" />
+    <result column="D" jdbcType="DOUBLE" property="d" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, creat_time, U, V, M, N, A, B, C, D
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from s
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from s
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.S">
+    insert into s (id, user_id, creat_time, 
+      U, V, M, N, 
+      A, B, C, D
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{creatTime,jdbcType=TIMESTAMP}, 
+      #{u,jdbcType=DOUBLE}, #{v,jdbcType=DOUBLE}, #{m,jdbcType=DOUBLE}, #{n,jdbcType=DOUBLE}, 
+      #{a,jdbcType=DOUBLE}, #{b,jdbcType=DOUBLE}, #{c,jdbcType=DOUBLE}, #{d,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.S">
+    insert into s
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="creatTime != null">
+        creat_time,
+      </if>
+      <if test="u != null">
+        U,
+      </if>
+      <if test="v != null">
+        V,
+      </if>
+      <if test="m != null">
+        M,
+      </if>
+      <if test="n != null">
+        N,
+      </if>
+      <if test="a != null">
+        A,
+      </if>
+      <if test="b != null">
+        B,
+      </if>
+      <if test="c != null">
+        C,
+      </if>
+      <if test="d != null">
+        D,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="creatTime != null">
+        #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="u != null">
+        #{u,jdbcType=DOUBLE},
+      </if>
+      <if test="v != null">
+        #{v,jdbcType=DOUBLE},
+      </if>
+      <if test="m != null">
+        #{m,jdbcType=DOUBLE},
+      </if>
+      <if test="n != null">
+        #{n,jdbcType=DOUBLE},
+      </if>
+      <if test="a != null">
+        #{a,jdbcType=DOUBLE},
+      </if>
+      <if test="b != null">
+        #{b,jdbcType=DOUBLE},
+      </if>
+      <if test="c != null">
+        #{c,jdbcType=DOUBLE},
+      </if>
+      <if test="d != null">
+        #{d,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.S">
+    update s
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="creatTime != null">
+        creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="u != null">
+        U = #{u,jdbcType=DOUBLE},
+      </if>
+      <if test="v != null">
+        V = #{v,jdbcType=DOUBLE},
+      </if>
+      <if test="m != null">
+        M = #{m,jdbcType=DOUBLE},
+      </if>
+      <if test="n != null">
+        N = #{n,jdbcType=DOUBLE},
+      </if>
+      <if test="a != null">
+        A = #{a,jdbcType=DOUBLE},
+      </if>
+      <if test="b != null">
+        B = #{b,jdbcType=DOUBLE},
+      </if>
+      <if test="c != null">
+        C = #{c,jdbcType=DOUBLE},
+      </if>
+      <if test="d != null">
+        D = #{d,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cci.projectx.core.entity.S">
+    update s
+    set user_id = #{userId,jdbcType=BIGINT},
+      creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      U = #{u,jdbcType=DOUBLE},
+      V = #{v,jdbcType=DOUBLE},
+      M = #{m,jdbcType=DOUBLE},
+      N = #{n,jdbcType=DOUBLE},
+      A = #{a,jdbcType=DOUBLE},
+      B = #{b,jdbcType=DOUBLE},
+      C = #{c,jdbcType=DOUBLE},
+      D = #{d,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCount" parameterType="com.cci.projectx.core.entity.S" resultType="java.lang.Integer">
+    select count(*) from s
+    <where>
+      <if test="id != null">
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="creatTime != null">
+        and creat_time = #{creatTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="u != null">
+        and U = #{u,jdbcType=DOUBLE}
+      </if>
+      <if test="v != null">
+        and V = #{v,jdbcType=DOUBLE}
+      </if>
+      <if test="m != null">
+        and M = #{m,jdbcType=DOUBLE}
+      </if>
+      <if test="n != null">
+        and N = #{n,jdbcType=DOUBLE}
+      </if>
+      <if test="a != null">
+        and A = #{a,jdbcType=DOUBLE}
+      </if>
+      <if test="b != null">
+        and B = #{b,jdbcType=DOUBLE}
+      </if>
+      <if test="c != null">
+        and C = #{c,jdbcType=DOUBLE}
+      </if>
+      <if test="d != null">
+        and D = #{d,jdbcType=DOUBLE}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from s where 1 = 1 
+    <if test="param1.id != null">
+      and id = #{param1.id,jdbcType=BIGINT}
+    </if>
+    <if test="param1.userId != null">
+      and user_id = #{param1.userId,jdbcType=BIGINT}
+    </if>
+    <if test="param1.creatTime != null">
+      and creat_time = #{param1.creatTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="param1.u != null">
+      and U = #{param1.u,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.v != null">
+      and V = #{param1.v,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.m != null">
+      and M = #{param1.m,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.n != null">
+      and N = #{param1.n,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.a != null">
+      and A = #{param1.a,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.b != null">
+      and B = #{param1.b,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.c != null">
+      and C = #{param1.c,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.d != null">
+      and D = #{param1.d,jdbcType=DOUBLE}
+    </if>
+    <if test="param2.sort != null">
+      order by 
+      <foreach collection="param2.sort" item="order" separator=",">
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0">
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>

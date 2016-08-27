@@ -1,0 +1,145 @@
+apply from: "./libraries.gradle"
+
+buildscript {
+	repositories {
+		maven { url wlwMavenCentral }
+	}
+	dependencies {
+		//Provides additional optional and provided dependency configurations for Gradle along with Maven POM generation support
+		classpath ("org.springframework.build.gradle:propdeps-plugin:0.0.7")
+		classpath ("com.wlw.gradleplugin:gradleplugin-restdoc:1.1.0-SNAPSHOT")
+		classpath ('org.gradle.api.plugins:gradle-cargo-plugin:1.5')
+	}
+}
+
+apply plugin: 'sonar-runner'
+apply plugin: 'base'
+
+description = 'projectx project'
+
+//sonar
+sonarRunner {
+    sonarProperties {
+        property "sonar.projectName", sonar_projectName
+        property "sonar.host.url", sonar_host_url
+        property "sonar.jdbc.url", sonar_jdbc_url
+        property "sonar.jdbc.driverClassName", sonar_jdbc_driverClassName
+        property "sonar.jdbc.username", sonar_jdbc_username
+        property "sonar.jdbc.password", sonar_jdbc_password
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.jacoco.reportPath", "${buildDir.name}/jacoco/jacoco.exec"
+    }
+}
+
+
+//configuration for all projects
+allprojects { project ->
+	apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
+	ext.releaseBuild = version.endsWith('RELEASE')
+    ext.snapshotBuild = version.endsWith('SNAPSHOT')
+
+    repositories {
+        maven { url wlwMavenCentral }
+    }
+    
+}
+
+//find out the java projects
+ext.javaProjects = subprojects.findAll { project -> project.name != 'docs' && project.name != 'manual' && project.name != 'guides'}
+
+//find out the itegrate test projects
+ext.itestProjects = subprojects.findAll { project -> project.name.startsWith('itest') }
+
+
+//find out the webapp projects
+ext.webappProjects = subprojects.findAll {project -> project.name.endsWith('webapp')}
+
+//find out the app projects
+ext.appProjects = subprojects.findAll {project -> project.name.endsWith('app')} - webappProjects
+
+//document/manual/guide project should change the eclipse import
+configure(allprojects - javaProjects) {
+    task afterEclipseImport {
+        ext.srcFile = file('.classpath')
+        inputs.file srcFile
+        outputs.dir srcFile
+
+        onlyIf { !srcFile.exists() }
+
+        doLast {
+            srcFile << """<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+    <classpathentry kind="output" path="bin"/>
+</classpath>
+"""
+        }
+    }
+}
+
+configure(javaProjects) {
+    apply from: "$rootDir/gradle/javaProjects.gradle"
+    apply from: "$rootDir/gradle/mavenDeployment.gradle"
+}
+
+//configure the application project which should ends with app
+configure(appProjects) {
+	apply from: "$rootDir/gradle/appProjects.gradle"
+}
+
+//configure the web application project which should ends with webapp
+configure(webappProjects) {
+	apply from: "$rootDir/gradle/webappProjects.gradle"
+}
+
+configure(rootProject) {
+	apply plugin: 'build-dashboard'
+	task wrapper(type: Wrapper) {
+		description = "Generates gradlew[.bat] scripts"
+	}
+}
+
+
+project("projectx-service-api") {
+	description = "The core module of projectx project"
+		
+	dependencies {
+		compile(libraries.pylon_core)
+        compile(libraries.pylon_data)
+		compile(libraries.spring_data_elasticsearch)
+		compile(libraries.spring_data_neo4j)
+		compile(libraries.voodoodyne_jackson)
+
+	}
+}
+
+project("projectx-service") {
+	description = "The service module of projectx project"
+		
+	dependencies {
+		compile(project(":projectx-service-api"))
+		compile(libraries.groovy_all)
+		compile(libraries.c3p0)
+		compile(libraries.immortal_logback)
+		compile(libraries.ryantenney)
+		testCompile(libraries.pylon_test)
+		
+	}
+}
+
+project("projectx-webapp") {
+	description = "projectx web application"
+	dependencies {
+		compile(project(":projectx-service"))
+		compile(libraries.pylon_web)
+		compile(libraries.jackson_databind)
+		compile(libraries.hibernate_validator)
+		compile(libraries.logback_classic)
+		compile(libraries.groovy_all)
+		compile(libraries.commons_fileupload)
+		compile(libraries.commons_io)
+		compile(libraries.c3p0)
+	}
+}

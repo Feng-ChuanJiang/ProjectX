@@ -1,0 +1,132 @@
+/*
+ * Use a libraries map to define the dependency artifacts
+ * It similar to the maven <dependencyManagement>
+ */
+ext {
+	
+	springFrameworkVersion 					= '4.3.1.RELEASE'
+	springDataJpaVersion 					= '1.10.2.RELEASE'
+	hibernateEntitymanagerVersion 			= '4.3.5.Final'
+	tomcatVersion 							= '7.0.11'
+	slf4jVersion							= '1.7.7'
+	logbackVersion							= '1.1.2'
+	lombokVersion							= '1.14.0'
+	junitVersion 							= '4.11'
+	mockitoVerion							= '1.9.5'
+	hamcrestVersion							= '1.3'
+	orikaVersion							= '1.4.5'
+	servletApiVersion						= '3.0.1'
+	jspApiVersion							= '2.2.1'
+	elApiVersion							= '2.2.5'
+	jstlApiVersion							= '1.2.1'
+	jackson2Version							= '2.3.3'
+	mybatisVersion							= '3.2.7'
+	mybatisSpringVersion					= '1.2.2'
+	mybatisGeneratorVersion					= '1.3.2'
+	commonsLang3Version						= '3.3.2'
+	commonsCollections4Version				= '4.0'
+	commonsBeanutilsVersion					= '1.9.2'
+	commonsPoolVersion						= '1.6'
+	commonsCompressVersion					= '1.8.1'
+	commonsFileuploadVersion				= '1.3.1'
+	commonsIoVersion						= '1.3.2'
+	druidVersion							= '1.0.5'
+	c3p0Version								= '0.9.5-pre8'
+	dbcpVersion								= '2.0.1'
+	mysqlDriverVersion						= '5.1.31'
+	validationApiVersion					= '1.1.0.Final'
+	hibernateValidatorVersion				= '5.1.1.Final'
+	reactorVersion							= '1.1.2.RELEASE'
+	groovyVersion							= '2.0.7'
+	pylonVersion							= '1.1.0-SNAPSHOT'
+	immortalVersion                         = '1.1.0-SNAPSHOT'
+    ryantenneyVersion                      	= '3.1.3'
+	springDataElasticsearchVersion          = '1.3.4.RELEASE'
+	springDataNeo4j                         = '4.1.1.RELEASE'
+	voodoodyneJackson                       ='1.1'
+
+    libraries = [
+			spring_data_neo4j:         "org.springframework.data:spring-data-neo4j:${springDataNeo4j}",
+			voodoodyne_jackson:          "com.voodoodyne.jackson.jsog:jackson-jsog:${voodoodyneJackson}",
+			spring_data_elasticsearch: "org.springframework.data:spring-data-elasticsearch:${springDataElasticsearchVersion}",
+			//spring base
+            spring_context_support:    	"org.springframework:spring-context-support:${springFrameworkVersion}",
+			//spring web
+			spring_webmvc:			   	"org.springframework:spring-webmvc:${springFrameworkVersion}",
+			//spring jdbc
+			spring_jdbc:			   	"org.springframework:spring-jdbc:${springFrameworkVersion}",
+            
+            //spring_data_jpa
+            spring_data_jpa:		   	"org.springframework.data:spring-data-jpa:${springDataJpaVersion}",
+            
+            reactor_core:				"org.projectreactor:reactor-core:${reactorVersion}",
+            
+            reactor_spring_context:		"org.projectreactor.spring:reactor-spring-context:${reactorVersion}",
+            
+            hibernate_entitymanager:   	"org.hibernate:hibernate-entitymanager:${hibernateEntitymanagerVersion}",
+            
+            slf4j_api:					"org.slf4j:slf4j-api:${slf4jVersion}",
+            logback_classic:			"ch.qos.logback:logback-classic:${logbackVersion}",
+
+			lombok:						"org.projectlombok:lombok:${lombokVersion}",
+			
+			orika_core:					"ma.glasnost.orika:orika-core:${orikaVersion}",
+			orika_eclipse_tools:		"ma.glasnost.orika:orika-eclipse-tools:${orikaVersion}",
+			
+			servlet_api:				"javax.servlet:javax.servlet-api:${servletApiVersion}",
+			jsp_api:					"javax.servlet.jsp:javax.servlet.jsp-api:${jspApiVersion}",
+			el_api:						"javax.el:javax.el-api:${elApiVersion}",
+			jstl_api:					"javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:${jstlApiVersion}",
+			
+			jackson_databind:			"com.fasterxml.jackson.core:jackson-databind:${jackson2Version}",
+			
+			//unit test
+			spring_test:			   	"org.springframework:spring-test:${springFrameworkVersion}",
+			junit:						"junit:junit:${junitVersion}",
+			mockito_all:				"org.mockito:mockito-all:${mockitoVerion}",
+			hamcrest_all:				"org.hamcrest:hamcrest-all:${hamcrestVersion}",
+			
+			//mybatis
+			mybatis:					"org.mybatis:mybatis:${mybatisVersion}",
+			mybatis_spring:				"org.mybatis:mybatis-spring:${mybatisSpringVersion}",
+			mybatis_generator:			"org.mybatis.generator:mybatis-generator-core:${mybatisGeneratorVersion}",
+			
+			//apache commons
+			commons_lang3:				"org.apache.commons:commons-lang3:${commonsLang3Version}",
+			commons_collections4:		"org.apache.commons:commons-collections4:${commonsCollections4Version}",
+			commons_beanutils:			"commons-beanutils:commons-beanutils:${commonsBeanutilsVersion}",
+			commons_pool:				"commons-pool:commons-pool:${commonsPoolVersion}",
+			commons_compress:			"org.apache.commons:commons-compress:${commonsCompressVersion}",
+			commons_fileupload:			"commons-fileupload:commons-fileupload:${commonsFileuploadVersion}",
+			commons_io:					"org.apache.commons:commons-io:${commonsIoVersion}",
+			
+			//druid
+			druid:						"com.alibaba:druid:${druidVersion}",
+			
+			//dbcp
+			dbcp:						"org.apache.commons:commons-dbcp2:${dbcpVersion}",
+			
+			//c3p0
+			c3p0:						"com.mchange:c3p0:${c3p0Version}",
+			
+			//mysql
+			mysql:						"mysql:mysql-connector-java:${mysqlDriverVersion}",
+       		
+       		//validator
+       		validation_api:				"javax.validation:validation-api:${validationApiVersion}",
+       		hibernate_validator:		"org.hibernate:hibernate-validator:${hibernateValidatorVersion}",
+
+            //ryantenney
+            ryantenney:					"com.ryantenney.metrics:metrics-spring:${ryantenneyVersion}",
+       		
+       		//groovy
+       		groovy_all:					"org.codehaus.groovy:groovy-all:${groovyVersion}",
+       		
+			pylon_core:					"com.wlw.pylon:pylon-core:${pylonVersion}",
+			pylon_test:					"com.wlw.pylon:pylon-test:${pylonVersion}",
+			pylon_data:					"com.wlw.pylon:pylon-data:${pylonVersion}",
+			pylon_web:					"com.wlw.pylon:pylon-web:${pylonVersion}",
+            immortal_logback:        	"com.wlw.immortal:immortal-logback:${immortalVersion}"
+        ]
+    
+}

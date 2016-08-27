@@ -1,0 +1,11 @@
+apply plugin: 'war'
+apply plugin: 'jetty'
+apply plugin: 'rest-doc'
+apply plugin: 'cargo'
+
+dependencies {
+	providedCompile(libraries.servlet_api)
+	providedCompile(libraries.jsp_api)
+	providedCompile(libraries.el_api)
+	providedCompile(libraries.jstl_api)
+}

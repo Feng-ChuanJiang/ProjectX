@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cci.projectx.core.repository.UserRepository">
+  <resultMap id="BaseResultMap" type="com.cci.projectx.core.entity.User">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="photos" jdbcType="VARCHAR" property="photos" />
+    <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone" />
+    <result column="gender" jdbcType="CHAR" property="gender" />
+    <result column="constellation" jdbcType="VARCHAR" property="constellation" />
+    <result column="Age" jdbcType="INTEGER" property="age" />
+    <result column="lndustry" jdbcType="VARCHAR" property="lndustry" />
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="labels" jdbcType="VARCHAR" property="labels" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, password, photos, mobile_phone, gender, constellation, Age, lndustry, group_id, 
+    labels, longitude, latitude
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.User">
+    insert into user (id, name, password, 
+      photos, mobile_phone, gender, 
+      constellation, Age, lndustry, 
+      group_id, labels, longitude, 
+      latitude)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{photos,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, 
+      #{constellation,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{lndustry,jdbcType=VARCHAR}, 
+      #{groupId,jdbcType=BIGINT}, #{labels,jdbcType=VARCHAR}, #{longitude,jdbcType=DECIMAL}, 
+      #{latitude,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.User">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="photos != null">
+        photos,
+      </if>
+      <if test="mobilePhone != null">
+        mobile_phone,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="constellation != null">
+        constellation,
+      </if>
+      <if test="age != null">
+        Age,
+      </if>
+      <if test="lndustry != null">
+        lndustry,
+      </if>
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="labels != null">
+        labels,
+      </if>
+      <if test="longitude != null">
+        longitude,
+      </if>
+      <if test="latitude != null">
+        latitude,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="photos != null">
+        #{photos,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePhone != null">
+        #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=CHAR},
+      </if>
+      <if test="constellation != null">
+        #{constellation,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null">
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="lndustry != null">
+        #{lndustry,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="labels != null">
+        #{labels,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null">
+        #{longitude,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude != null">
+        #{latitude,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.User">
+    update user
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="photos != null">
+        photos = #{photos,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePhone != null">
+        mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=CHAR},
+      </if>
+      <if test="constellation != null">
+        constellation = #{constellation,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null">
+        Age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="lndustry != null">
+        lndustry = #{lndustry,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="labels != null">
+        labels = #{labels,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null">
+        longitude = #{longitude,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude != null">
+        latitude = #{latitude,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cci.projectx.core.entity.User">
+    update user
+    set name = #{name,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      photos = #{photos,jdbcType=VARCHAR},
+      mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=CHAR},
+      constellation = #{constellation,jdbcType=VARCHAR},
+      Age = #{age,jdbcType=INTEGER},
+      lndustry = #{lndustry,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=BIGINT},
+      labels = #{labels,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=DECIMAL},
+      latitude = #{latitude,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCount" parameterType="com.cci.projectx.core.entity.User" resultType="java.lang.Integer">
+    select count(*) from user
+    <where>
+      <if test="id != null">
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="name != null">
+        and name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="password != null">
+        and password = #{password,jdbcType=VARCHAR}
+      </if>
+      <if test="photos != null">
+        and photos = #{photos,jdbcType=VARCHAR}
+      </if>
+      <if test="mobilePhone != null">
+        and mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
+      </if>
+      <if test="gender != null">
+        and gender = #{gender,jdbcType=CHAR}
+      </if>
+      <if test="constellation != null">
+        and constellation = #{constellation,jdbcType=VARCHAR}
+      </if>
+      <if test="age != null">
+        and Age = #{age,jdbcType=INTEGER}
+      </if>
+      <if test="lndustry != null">
+        and lndustry = #{lndustry,jdbcType=VARCHAR}
+      </if>
+      <if test="groupId != null">
+        and group_id = #{groupId,jdbcType=BIGINT}
+      </if>
+      <if test="labels != null">
+        and labels = #{labels,jdbcType=VARCHAR}
+      </if>
+      <if test="longitude != null">
+        and longitude = #{longitude,jdbcType=DECIMAL}
+      </if>
+      <if test="latitude != null">
+        and latitude = #{latitude,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user where 1 = 1 
+    <if test="param1.id != null">
+      and id = #{param1.id,jdbcType=BIGINT}
+    </if>
+    <if test="param1.name != null">
+      and name = #{param1.name,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.password != null">
+      and password = #{param1.password,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.photos != null">
+      and photos = #{param1.photos,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.mobilePhone != null">
+      and mobile_phone = #{param1.mobilePhone,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.gender != null">
+      and gender = #{param1.gender,jdbcType=CHAR}
+    </if>
+    <if test="param1.constellation != null">
+      and constellation = #{param1.constellation,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.age != null">
+      and Age = #{param1.age,jdbcType=INTEGER}
+    </if>
+    <if test="param1.lndustry != null">
+      and lndustry = #{param1.lndustry,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.groupId != null">
+      and group_id = #{param1.groupId,jdbcType=BIGINT}
+    </if>
+    <if test="param1.labels != null">
+      and labels = #{param1.labels,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.longitude != null">
+      and longitude = #{param1.longitude,jdbcType=DECIMAL}
+    </if>
+    <if test="param1.latitude != null">
+      and latitude = #{param1.latitude,jdbcType=DECIMAL}
+    </if>
+    <if test="param2.sort != null">
+      order by 
+      <foreach collection="param2.sort" item="order" separator=",">
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0">
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>

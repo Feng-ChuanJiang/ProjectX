@@ -1,0 +1,34 @@
+apply plugin: 'jacoco'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
+apply plugin: 'project-report'
+
+jacocoTestReport {
+	reports {
+		html.enabled = true
+		html.destination "${buildDir}/jacoco/jacocoHtml"
+	}
+}
+
+findbugs {
+	ignoreFailures = true
+	excludeFilter = file("${rootProject.projectDir}/gradle/config/findbugs/excludeFilter.xml")
+}
+    
+findbugsMain {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+findbugsTest {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+pmd {
+	ignoreFailures = true
+}

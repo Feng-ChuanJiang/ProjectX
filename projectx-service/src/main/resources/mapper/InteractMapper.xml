@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cci.projectx.core.repository.InteractRepository">
+  <resultMap id="BaseResultMap" type="com.cci.projectx.core.entity.Interact">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="privacy_permission" jdbcType="INTEGER" property="privacyPermission" />
+    <result column="tag" jdbcType="INTEGER" property="tag" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+    <result column="address_describe" jdbcType="VARCHAR" property="addressDescribe" />
+    <result column="picture" jdbcType="VARCHAR" property="picture" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, content, user_id, group_id, create_time, privacy_permission, tag, longitude, 
+    latitude, address_describe, picture
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from interact
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from interact
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.Interact">
+    insert into interact (id, content, user_id, 
+      group_id, create_time, privacy_permission, 
+      tag, longitude, latitude, 
+      address_describe, picture)
+    values (#{id,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
+      #{groupId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{privacyPermission,jdbcType=INTEGER}, 
+      #{tag,jdbcType=INTEGER}, #{longitude,jdbcType=DECIMAL}, #{latitude,jdbcType=DECIMAL}, 
+      #{addressDescribe,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Interact">
+    insert into interact
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="privacyPermission != null">
+        privacy_permission,
+      </if>
+      <if test="tag != null">
+        tag,
+      </if>
+      <if test="longitude != null">
+        longitude,
+      </if>
+      <if test="latitude != null">
+        latitude,
+      </if>
+      <if test="addressDescribe != null">
+        address_describe,
+      </if>
+      <if test="picture != null">
+        picture,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="privacyPermission != null">
+        #{privacyPermission,jdbcType=INTEGER},
+      </if>
+      <if test="tag != null">
+        #{tag,jdbcType=INTEGER},
+      </if>
+      <if test="longitude != null">
+        #{longitude,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude != null">
+        #{latitude,jdbcType=DECIMAL},
+      </if>
+      <if test="addressDescribe != null">
+        #{addressDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        #{picture,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.Interact">
+    update interact
+    <set>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null">
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="privacyPermission != null">
+        privacy_permission = #{privacyPermission,jdbcType=INTEGER},
+      </if>
+      <if test="tag != null">
+        tag = #{tag,jdbcType=INTEGER},
+      </if>
+      <if test="longitude != null">
+        longitude = #{longitude,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude != null">
+        latitude = #{latitude,jdbcType=DECIMAL},
+      </if>
+      <if test="addressDescribe != null">
+        address_describe = #{addressDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        picture = #{picture,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cci.projectx.core.entity.Interact">
+    update interact
+    set content = #{content,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=BIGINT},
+      group_id = #{groupId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      privacy_permission = #{privacyPermission,jdbcType=INTEGER},
+      tag = #{tag,jdbcType=INTEGER},
+      longitude = #{longitude,jdbcType=DECIMAL},
+      latitude = #{latitude,jdbcType=DECIMAL},
+      address_describe = #{addressDescribe,jdbcType=VARCHAR},
+      picture = #{picture,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCount" parameterType="com.cci.projectx.core.entity.Interact" resultType="java.lang.Integer">
+    select count(*) from interact
+    <where>
+      <if test="id != null">
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="content != null">
+        and content = #{content,jdbcType=VARCHAR}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="groupId != null">
+        and group_id = #{groupId,jdbcType=BIGINT}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="privacyPermission != null">
+        and privacy_permission = #{privacyPermission,jdbcType=INTEGER}
+      </if>
+      <if test="tag != null">
+        and tag = #{tag,jdbcType=INTEGER}
+      </if>
+      <if test="longitude != null">
+        and longitude = #{longitude,jdbcType=DECIMAL}
+      </if>
+      <if test="latitude != null">
+        and latitude = #{latitude,jdbcType=DECIMAL}
+      </if>
+      <if test="addressDescribe != null">
+        and address_describe = #{addressDescribe,jdbcType=VARCHAR}
+      </if>
+      <if test="picture != null">
+        and picture = #{picture,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from interact where 1 = 1 
+    <if test="param1.id != null">
+      and id = #{param1.id,jdbcType=BIGINT}
+    </if>
+    <if test="param1.content != null">
+      and content = #{param1.content,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.userId != null">
+      and user_id = #{param1.userId,jdbcType=BIGINT}
+    </if>
+    <if test="param1.groupId != null">
+      and group_id = #{param1.groupId,jdbcType=BIGINT}
+    </if>
+    <if test="param1.createTime != null">
+      and create_time = #{param1.createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="param1.privacyPermission != null">
+      and privacy_permission = #{param1.privacyPermission,jdbcType=INTEGER}
+    </if>
+    <if test="param1.tag != null">
+      and tag = #{param1.tag,jdbcType=INTEGER}
+    </if>
+    <if test="param1.longitude != null">
+      and longitude = #{param1.longitude,jdbcType=DECIMAL}
+    </if>
+    <if test="param1.latitude != null">
+      and latitude = #{param1.latitude,jdbcType=DECIMAL}
+    </if>
+    <if test="param1.addressDescribe != null">
+      and address_describe = #{param1.addressDescribe,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.picture != null">
+      and picture = #{param1.picture,jdbcType=VARCHAR}
+    </if>
+    <if test="param2.sort != null">
+      order by 
+      <foreach collection="param2.sort" item="order" separator=",">
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0">
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>

@@ -1,0 +1,4 @@
+rootProject.name = 'projectx'
+include 'projectx-service-api'
+include 'projectx-service'
+include 'projectx-webapp'

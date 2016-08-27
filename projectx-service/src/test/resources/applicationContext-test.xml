@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:pylon-context="http://pylon.wlw.com/schema/context" xmlns:pylon-datasource="http://pylon.wlw.com/schema/datasource"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.6.xsd
+		http://pylon.wlw.com/schema/context http://pylon.wlw.com/schema/context/pylon-context-1.0.0.xsd
+		http://pylon.wlw.com/schema/datasource http://pylon.wlw.com/schema/datasource/pylon-datasource-1.0.0.xsd"
+	default-lazy-init="true">
+	
+	<pylon-context:property-placeholder ignore-resource-not-found="true"/>
+	
+	<bean id="orikaBeanMapper" class="com.wlw.pylon.core.beans.mapping.orika.OrikaBeanMapper">
+		<property name="basePackage" value="com.cci.projectx.**"></property>
+	</bean>
+	
+	<context:annotation-config />
+	<context:component-scan base-package="com.cci.**.repository" />
+	<context:component-scan base-package="com.cci.**.service" />
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.cci.**.repository" />
+		<property name="sqlSessionFactoryBeanName" value="myBatisSqlSessionFactory" />
+		<property name="annotationClass" value="org.springframework.stereotype.Repository" /> 
+	</bean>
+
+	<bean id="myBatisSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath*:mapper/*Mapper.xml" />
+	</bean>
+
+	<bean id="transactionManager" class="com.wlw.pylon.data.datasource.SmartDataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<pylon-datasource:jdbc-matrix id="dataSource">
+		<pylon-datasource:readWriteDataSource name="readwrite">
+			<pylon-datasource:writeDataSource logicName="ps" />
+		</pylon-datasource:readWriteDataSource>
+	</pylon-datasource:jdbc-matrix>
+	
+</beans>
