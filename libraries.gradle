@@ -44,6 +44,7 @@ ext {
 	springDataElasticsearchVersion          = '1.3.4.RELEASE'
 	springDataNeo4j                         = '4.1.1.RELEASE'
 	voodoodyneJackson                       ='1.1'
+	thumbnailatorVersion					= '0.4.8'
 
     libraries = [
 			spring_data_neo4j:         "org.springframework.data:spring-data-neo4j:${springDataNeo4j}",
@@ -121,12 +122,16 @@ ext {
        		
        		//groovy
        		groovy_all:					"org.codehaus.groovy:groovy-all:${groovyVersion}",
+			//thumbnailator
+			thumbnailator:				"net.coobird:thumbnailator:${thumbnailatorVersion}",
        		
 			pylon_core:					"com.wlw.pylon:pylon-core:${pylonVersion}",
 			pylon_test:					"com.wlw.pylon:pylon-test:${pylonVersion}",
 			pylon_data:					"com.wlw.pylon:pylon-data:${pylonVersion}",
 			pylon_web:					"com.wlw.pylon:pylon-web:${pylonVersion}",
             immortal_logback:        	"com.wlw.immortal:immortal-logback:${immortalVersion}"
+
+
         ]
     
 }

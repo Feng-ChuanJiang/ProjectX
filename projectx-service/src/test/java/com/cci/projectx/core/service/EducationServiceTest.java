@@ -1,16 +1,14 @@
-		package com.cci.projectx.core.service;
+package com.cci.projectx.core.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
+import com.cci.projectx.core.model.EducationModel;
+import com.wlw.pylon.unit.BaseDbTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.wlw.pylon.unit.BaseDbTest;
-import com.cci.projectx.core.service.EducationService;
-import com.cci.projectx.core.model.EducationModel;
-
 import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class EducationServiceTest extends BaseDbTest{
 

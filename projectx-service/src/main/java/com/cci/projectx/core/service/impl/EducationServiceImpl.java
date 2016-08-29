@@ -1,15 +1,15 @@
 package com.cci.projectx.core.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Pageable;
-
+import com.cci.projectx.core.ElasticSearchHelp;
 import com.cci.projectx.core.entity.Education;
-import com.cci.projectx.core.repository.EducationRepository;
 import com.cci.projectx.core.model.EducationModel;
+import com.cci.projectx.core.repository.EducationRepository;
 import com.cci.projectx.core.service.EducationService;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,22 +22,39 @@ public class EducationServiceImpl implements EducationService {
 	@Autowired
 	private EducationRepository educationRepo;
 
+	@Autowired
+	private ElasticSearchHelp elasticSearchBase;
+
 	@Transactional
 	@Override
 	public int create(EducationModel educationModel) {
-		return educationRepo.insert(beanMapper.map(educationModel, Education.class));
+		Education education = beanMapper.map(educationModel, Education.class);
+		int nid=educationRepo.insert(education);
+		if (education.getId()!=null) {
+			elasticSearchBase.mergeES(education, String.valueOf(education.getId()));
+		}
+		return nid;
 	}
 
 	@Transactional
 	@Override
 	public int createSelective(EducationModel educationModel) {
-		return educationRepo.insertSelective(beanMapper.map(educationModel, Education.class));
+		Education education = beanMapper.map(educationModel, Education.class);
+		int nid = educationRepo.insertSelective(education);
+		if (education.getId()!=null) {
+			elasticSearchBase.mergeES(education, String.valueOf(education.getId()));
+		}
+		return nid;
 	}
 
 	@Transactional
 	@Override
 	public int deleteByPrimaryKey(Long id) {
-		return educationRepo.deleteByPrimaryKey(id);
+		int eid = educationRepo.deleteByPrimaryKey(id);
+		if (eid > 0) {
+			elasticSearchBase.deleteES(Education.class, id);
+		}
+		return eid;
 	}
 
 	@Transactional(readOnly = true)
@@ -63,13 +80,33 @@ public class EducationServiceImpl implements EducationService {
 	@Transactional
 	@Override
 	public int updateByPrimaryKey(EducationModel educationModel) {
-		return educationRepo.updateByPrimaryKey(beanMapper.map(educationModel, Education.class));
+		Education education = beanMapper.map(educationModel, Education.class);
+		int id = educationRepo.updateByPrimaryKey(education);
+		if (id > 0) {
+			elasticSearchBase.mergeES(education,education.getId().toString());
+		}
+		return id;
 	}
 	
 	@Transactional
 	@Override
 	public int updateByPrimaryKeySelective(EducationModel educationModel) {
-		return educationRepo.updateByPrimaryKeySelective(beanMapper.map(educationModel, Education.class));
+		Education education = beanMapper.map(educationModel, Education.class);
+		int id = educationRepo.updateByPrimaryKeySelective(education);
+		if (id > 0) {
+			elasticSearchBase.mergeES(education,education.getId().toString());
+		}
+		return id;
+	}
+
+	/**
+	 * 通过对象模糊查询教育背景
+	 * @param education
+	 * @return
+	 */
+	public List<Education> getEducationByEducationInfo(Education education){
+		List<Education> educations = elasticSearchBase.findESForList(education);
+		return educations;
 	}
 
 }

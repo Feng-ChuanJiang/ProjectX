@@ -19,7 +19,7 @@ import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
  * Created by 33303 on 2016/8/27.
  */
 @Repository
-public class ElasticSearchBase<T> {
+public class ElasticSearchHelp<T> {
     @Autowired
     ElasticsearchTemplate elasticsearchTemplate;
     /**

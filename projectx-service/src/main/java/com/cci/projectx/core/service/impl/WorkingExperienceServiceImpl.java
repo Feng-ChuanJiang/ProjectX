@@ -1,15 +1,15 @@
 package com.cci.projectx.core.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Pageable;
-
+import com.cci.projectx.core.ElasticSearchHelp;
 import com.cci.projectx.core.entity.WorkingExperience;
-import com.cci.projectx.core.repository.WorkingExperienceRepository;
 import com.cci.projectx.core.model.WorkingExperienceModel;
+import com.cci.projectx.core.repository.WorkingExperienceRepository;
 import com.cci.projectx.core.service.WorkingExperienceService;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,22 +22,39 @@ public class WorkingExperienceServiceImpl implements WorkingExperienceService {
 	@Autowired
 	private WorkingExperienceRepository workingExperienceRepo;
 
+	@Autowired
+	private ElasticSearchHelp elasticSearchBase;
+
 	@Transactional
 	@Override
 	public int create(WorkingExperienceModel workingExperienceModel) {
-		return workingExperienceRepo.insert(beanMapper.map(workingExperienceModel, WorkingExperience.class));
+		WorkingExperience workingExperience = beanMapper.map(workingExperienceModel, WorkingExperience.class);
+		int nid = workingExperienceRepo.insert(workingExperience);
+		if (workingExperience.getId()!=null) {
+			elasticSearchBase.mergeES(workingExperience, String.valueOf(workingExperience.getId()));
+		}
+		return nid;
 	}
 
 	@Transactional
 	@Override
 	public int createSelective(WorkingExperienceModel workingExperienceModel) {
-		return workingExperienceRepo.insertSelective(beanMapper.map(workingExperienceModel, WorkingExperience.class));
+		WorkingExperience workingExperience = beanMapper.map(workingExperienceModel, WorkingExperience.class);
+		int id = workingExperienceRepo.insertSelective(workingExperience);
+		if (workingExperience.getId()!=null) {
+			elasticSearchBase.mergeES(workingExperience, String.valueOf(workingExperience.getId()));
+		}
+		return id;
 	}
 
 	@Transactional
 	@Override
 	public int deleteByPrimaryKey(Long id) {
-		return workingExperienceRepo.deleteByPrimaryKey(id);
+		int wid = workingExperienceRepo.deleteByPrimaryKey(id);
+		if (wid > 0) {
+			elasticSearchBase.deleteES(WorkingExperience.class, id);
+		}
+		return wid;
 	}
 
 	@Transactional(readOnly = true)
@@ -63,13 +80,33 @@ public class WorkingExperienceServiceImpl implements WorkingExperienceService {
 	@Transactional
 	@Override
 	public int updateByPrimaryKey(WorkingExperienceModel workingExperienceModel) {
-		return workingExperienceRepo.updateByPrimaryKey(beanMapper.map(workingExperienceModel, WorkingExperience.class));
+		WorkingExperience workingExperience = beanMapper.map(workingExperienceModel, WorkingExperience.class);
+		int id = workingExperienceRepo.updateByPrimaryKey(workingExperience);
+		if (workingExperience.getId()!=null) {
+			elasticSearchBase.mergeES(workingExperience, workingExperience.getId().toString());
+		}
+		return id;
 	}
 	
 	@Transactional
 	@Override
 	public int updateByPrimaryKeySelective(WorkingExperienceModel workingExperienceModel) {
-		return workingExperienceRepo.updateByPrimaryKeySelective(beanMapper.map(workingExperienceModel, WorkingExperience.class));
+		WorkingExperience workingExperience = beanMapper.map(workingExperienceModel, WorkingExperience.class);
+		int id = workingExperienceRepo.updateByPrimaryKeySelective(workingExperience);
+		if (workingExperience.getId()!=null) {
+			elasticSearchBase.mergeES(workingExperience, workingExperience.getId().toString());
+		}
+		return id;
+	}
+
+	/**
+	 * 通过对象模糊查询教育背景
+	 * @param workingExperience
+	 * @return
+	 */
+	public List<WorkingExperience> getWorkingByWorkInfo(WorkingExperience workingExperience){
+		List<WorkingExperience> workingExperiences = elasticSearchBase.findESForList(workingExperience);
+		return workingExperiences;
 	}
 
 }

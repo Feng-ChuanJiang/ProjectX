@@ -111,6 +111,7 @@ project("projectx-service-api") {
 		compile(libraries.spring_data_elasticsearch)
 		compile(libraries.spring_data_neo4j)
 		compile(libraries.voodoodyne_jackson)
+		compile(libraries.thumbnailator)
 
 	}
 }

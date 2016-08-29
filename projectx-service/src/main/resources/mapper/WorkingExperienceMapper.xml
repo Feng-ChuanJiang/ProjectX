@@ -28,7 +28,7 @@
     delete from working_experience
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.cci.projectx.core.entity.WorkingExperience">
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.WorkingExperience" keyProperty="id" useGeneratedKeys="true">
     insert into working_experience (id, user_id, company_id, 
       company_for_short, department, department_for_short, 
       title, title_for_short, start_time, 
@@ -38,7 +38,7 @@
       #{title,jdbcType=VARCHAR}, #{titleForShort,jdbcType=VARCHAR}, #{startTime,jdbcType=DATE}, 
       #{endTime,jdbcType=DATE}, #{sort,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.WorkingExperience">
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.WorkingExperience" keyProperty="id" useGeneratedKeys="true">
     insert into working_experience
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

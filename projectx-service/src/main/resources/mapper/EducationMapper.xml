@@ -28,7 +28,7 @@
     delete from education
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.cci.projectx.core.entity.Education">
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.Education" keyProperty="id" useGeneratedKeys="true">
     insert into education (id, user_id, university, 
       degree, majorX, majorX_for_short, 
       majorY, majorY_for_short, start_time, 
@@ -38,7 +38,7 @@
       #{majory,jdbcType=VARCHAR}, #{majoryForShort,jdbcType=VARCHAR}, #{startTime,jdbcType=DATE}, 
       #{endTime,jdbcType=DATE}, #{sort,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Education">
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Education" keyProperty="id" useGeneratedKeys="true">
     insert into education
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

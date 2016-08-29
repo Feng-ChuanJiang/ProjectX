@@ -1,7 +1,9 @@
 package com.cci.projectx.core.model;
 
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
+
 import java.math.BigDecimal;
+import java.util.List;
 
 @MapClass("com.cci.projectx.core.entity.User")
 public class UserModel{
@@ -19,6 +21,8 @@ public class UserModel{
 	private String labels;
 	private BigDecimal longitude;
 	private BigDecimal latitude;
+	private List<WorkingExperienceModel> workingExperienceModels;
+	private List<EducationModel> educationModels;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -123,6 +127,20 @@ public class UserModel{
 	public BigDecimal getLatitude(){
 		return this.latitude;
 	}
-		
-		
+
+	public List<WorkingExperienceModel> getWorkingExperienceModels() {
+		return workingExperienceModels;
+	}
+
+	public void setWorkingExperienceModels(List<WorkingExperienceModel> workingExperienceModels) {
+		this.workingExperienceModels = workingExperienceModels;
+	}
+
+	public List<EducationModel> getEducationModels() {
+		return educationModels;
+	}
+
+	public void setEducationModels(List<EducationModel> educationModels) {
+		this.educationModels = educationModels;
+	}
 }
