@@ -21,6 +21,7 @@ public class UserModel{
 	private String labels;
 	private BigDecimal longitude;
 	private BigDecimal latitude;
+	private Long praise;
 	private List<WorkingExperienceModel> workingExperiences;
 	private List<EducationModel> educations;
 		
@@ -142,5 +143,13 @@ public class UserModel{
 
 	public void setEducations(List<EducationModel> educations) {
 		this.educations = educations;
+	}
+
+	public Long getPraise() {
+		return praise;
+	}
+
+	public void setPraise(Long praise) {
+		this.praise = praise;
 	}
 }

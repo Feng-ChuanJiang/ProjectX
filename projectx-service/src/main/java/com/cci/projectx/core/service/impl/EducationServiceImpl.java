@@ -3,7 +3,6 @@ package com.cci.projectx.core.service.impl;
 import com.cci.projectx.core.ElasticSearchHelp;
 import com.cci.projectx.core.entity.Education;
 import com.cci.projectx.core.model.EducationModel;
-import com.cci.projectx.core.model.WorkingExperienceModel;
 import com.cci.projectx.core.repository.EducationRepository;
 import com.cci.projectx.core.service.EducationService;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
@@ -102,12 +101,13 @@ public class EducationServiceImpl implements EducationService {
 
 	/**
 	 * 通过对象模糊查询教育背景
-	 * @param education
+	 * @param educationModel
 	 * @return
 	 */
 	@Transactional
 	@Override
-	public List<EducationModel> getEducationByEducationInfo(EducationModel education){
+	public List<EducationModel> getEducationByEducationInfo(EducationModel educationModel){
+		Education education=beanMapper.map(educationModel,Education.class);
 		List<EducationModel> educations = elasticSearchBase.findESForList(education);
 		return educations;
 	}

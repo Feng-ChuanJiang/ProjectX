@@ -1,7 +1,5 @@
 package com.cci.projectx.core.vo;
 
-import com.cci.projectx.core.entity.Education;
-import com.cci.projectx.core.entity.WorkingExperience;
 import com.cci.projectx.core.model.EducationModel;
 import com.cci.projectx.core.model.WorkingExperienceModel;
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
@@ -11,7 +9,6 @@ import java.util.List;
 
 @MapClass("com.cci.projectx.core.model.UserModel")
 public class UserVO{
-
 
 	private Long id;
 	private String name;
@@ -26,6 +23,7 @@ public class UserVO{
 	private String labels;
 	private BigDecimal longitude;
 	private BigDecimal latitude;
+	private Long praise;
 	private List<WorkingExperienceModel> workingExperiences;
 	private List<EducationModel> educations;
 
@@ -147,5 +145,13 @@ public class UserVO{
 
 	public void setEducations(List<EducationModel> educations) {
 		this.educations = educations;
+	}
+
+	public Long getPraise() {
+		return praise;
+	}
+
+	public void setPraise(Long praise) {
+		this.praise = praise;
 	}
 }

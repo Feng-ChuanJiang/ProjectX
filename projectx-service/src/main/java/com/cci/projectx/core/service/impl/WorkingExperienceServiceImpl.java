@@ -101,12 +101,13 @@ public class WorkingExperienceServiceImpl implements WorkingExperienceService {
 
 	/**
 	 * 通过对象模糊查询教育背景
-	 * @param workingExperience
+	 * @param workingExperienceModel
 	 * @return
 	 */
 	@Transactional
 	@Override
-	public List<WorkingExperienceModel> getWorkingByWorkInfo(WorkingExperienceModel workingExperience){
+	public List<WorkingExperienceModel> getWorkingByWorkInfo(WorkingExperienceModel workingExperienceModel){
+		WorkingExperience workingExperience=beanMapper.map(workingExperienceModel,WorkingExperience.class);
 		List<WorkingExperienceModel> workingExperiences = elasticSearchBase.findESForList(workingExperience);
 		return workingExperiences;
 	}

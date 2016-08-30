@@ -222,11 +222,12 @@ public class UserServiceImpl implements UserService {
     /**
      * 通过对象模糊查询用户
      *
-     * @param user
+     * @param
      * @return
      */
     @Override
-    public List<UserModel> getUserByUserProfile(UserModel user) {
+    public List<UserModel> getUserByUserProfile(UserModel userModel) {
+        User user = beanMapper.map(userModel,User.class);
         List<UserModel> users = elasticSearchHelp.findESForList(user);
         return users;
     }

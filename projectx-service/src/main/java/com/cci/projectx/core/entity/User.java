@@ -36,6 +36,8 @@ public class User {
 
     private BigDecimal latitude;
 
+    private Long praise;
+
     public Long getId() {
         return id;
     }
@@ -138,5 +140,13 @@ public class User {
 
     public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
+    }
+
+    public Long getPraise() {
+        return praise;
+    }
+
+    public void setPraise(Long praise) {
+        this.praise = praise;
     }
 }

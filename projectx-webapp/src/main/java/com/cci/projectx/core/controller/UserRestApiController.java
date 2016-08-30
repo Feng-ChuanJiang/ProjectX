@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -147,7 +148,7 @@ public class UserRestApiController {
 	}
 
 	@GetMapping(value = "/user/like")
-	public ResponseEnvelope<List<UserModel>> getUserByUserProfile(UserVO userVO){
+	public ResponseEnvelope<List<UserModel>> getUserByUserProfile(UserVO userVO) throws UnsupportedEncodingException {
 		UserModel user = beanMapper.map(userVO,UserModel.class);
 		List<UserModel> listUser=userService.getUserByUserProfile(user);
 		ResponseEnvelope<List<UserModel>> responseEnv = new ResponseEnvelope<>(listUser,true);
