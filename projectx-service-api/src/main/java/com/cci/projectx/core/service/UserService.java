@@ -1,7 +1,6 @@
 
 package com.cci.projectx.core.service;
 
-import com.cci.projectx.core.entity.User;
 import com.cci.projectx.core.model.EducationModel;
 import com.cci.projectx.core.model.FriendsModel;
 import com.cci.projectx.core.model.UserModel;
@@ -45,7 +44,7 @@ public interface UserService {
 
     public List<Map<String, Object>> getBackdropId(List<UserModel> userlist);
 
-    public List<User> getUserByUserProfile(User user);
+    public List<UserModel> getUserByUserProfile(UserModel user);
 
     public Map<String, Object> findUserShortById(Long id);
 

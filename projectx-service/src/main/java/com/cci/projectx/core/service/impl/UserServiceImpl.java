@@ -4,7 +4,6 @@ import com.cci.projectx.core.ElasticSearchHelp;
 import com.cci.projectx.core.FriendsType;
 import com.cci.projectx.core.HRErrorCode;
 import com.cci.projectx.core.JdbcTempateHelp;
-import com.cci.projectx.core.entity.Friends;
 import com.cci.projectx.core.entity.User;
 import com.cci.projectx.core.model.EducationModel;
 import com.cci.projectx.core.model.FriendsModel;
@@ -227,8 +226,8 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public List<User> getUserByUserProfile(User user) {
-        List<User> users = elasticSearchHelp.findESForList(user);
+    public List<UserModel> getUserByUserProfile(UserModel user) {
+        List<UserModel> users = elasticSearchHelp.findESForList(user);
         return users;
     }
 

@@ -102,34 +102,34 @@ public class UserRestApiController {
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/user/findUserFriendsById/{id}")
+	@GetMapping(value = "/friends/{id}")
 	public ResponseEnvelope<List<Map<String,Object>>> findUserFriendsById(@PathVariable Long id){
 		List<Map<String,Object>> lisMap=userService.findUserFriendsById(id);
 		ResponseEnvelope<List<Map<String,Object>>> responseEnv = new ResponseEnvelope<List<Map<String,Object>>>(lisMap,true);
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/user/findUserFriendsNotId/{userId}/{friendsId}")
+	@GetMapping(value = "/friends/{userId}/{friendsId}")
 	public ResponseEnvelope<List<Map<String,Object>>> findUserFriendsNotId(@PathVariable Long userId,@PathVariable Long[] friendsId){
 		List<Map<String,Object>> lisMap=userService.findUserFriendsNotId(userId, friendsId);
 		ResponseEnvelope<List<Map<String,Object>>> responseEnv = new ResponseEnvelope<List<Map<String,Object>>>(lisMap,true);
 		return responseEnv;
 	}
-	@GetMapping(value = "/user/findApplyforFriends/{userId}")
+	@GetMapping(value = "/friends/{userId}/apply")
 	public ResponseEnvelope<List<Map<String,Object>>> findApplyforFriends(@PathVariable Long userId){
 		List<Map<String,Object>> lisMap=userService.findApplyforFriends(userId);
 		ResponseEnvelope<List<Map<String,Object>>> responseEnv = new ResponseEnvelope<List<Map<String,Object>>>(lisMap,true);
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/user/findWaitingFriends/{userId}")
+	@GetMapping(value = "/friends/{userId}/waiting")
 	public ResponseEnvelope<List<Map<String,Object>>> findWaitingFriends(@PathVariable Long userId){
 		List<Map<String,Object>> lisMap=userService.findWaitingFriends(userId);
 		ResponseEnvelope<List<Map<String,Object>>> responseEnv = new ResponseEnvelope<List<Map<String,Object>>>(lisMap,true);
 		return responseEnv;
 	}
 
-	@PostMapping(value = "/addFriend")
+	@PostMapping(value = "/friend")
 	public ResponseEnvelope<Integer> addFriends(@RequestBody FriendsVO friendsVO ){
 		FriendsModel friendsModel = beanMapper.map(friendsVO, FriendsModel.class);
 		Integer  result = userService.addFriends(friendsModel);
@@ -137,19 +137,21 @@ public class UserRestApiController {
 		return responseEnv;
 	}
 
-	@PostMapping(value = "/deleteFriend")
-	public ResponseEnvelope<Integer> deleteFriends(@RequestBody FriendsVO friendsVO ){
-		FriendsModel friendsModel = beanMapper.map(friendsVO, FriendsModel.class);
+	@DeleteMapping (value = "/friend/{userId}/{friendsId}")
+	public ResponseEnvelope<Integer> deleteFriends(@PathVariable Long userId,@PathVariable Long friendsId ){
+		FriendsModel friendsModel = new FriendsModel();
+		friendsModel.setUserId(userId);
+		friendsModel.setFriendId(friendsId);
 		Integer  result = userService.deleteFriends(friendsModel);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
 		return responseEnv;
 	}
 
 	@PostMapping(value = "/user/getUserByUserProfile")
-	public ResponseEnvelope<List<User>> getUserByUserProfile(@RequestBody UserVO userVO){
-		User user = beanMapper.map(userVO,User.class);
-		List<User> listUser=userService.getUserByUserProfile(user);
-		ResponseEnvelope<List<User>> responseEnv = new ResponseEnvelope<List<User>>(listUser,true);
+	public ResponseEnvelope<List<UserModel>> getUserByUserProfile(@RequestBody UserVO userVO){
+		UserModel user = beanMapper.map(userVO,UserModel.class);
+		List<UserModel> listUser=userService.getUserByUserProfile(user);
+		ResponseEnvelope<List<UserModel>> responseEnv = new ResponseEnvelope<>(listUser,true);
 		return responseEnv;
 	}
 
