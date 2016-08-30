@@ -104,6 +104,8 @@ public class EducationServiceImpl implements EducationService {
 	 * @param education
 	 * @return
 	 */
+	@Transactional
+	@Override
 	public List<Education> getEducationByEducationInfo(Education education){
 		List<Education> educations = elasticSearchBase.findESForList(education);
 		return educations;

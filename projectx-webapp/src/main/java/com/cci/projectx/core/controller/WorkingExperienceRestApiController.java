@@ -1,5 +1,6 @@
 package com.cci.projectx.core.controller;
 
+import com.cci.projectx.core.entity.WorkingExperience;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class WorkingExperienceRestApiController {
 	@Autowired
 	private WorkingExperienceService workingExperienceService;
 
-	@GetMapping(value = "/core/workingExperience/{id}")
+	@GetMapping(value = "/workingExperience/{id}")
 	public ResponseEnvelope<WorkingExperienceVO> getWorkingExperienceById(@PathVariable Long id){
 		WorkingExperienceModel workingExperienceModel = workingExperienceService.findByPrimaryKey(id);
 		WorkingExperienceVO workingExperienceVO =beanMapper.map(workingExperienceModel, WorkingExperienceVO.class);
@@ -41,7 +42,7 @@ public class WorkingExperienceRestApiController {
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/core/workingExperience")
+	@GetMapping(value = "/workingExperience")
     public ResponseEnvelope<Page<WorkingExperienceModel>> listWorkingExperience(WorkingExperienceVO workingExperienceVO,Pageable pageable){
 
 		WorkingExperienceModel param = beanMapper.map(workingExperienceVO, WorkingExperienceModel.class);
@@ -52,7 +53,7 @@ public class WorkingExperienceRestApiController {
         return responseEnv;
     }
 
-	@PostMapping(value = "/core/workingExperience")
+	@PostMapping(value = "/workingExperience")
 	public ResponseEnvelope<Integer> createWorkingExperience(@RequestBody WorkingExperienceVO workingExperienceVO){
 		WorkingExperienceModel workingExperienceModel = beanMapper.map(workingExperienceVO, WorkingExperienceModel.class);
 		Integer  result = workingExperienceService.create(workingExperienceModel);
@@ -60,7 +61,7 @@ public class WorkingExperienceRestApiController {
         return responseEnv;
 	}
 
-    @DeleteMapping(value = "/core/workingExperience/{id}")
+    @DeleteMapping(value = "/workingExperience/{id}")
 	public ResponseEnvelope<Integer> deleteWorkingExperienceByPrimaryKey(@PathVariable Long id){
 		Integer  result = workingExperienceService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
@@ -68,7 +69,7 @@ public class WorkingExperienceRestApiController {
 	}
 
 
-    @PutMapping(value = "/core/workingExperience/{id}")
+    @PutMapping(value = "/workingExperience/{id}")
 	public ResponseEnvelope<Integer> updateWorkingExperienceByPrimaryKeySelective(@PathVariable Long id,
 					@RequestBody WorkingExperienceVO workingExperienceVO){
 		WorkingExperienceModel workingExperienceModel = beanMapper.map(workingExperienceVO, WorkingExperienceModel.class);
@@ -76,6 +77,14 @@ public class WorkingExperienceRestApiController {
 		Integer  result = workingExperienceService.updateByPrimaryKeySelective(workingExperienceModel);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
         return responseEnv;
+	}
+	@PostMapping(value = "workingExperience/getWorkingByWorkInfo")
+	public ResponseEnvelope<List<WorkingExperience>> getWorkingByWorkInfo(@RequestBody WorkingExperienceVO workingExperienceVO){
+		WorkingExperience workingExperience=beanMapper.map(workingExperienceVO,WorkingExperience.class);
+		List<WorkingExperience> workingExperienceList=workingExperienceService.getWorkingByWorkInfo(workingExperience);
+		ResponseEnvelope<List<WorkingExperience>> responseEnvelope=new ResponseEnvelope<List<WorkingExperience>>(workingExperienceList,true);
+
+		return  responseEnvelope;
 	}
 
 }

@@ -45,17 +45,17 @@ public class AuthInterceptor implements HandlerInterceptor {
             RestController restController = handlerMethod.getBeanType().getAnnotation(RestController.class);
             if (null != restController) {
 
-                String authToken = request.getHeader(AUTHORIZATION);
-                if (StringUtils.isEmpty(authToken)) {
-                    HRErrorCode.throwBusinessException(HRErrorCode.UN_LOGIN);
-                }
-
-                Long userId = sessionCache.getIfPresent(authToken);
-                if(null==userId){
-                    HRErrorCode.throwBusinessException(HRErrorCode.UN_LOGIN);
-                }
-
-                request.setAttribute("userId", userId);
+//                String authToken = request.getHeader(AUTHORIZATION);
+//                if (StringUtils.isEmpty(authToken)) {
+//                    HRErrorCode.throwBusinessException(HRErrorCode.UN_LOGIN);
+//                }
+//
+//                Long userId = sessionCache.getIfPresent(authToken);
+//                if(null==userId){
+//                    HRErrorCode.throwBusinessException(HRErrorCode.UN_LOGIN);
+//                }
+//
+//                request.setAttribute("userId", userId);
             }
         }
 

@@ -33,7 +33,7 @@ public class SRestApiController {
 	@Autowired
 	private SService sService;
 
-	@GetMapping(value = "/core/s/{id}")
+	@GetMapping(value = "/s/{id}")
 	public ResponseEnvelope<SVO> getSById(@PathVariable Long id){
 		SModel sModel = sService.findByPrimaryKey(id);
 		SVO sVO =beanMapper.map(sModel, SVO.class);
@@ -41,7 +41,7 @@ public class SRestApiController {
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/core/s")
+	@GetMapping(value = "/s")
     public ResponseEnvelope<Page<SModel>> listS(SVO sVO,Pageable pageable){
 
 		SModel param = beanMapper.map(sVO, SModel.class);
@@ -52,7 +52,7 @@ public class SRestApiController {
         return responseEnv;
     }
 
-	@PostMapping(value = "/core/s")
+	@PostMapping(value = "/s")
 	public ResponseEnvelope<Integer> createS(@RequestBody SVO sVO){
 		SModel sModel = beanMapper.map(sVO, SModel.class);
 		Integer  result = sService.create(sModel);
@@ -60,7 +60,7 @@ public class SRestApiController {
         return responseEnv;
 	}
 
-    @DeleteMapping(value = "/core/s/{id}")
+    @DeleteMapping(value = "/s/{id}")
 	public ResponseEnvelope<Integer> deleteSByPrimaryKey(@PathVariable Long id){
 		Integer  result = sService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
@@ -68,7 +68,7 @@ public class SRestApiController {
 	}
 
 
-    @PutMapping(value = "/core/s/{id}")
+    @PutMapping(value = "/s/{id}")
 	public ResponseEnvelope<Integer> updateSByPrimaryKeySelective(@PathVariable Long id,
 					@RequestBody SVO sVO){
 		SModel sModel = beanMapper.map(sVO, SModel.class);

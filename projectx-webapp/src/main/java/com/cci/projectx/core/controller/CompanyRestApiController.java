@@ -33,7 +33,7 @@ public class CompanyRestApiController {
 	@Autowired
 	private CompanyService companyService;
 
-	@GetMapping(value = "/core/company/{id}")
+	@GetMapping(value = "/company/{id}")
 	public ResponseEnvelope<CompanyVO> getCompanyById(@PathVariable Long id){
 		CompanyModel companyModel = companyService.findByPrimaryKey(id);
 		CompanyVO companyVO =beanMapper.map(companyModel, CompanyVO.class);
@@ -41,7 +41,7 @@ public class CompanyRestApiController {
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/core/company")
+	@GetMapping(value = "/company")
     public ResponseEnvelope<Page<CompanyModel>> listCompany(CompanyVO companyVO,Pageable pageable){
 
 		CompanyModel param = beanMapper.map(companyVO, CompanyModel.class);
@@ -52,7 +52,7 @@ public class CompanyRestApiController {
         return responseEnv;
     }
 
-	@PostMapping(value = "/core/company")
+	@PostMapping(value = "/company")
 	public ResponseEnvelope<Integer> createCompany(@RequestBody CompanyVO companyVO){
 		CompanyModel companyModel = beanMapper.map(companyVO, CompanyModel.class);
 		Integer  result = companyService.create(companyModel);
@@ -60,7 +60,7 @@ public class CompanyRestApiController {
         return responseEnv;
 	}
 
-    @DeleteMapping(value = "/core/company/{id}")
+    @DeleteMapping(value = "/company/{id}")
 	public ResponseEnvelope<Integer> deleteCompanyByPrimaryKey(@PathVariable Long id){
 		Integer  result = companyService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
@@ -68,7 +68,7 @@ public class CompanyRestApiController {
 	}
 
 
-    @PutMapping(value = "/core/company/{id}")
+    @PutMapping(value = "/company/{id}")
 	public ResponseEnvelope<Integer> updateCompanyByPrimaryKeySelective(@PathVariable Long id,
 					@RequestBody CompanyVO companyVO){
 		CompanyModel companyModel = beanMapper.map(companyVO, CompanyModel.class);

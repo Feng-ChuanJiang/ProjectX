@@ -104,6 +104,8 @@ public class WorkingExperienceServiceImpl implements WorkingExperienceService {
 	 * @param workingExperience
 	 * @return
 	 */
+	@Transactional
+	@Override
 	public List<WorkingExperience> getWorkingByWorkInfo(WorkingExperience workingExperience){
 		List<WorkingExperience> workingExperiences = elasticSearchBase.findESForList(workingExperience);
 		return workingExperiences;

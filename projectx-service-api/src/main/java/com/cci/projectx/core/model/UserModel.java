@@ -21,8 +21,8 @@ public class UserModel{
 	private String labels;
 	private BigDecimal longitude;
 	private BigDecimal latitude;
-	private List<WorkingExperienceModel> workingExperienceModels;
-	private List<EducationModel> educationModels;
+	private List<WorkingExperienceModel> workingExperiences;
+	private List<EducationModel> educations;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -123,24 +123,24 @@ public class UserModel{
 	public void setLatitude(BigDecimal latitude){
 		this.latitude = latitude;
 	}
-	
-	public BigDecimal getLatitude(){
-		return this.latitude;
+
+	public BigDecimal getLatitude() {
+		return latitude;
 	}
 
-	public List<WorkingExperienceModel> getWorkingExperienceModels() {
-		return workingExperienceModels;
+	public List<WorkingExperienceModel> getWorkingExperiences() {
+		return workingExperiences;
 	}
 
-	public void setWorkingExperienceModels(List<WorkingExperienceModel> workingExperienceModels) {
-		this.workingExperienceModels = workingExperienceModels;
+	public void setWorkingExperiences(List<WorkingExperienceModel> workingExperiences) {
+		this.workingExperiences = workingExperiences;
 	}
 
-	public List<EducationModel> getEducationModels() {
-		return educationModels;
+	public List<EducationModel> getEducations() {
+		return educations;
 	}
 
-	public void setEducationModels(List<EducationModel> educationModels) {
-		this.educationModels = educationModels;
+	public void setEducations(List<EducationModel> educations) {
+		this.educations = educations;
 	}
 }

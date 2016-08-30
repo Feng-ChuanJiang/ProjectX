@@ -33,7 +33,7 @@ public class InteractRestApiController {
 	@Autowired
 	private InteractService interactService;
 
-	@GetMapping(value = "/core/interact/{id}")
+	@GetMapping(value = "/interact/{id}")
 	public ResponseEnvelope<InteractVO> getInteractById(@PathVariable Long id){
 		InteractModel interactModel = interactService.findByPrimaryKey(id);
 		InteractVO interactVO =beanMapper.map(interactModel, InteractVO.class);
@@ -41,7 +41,7 @@ public class InteractRestApiController {
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/core/interact")
+	@GetMapping(value = "/interact")
     public ResponseEnvelope<Page<InteractModel>> listInteract(InteractVO interactVO,Pageable pageable){
 
 		InteractModel param = beanMapper.map(interactVO, InteractModel.class);
@@ -52,7 +52,7 @@ public class InteractRestApiController {
         return responseEnv;
     }
 
-	@PostMapping(value = "/core/interact")
+	@PostMapping(value = "/interact")
 	public ResponseEnvelope<Integer> createInteract(@RequestBody InteractVO interactVO){
 		InteractModel interactModel = beanMapper.map(interactVO, InteractModel.class);
 		Integer  result = interactService.create(interactModel);
@@ -60,7 +60,7 @@ public class InteractRestApiController {
         return responseEnv;
 	}
 
-    @DeleteMapping(value = "/core/interact/{id}")
+    @DeleteMapping(value = "/interact/{id}")
 	public ResponseEnvelope<Integer> deleteInteractByPrimaryKey(@PathVariable Long id){
 		Integer  result = interactService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
@@ -68,7 +68,7 @@ public class InteractRestApiController {
 	}
 
 
-    @PutMapping(value = "/core/interact/{id}")
+    @PutMapping(value = "/interact/{id}")
 	public ResponseEnvelope<Integer> updateInteractByPrimaryKeySelective(@PathVariable Long id,
 					@RequestBody InteractVO interactVO){
 		InteractModel interactModel = beanMapper.map(interactVO, InteractModel.class);

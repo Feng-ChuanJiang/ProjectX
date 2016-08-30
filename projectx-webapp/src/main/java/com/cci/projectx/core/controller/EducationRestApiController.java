@@ -1,5 +1,6 @@
 package com.cci.projectx.core.controller;
 
+import com.cci.projectx.core.entity.Education;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class EducationRestApiController {
 	@Autowired
 	private EducationService educationService;
 
-	@GetMapping(value = "/core/education/{id}")
+	@GetMapping(value = "/education/{id}")
 	public ResponseEnvelope<EducationVO> getEducationById(@PathVariable Long id){
 		EducationModel educationModel = educationService.findByPrimaryKey(id);
 		EducationVO educationVO =beanMapper.map(educationModel, EducationVO.class);
@@ -41,7 +42,7 @@ public class EducationRestApiController {
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/core/education")
+	@GetMapping(value = "/education")
     public ResponseEnvelope<Page<EducationModel>> listEducation(EducationVO educationVO,Pageable pageable){
 
 		EducationModel param = beanMapper.map(educationVO, EducationModel.class);
@@ -52,7 +53,7 @@ public class EducationRestApiController {
         return responseEnv;
     }
 
-	@PostMapping(value = "/core/education")
+	@PostMapping(value = "/education")
 	public ResponseEnvelope<Integer> createEducation(@RequestBody EducationVO educationVO){
 		EducationModel educationModel = beanMapper.map(educationVO, EducationModel.class);
 		Integer  result = educationService.create(educationModel);
@@ -60,7 +61,7 @@ public class EducationRestApiController {
         return responseEnv;
 	}
 
-    @DeleteMapping(value = "/core/education/{id}")
+    @DeleteMapping(value = "/education/{id}")
 	public ResponseEnvelope<Integer> deleteEducationByPrimaryKey(@PathVariable Long id){
 		Integer  result = educationService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
@@ -68,7 +69,7 @@ public class EducationRestApiController {
 	}
 
 
-    @PutMapping(value = "/core/education/{id}")
+    @PutMapping(value = "/education/{id}")
 	public ResponseEnvelope<Integer> updateEducationByPrimaryKeySelective(@PathVariable Long id,
 					@RequestBody EducationVO educationVO){
 		EducationModel educationModel = beanMapper.map(educationVO, EducationModel.class);
@@ -77,5 +78,11 @@ public class EducationRestApiController {
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
         return responseEnv;
 	}
-
+	@PostMapping(value = "/education/getEducationByEducationInfo")
+	public ResponseEnvelope<List<Education>> getEducationByEducationInfo(@RequestBody EducationVO educationVO){
+		Education education= beanMapper.map(educationVO,Education.class);
+		List<Education> educationList= educationService.getEducationByEducationInfo(education);
+		ResponseEnvelope<List<Education>> envelope =new ResponseEnvelope<List<Education>>(educationList,true);
+		return envelope;
+	}
 }

@@ -40,7 +40,7 @@ public class CommentRestApiController {
 	@Autowired
 	private CommentService commentService;
 
-	@GetMapping(value = "/core/comment/{id}")
+	@GetMapping(value = "/comment/{id}")
 	public ResponseEnvelope<CommentVO> getCommentById(@PathVariable Long id){
 		User u=new User();
 		u.setPhotos("D");
@@ -92,7 +92,7 @@ public class CommentRestApiController {
 
 	}
 
-	@GetMapping(value = "/core/comment")
+	@GetMapping(value = "/comment")
     public ResponseEnvelope<Page<CommentModel>> listComment(CommentVO commentVO,Pageable pageable){
 
 		CommentModel param = beanMapper.map(commentVO, CommentModel.class);
@@ -103,7 +103,7 @@ public class CommentRestApiController {
         return responseEnv;
     }
 
-	@PostMapping(value = "/core/comment")
+	@PostMapping(value = "/comment")
 	public ResponseEnvelope<Integer> createComment(@RequestBody CommentVO commentVO){
 		CommentModel commentModel = beanMapper.map(commentVO, CommentModel.class);
 		Integer  result = commentService.create(commentModel);
@@ -111,7 +111,7 @@ public class CommentRestApiController {
         return responseEnv;
 	}
 
-    @DeleteMapping(value = "/core/comment/{id}")
+    @DeleteMapping(value = "/comment/{id}")
 	public ResponseEnvelope<Integer> deleteCommentByPrimaryKey(@PathVariable Long id){
 		Integer  result = commentService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
@@ -119,7 +119,7 @@ public class CommentRestApiController {
 	}
 
 
-    @PutMapping(value = "/core/comment/{id}")
+    @PutMapping(value = "/comment/{id}")
 	public ResponseEnvelope<Integer> updateCommentByPrimaryKeySelective(@PathVariable Long id,
 					@RequestBody CommentVO commentVO){
 		CommentModel commentModel = beanMapper.map(commentVO, CommentModel.class);

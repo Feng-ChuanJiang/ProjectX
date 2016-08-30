@@ -1,5 +1,9 @@
 package com.cci.projectx.core.vo;
 
+import com.cci.projectx.core.entity.Education;
+import com.cci.projectx.core.entity.WorkingExperience;
+import com.cci.projectx.core.model.EducationModel;
+import com.cci.projectx.core.model.WorkingExperienceModel;
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 
 import java.math.BigDecimal;
@@ -22,8 +26,8 @@ public class UserVO{
 	private String labels;
 	private BigDecimal longitude;
 	private BigDecimal latitude;
-	private List<WorkingExperienceVO> workingExperienceVOs;
-	private List<EducationVO> educationVOs;
+	private List<WorkingExperienceModel> workingExperiences;
+	private List<EducationModel> educations;
 
 	public void setId(Long id){
 		this.id = id;
@@ -129,19 +133,19 @@ public class UserVO{
 		return this.latitude;
 	}
 
-	public List<WorkingExperienceVO> getWorkingExperienceVOs() {
-		return workingExperienceVOs;
+	public List<WorkingExperienceModel> getWorkingExperiences() {
+		return workingExperiences;
 	}
 
-	public void setWorkingExperienceVOs(List<WorkingExperienceVO> workingExperienceVOs) {
-		this.workingExperienceVOs = workingExperienceVOs;
+	public void setWorkingExperiences(List<WorkingExperienceModel> workingExperiences) {
+		this.workingExperiences = workingExperiences;
 	}
 
-	public List<EducationVO> getEducationVOs() {
-		return educationVOs;
+	public List<EducationModel> getEducations() {
+		return educations;
 	}
 
-	public void setEducationVOs(List<EducationVO> educationVOs) {
-		this.educationVOs = educationVOs;
+	public void setEducations(List<EducationModel> educations) {
+		this.educations = educations;
 	}
 }

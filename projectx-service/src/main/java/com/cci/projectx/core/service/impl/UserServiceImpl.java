@@ -7,6 +7,7 @@ import com.cci.projectx.core.JdbcTempateHelp;
 import com.cci.projectx.core.entity.Friends;
 import com.cci.projectx.core.entity.User;
 import com.cci.projectx.core.model.EducationModel;
+import com.cci.projectx.core.model.FriendsModel;
 import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.model.WorkingExperienceModel;
 import com.cci.projectx.core.repository.UserRepository;
@@ -60,15 +61,15 @@ public class UserServiceImpl implements UserService {
         User user = beanMapper.map(userModel, User.class);
         int id = userRepo.insert(user);
         //添加教育信息
-        if(CollectionUtils.isNotEmpty(userModel.getEducationModels())) {
-            for (EducationModel education : userModel.getEducationModels()) {
+        if(CollectionUtils.isNotEmpty(userModel.getEducations())) {
+            for (EducationModel education : userModel.getEducations()) {
                 education.setUserId(user.getId());
                 educationService.create(education);
             }
         }
         //添加工作信息
-        if(CollectionUtils.isNotEmpty(userModel.getWorkingExperienceModels())) {
-            for (WorkingExperienceModel workingExperience : userModel.getWorkingExperienceModels()) {
+        if(CollectionUtils.isNotEmpty(userModel.getWorkingExperiences())) {
+            for (WorkingExperienceModel workingExperience : userModel.getWorkingExperiences()) {
                 workingExperience.setUserId(user.getId());
                 workingExperienceService.create(workingExperience);
             }
@@ -86,15 +87,15 @@ public class UserServiceImpl implements UserService {
         User user = beanMapper.map(userModel, User.class);
         int id = userRepo.insertSelective(user);
         //添加教育信息
-        if(CollectionUtils.isNotEmpty(userModel.getEducationModels())) {
-            for (EducationModel education : userModel.getEducationModels()) {
+        if(CollectionUtils.isNotEmpty(userModel.getEducations())) {
+            for (EducationModel education : userModel.getEducations()) {
                 education.setUserId(user.getId());
                 educationService.create(education);
             }
         }
         //添加工作信息
-        if(CollectionUtils.isNotEmpty(userModel.getWorkingExperienceModels())) {
-            for (WorkingExperienceModel workingExperience : userModel.getWorkingExperienceModels()) {
+        if(CollectionUtils.isNotEmpty(userModel.getWorkingExperiences())) {
+            for (WorkingExperienceModel workingExperience : userModel.getWorkingExperiences()) {
                 workingExperience.setUserId(user.getId());
                 workingExperienceService.create(workingExperience);
             }
@@ -120,7 +121,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserModel findByPrimaryKey(Long id) {
         User user = userRepo.selectByPrimaryKey(id);
-        return beanMapper.map(user, UserModel.class);
+        UserModel userModel=beanMapper.map(user, UserModel.class);
+        if (user != null) {
+            List<WorkingExperienceModel> w = findworkingExperienceByUserId(user.getId());
+            List<EducationModel> e = findEducationByUserId(user.getId());
+            userModel.setWorkingExperiences(w.size() > 0 ? w.subList(0, 1) : w);
+            userModel.setEducations(e.size() > 0 ? e.subList(0, 1) : e);
+        }
+        return userModel;
     }
 
     @Transactional(readOnly = true)
@@ -141,19 +149,19 @@ public class UserServiceImpl implements UserService {
         User user = beanMapper.map(userModel, User.class);
         List<UserModel> users= beanMapper.mapAsList(userRepo.selectPage(user, pageable), UserModel.class);
         for (UserModel u : users) {
-            if(CollectionUtils.isNotEmpty(userModel.getEducationModels())){
-                EducationModel em=userModel.getEducationModels().get(0);
+            if(CollectionUtils.isNotEmpty(userModel.getEducations())){
+                EducationModel em=userModel.getEducations().get(0);
                 em.setUserId(u.getId());
-                u.setEducationModels(educationService.selectPage(em,new PageRequest(0,Integer.MAX_VALUE)));
+                u.setEducations(educationService.selectPage(em, new PageRequest(0, Integer.MAX_VALUE)));
             }else{
-                u.setEducationModels(findEducationByUserId(user.getId()));
+                u.setEducations(findEducationByUserId(u.getId()));
             }
-            if(CollectionUtils.isNotEmpty(userModel.getWorkingExperienceModels())){
-                WorkingExperienceModel wem=userModel.getWorkingExperienceModels().get(0);
+            if(CollectionUtils.isNotEmpty(userModel.getWorkingExperiences())) {
+                WorkingExperienceModel wem=userModel.getWorkingExperiences().get(0);
                 wem.setUserId(u.getId());
-                u.setWorkingExperienceModels(workingExperienceService.selectPage(wem,new PageRequest(0,Integer.MAX_VALUE)));
+                u.setWorkingExperiences(workingExperienceService.selectPage(wem, new PageRequest(0, Integer.MAX_VALUE)));
             }else{
-                u.setWorkingExperienceModels(findworkingExperienceByUserId(user.getId()));
+                u.setWorkingExperiences(findworkingExperienceByUserId(u.getId()));
             }
 
         }
@@ -166,15 +174,15 @@ public class UserServiceImpl implements UserService {
         User user = beanMapper.map(userModel, User.class);
         int id = userRepo.updateByPrimaryKey(user);
         //更新教育信息
-        if(CollectionUtils.isNotEmpty(userModel.getEducationModels())) {
-            for (EducationModel education : userModel.getEducationModels()) {
+        if(CollectionUtils.isNotEmpty(userModel.getEducations())) {
+            for (EducationModel education : userModel.getEducations()) {
                 education.setUserId(user.getId());
                 educationService.updateByPrimaryKey(education);
             }
         }
         //更新工作信息
-        if(CollectionUtils.isNotEmpty(userModel.getWorkingExperienceModels())) {
-            for (WorkingExperienceModel workingExperience : userModel.getWorkingExperienceModels()) {
+        if(CollectionUtils.isNotEmpty(userModel.getWorkingExperiences())) {
+            for (WorkingExperienceModel workingExperience : userModel.getWorkingExperiences()) {
                 workingExperience.setUserId(user.getId());
                 workingExperienceService.updateByPrimaryKey(workingExperience);
             }
@@ -192,15 +200,15 @@ public class UserServiceImpl implements UserService {
         User user = beanMapper.map(userModel, User.class);
         int id = userRepo.updateByPrimaryKeySelective(user);
         //更新教育信息
-        if(CollectionUtils.isNotEmpty(userModel.getEducationModels())) {
-            for (EducationModel education : userModel.getEducationModels()) {
+        if(CollectionUtils.isNotEmpty(userModel.getEducations())) {
+            for (EducationModel education : userModel.getEducations()) {
                 education.setUserId(user.getId());
                 educationService.updateByPrimaryKey(education);
             }
         }
         //更新工作信息
-        if(CollectionUtils.isNotEmpty(userModel.getWorkingExperienceModels())) {
-            for (WorkingExperienceModel workingExperience : userModel.getWorkingExperienceModels()) {
+        if(CollectionUtils.isNotEmpty(userModel.getWorkingExperiences())) {
+            for (WorkingExperienceModel workingExperience : userModel.getWorkingExperiences()) {
                 workingExperience.setUserId(user.getId());
                 workingExperienceService.updateByPrimaryKey(workingExperience);
             }
@@ -218,29 +226,10 @@ public class UserServiceImpl implements UserService {
      * @param user
      * @return
      */
+    @Override
     public List<User> getUserByUserProfile(User user) {
         List<User> users = elasticSearchHelp.findESForList(user);
         return users;
-    }
-
-
-
-    /**
-     * 根据id查找用户
-     * 取最新教育背景和工作背景
-     *
-     * @param id
-     * @return
-     */
-    public UserModel findUserById(Long id) {
-        UserModel user = findByPrimaryKey(id);
-        if (user != null) {
-            List<WorkingExperienceModel> w = findworkingExperienceByUserId(user.getId());
-            List<EducationModel> e = findEducationByUserId(user.getId());
-            user.setWorkingExperienceModels(w.size() > 0 ? w.subList(0, 1) : w);
-            user.setEducationModels(e.size() > 0 ? e.subList(0, 1) : e);
-        }
-        return user;
     }
 
     /**
@@ -249,10 +238,11 @@ public class UserServiceImpl implements UserService {
      * @param id
      * @return
      */
+    @Override
     public Map<String, Object> findUserShortById(Long id) {
-        String sql = "SELECT  U.ID,U.`NAME`,U.PHOTOS,W.COMPANY_FOR_SHORT COMPANYFORSHORT,W.DEPARTMENT_FOR_SHORT DEPARTMENTFORSHORT,W.TITLE_FOR_SHORT TITLEFORSHORT FROM \n" +
+        String sql = "SELECT  U.ID,U.NAME,U.PHOTOS,W.COMPANY_FOR_SHORT COMPANYFORSHORT,W.DEPARTMENT_FOR_SHORT DEPARTMENTFORSHORT,W.TITLE_FOR_SHORT TITLEFORSHORT FROM \n" +
                      "USER U ,(SELECT * FROM WORKING_EXPERIENCE W WHERE W.USER_ID=? ORDER BY SORT LIMIT 1)W WHERE U.ID=W.USER_ID";
-        return  jdbcTemplate.queryForMap(sql, new Object[]{id});
+        return  jdbcTemplate.queryForMap(sql, id);
 
     }
 
@@ -262,6 +252,7 @@ public class UserServiceImpl implements UserService {
      * @param userId
      * @return
      */
+    @Override
     public List<Map<String, Object>> findUserFriendsById(Long userId) {
         String sql = "SELECT U.* FROM USER U,FRIENDS F WHERE U.ID=F.FRIEND_ID AND F.STATE=? AND F.USER_ID=?";
         BeanPropertyRowMapper<UserModel> argTypes = new BeanPropertyRowMapper<>(UserModel.class);
@@ -276,6 +267,7 @@ public class UserServiceImpl implements UserService {
      * @param userId
      * @return
      */
+    @Override
     public List<Map<String, Object>> findUserFriendsNotId(Long userId, Long[] friendsId) {
         String sql = "SELECT U.* FROM USER U,FRIENDS F WHERE U.ID=F.FRIEND_ID AND F.USER_ID=? AND F.STATE=? AND F.FRIEND_ID NOT IN(" + StringUtils.join(friendsId) + ")";
         BeanPropertyRowMapper<UserModel> argTypes = new BeanPropertyRowMapper<>(UserModel.class);
@@ -289,6 +281,7 @@ public class UserServiceImpl implements UserService {
      * @param userId
      * @return
      */
+    @Override
     public List<Map<String, Object>> findApplyforFriends(Long userId) {
         String sql = "SELECT U.* FROM USER U,FRIENDS F WHERE U.ID=F.FRIEND_ID AND F.USER_ID=? AND F.STATE=? ";
         BeanPropertyRowMapper<UserModel> argTypes = new BeanPropertyRowMapper<>(UserModel.class);
@@ -302,6 +295,7 @@ public class UserServiceImpl implements UserService {
      * @param userId
      * @return
      */
+    @Override
     public List<Map<String, Object>> findWaitingFriends(Long userId) {
         String sql = "SELECT U.* FROM USER U,FRIENDS F WHERE U.ID=F.USER_ID AND F.FRIEND_ID=? AND F.STATE=? ";
         BeanPropertyRowMapper<UserModel> argTypes = new BeanPropertyRowMapper<>(UserModel.class);
@@ -328,7 +322,7 @@ public class UserServiceImpl implements UserService {
      * @param friends
      * @return
      */
-    public int addFriends(Friends friends) {
+    public int addFriends(FriendsModel friends) {
         return jdbcTempateHelp.add(friends);
     }
 
@@ -338,7 +332,8 @@ public class UserServiceImpl implements UserService {
      * @param friends
      * @return
      */
-    public int deleteFriends(Friends friends) {
+    @Override
+    public int deleteFriends(FriendsModel friends) {
         String sql = "DELETE FROM FRIENDS  WHERE USER_ID=? AND FRIEND_ID=?";
         return jdbcTemplate.update(sql, new Object[]{friends.getUserId(), friends.getFriendId()});
     }
@@ -357,22 +352,24 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 根据用户编号得到学习背景信息
+     * 根据用户编号得到学习背景信息编号
      *
      * @param id
      * @return
      */
+    @Override
     public List<Long> findEducationIdByUserId(Long id) {
         String sql = "SELECT ID FROM EDUCATION WHERE USER_ID=? ORDER BY SORT ";
         return jdbcTemplate.queryForList(sql, new Object[]{id}, Long.class);
     }
 
     /**
-     * 根据用户编号得到工作背景
+     * 根据用户编号得到工作背景编号
      *
      * @param id
      * @return
      */
+    @Override
     public List<Long> findworkingExperienceIdByUserId(Long id) {
         String sql = "SELECT ID FROM WORKING_EXPERIENCE WHERE USER_ID=? ORDER BY SORT";
         return jdbcTemplate.queryForList(sql, new Object[]{id}, Long.class);
@@ -384,6 +381,7 @@ public class UserServiceImpl implements UserService {
      * @param userlist
      * @return
      */
+    @Override
     public List<Map<String, Object>> getBackdropId(List<UserModel> userlist) {
         List<Map<String, Object>> list = new ArrayList<>();
         List<Long> education = new ArrayList<>();

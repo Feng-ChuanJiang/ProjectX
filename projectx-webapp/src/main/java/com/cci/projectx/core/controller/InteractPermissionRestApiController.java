@@ -33,7 +33,7 @@ public class InteractPermissionRestApiController {
 	@Autowired
 	private InteractPermissionService interactPermissionService;
 
-	@GetMapping(value = "/core/interactPermission/{id}")
+	@GetMapping(value = "/interactPermission/{id}")
 	public ResponseEnvelope<InteractPermissionVO> getInteractPermissionById(@PathVariable Long id){
 		InteractPermissionModel interactPermissionModel = interactPermissionService.findByPrimaryKey(id);
 		InteractPermissionVO interactPermissionVO =beanMapper.map(interactPermissionModel, InteractPermissionVO.class);
@@ -41,7 +41,7 @@ public class InteractPermissionRestApiController {
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/core/interactPermission")
+	@GetMapping(value = "/interactPermission")
     public ResponseEnvelope<Page<InteractPermissionModel>> listInteractPermission(InteractPermissionVO interactPermissionVO,Pageable pageable){
 
 		InteractPermissionModel param = beanMapper.map(interactPermissionVO, InteractPermissionModel.class);
@@ -52,7 +52,7 @@ public class InteractPermissionRestApiController {
         return responseEnv;
     }
 
-	@PostMapping(value = "/core/interactPermission")
+	@PostMapping(value = "/interactPermission")
 	public ResponseEnvelope<Integer> createInteractPermission(@RequestBody InteractPermissionVO interactPermissionVO){
 		InteractPermissionModel interactPermissionModel = beanMapper.map(interactPermissionVO, InteractPermissionModel.class);
 		Integer  result = interactPermissionService.create(interactPermissionModel);
@@ -60,7 +60,7 @@ public class InteractPermissionRestApiController {
         return responseEnv;
 	}
 
-    @DeleteMapping(value = "/core/interactPermission/{id}")
+    @DeleteMapping(value = "/interactPermission/{id}")
 	public ResponseEnvelope<Integer> deleteInteractPermissionByPrimaryKey(@PathVariable Long id){
 		Integer  result = interactPermissionService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
@@ -68,7 +68,7 @@ public class InteractPermissionRestApiController {
 	}
 
 
-    @PutMapping(value = "/core/interactPermission/{id}")
+    @PutMapping(value = "/interactPermission/{id}")
 	public ResponseEnvelope<Integer> updateInteractPermissionByPrimaryKeySelective(@PathVariable Long id,
 					@RequestBody InteractPermissionVO interactPermissionVO){
 		InteractPermissionModel interactPermissionModel = beanMapper.map(interactPermissionVO, InteractPermissionModel.class);
