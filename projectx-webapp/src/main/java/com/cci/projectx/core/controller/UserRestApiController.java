@@ -146,7 +146,7 @@ public class UserRestApiController {
 		return responseEnv;
 	}
 
-	@PostMapping(value = "/user/like")
+	@GetMapping(value = "/user/like")
 	public ResponseEnvelope<List<UserModel>> getUserByUserProfile(@RequestBody UserVO userVO){
 		UserModel user = beanMapper.map(userVO,UserModel.class);
 		List<UserModel> listUser=userService.getUserByUserProfile(user);
