@@ -15,10 +15,12 @@
     <result column="labels" jdbcType="VARCHAR" property="labels" />
     <result column="longitude" jdbcType="DECIMAL" property="longitude" />
     <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+    <result column="praise" jdbcType="BIGINT" property="praise" />
+    <result column="create_time" jdbcType="DATE" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, password, photos, mobile_phone, gender, constellation, Age, lndustry, group_id, 
-    labels, longitude, latitude
+    labels, longitude, latitude, praise, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -30,17 +32,19 @@
     delete from user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.cci.projectx.core.entity.User" keyProperty="id" useGeneratedKeys="true">
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.User " keyProperty="id" useGeneratedKeys="true">
     insert into user (id, name, password, 
       photos, mobile_phone, gender, 
       constellation, Age, lndustry, 
       group_id, labels, longitude, 
-      latitude)
+      latitude, praise, create_time
+      )
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{photos,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, 
       #{constellation,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{lndustry,jdbcType=VARCHAR}, 
       #{groupId,jdbcType=BIGINT}, #{labels,jdbcType=VARCHAR}, #{longitude,jdbcType=DECIMAL}, 
-      #{latitude,jdbcType=DECIMAL})
+      #{latitude,jdbcType=DECIMAL}, #{praise,jdbcType=BIGINT}, #{createTime,jdbcType=DATE}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.User" keyProperty="id" useGeneratedKeys="true">
     insert into user
@@ -84,6 +88,12 @@
       <if test="latitude != null">
         latitude,
       </if>
+      <if test="praise != null">
+        praise,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -125,9 +135,15 @@
       <if test="latitude != null">
         #{latitude,jdbcType=DECIMAL},
       </if>
+      <if test="praise != null">
+        #{praise,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=DATE},
+      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.User">
+  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.User" >
     update user
     <set>
       <if test="name != null">
@@ -166,6 +182,12 @@
       <if test="latitude != null">
         latitude = #{latitude,jdbcType=DECIMAL},
       </if>
+      <if test="praise != null">
+        praise = #{praise,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=DATE},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -182,7 +204,9 @@
       group_id = #{groupId,jdbcType=BIGINT},
       labels = #{labels,jdbcType=VARCHAR},
       longitude = #{longitude,jdbcType=DECIMAL},
-      latitude = #{latitude,jdbcType=DECIMAL}
+      latitude = #{latitude,jdbcType=DECIMAL},
+      praise = #{praise,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=DATE}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectCount" parameterType="com.cci.projectx.core.entity.User" resultType="java.lang.Integer">
@@ -226,6 +250,12 @@
       </if>
       <if test="latitude != null">
         and latitude = #{latitude,jdbcType=DECIMAL}
+      </if>
+      <if test="praise != null">
+        and praise = #{praise,jdbcType=BIGINT}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime,jdbcType=DATE}
       </if>
     </where>
   </select>
@@ -271,6 +301,12 @@
     </if>
     <if test="param1.latitude != null">
       and latitude = #{param1.latitude,jdbcType=DECIMAL}
+    </if>
+    <if test="param1.praise != null">
+      and praise = #{param1.praise,jdbcType=BIGINT}
+    </if>
+    <if test="param1.createTime != null">
+      and create_time = #{param1.createTime,jdbcType=DATE}
     </if>
     <if test="param2.sort != null">
       order by 

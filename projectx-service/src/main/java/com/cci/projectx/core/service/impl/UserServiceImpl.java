@@ -19,6 +19,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -57,27 +59,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public int create(UserModel userModel) {
-        User user = beanMapper.map(userModel, User.class);
-        int id = userRepo.insert(user);
-        //添加教育信息
-        if(CollectionUtils.isNotEmpty(userModel.getEducations())) {
-            for (EducationModel education : userModel.getEducations()) {
-                education.setUserId(user.getId());
-                educationService.create(education);
-            }
+        UserModel existedUser = findUserByAccount(userModel.getMobilePhone());
+        if (null != existedUser) {
+            HRErrorCode.throwBusinessException(HRErrorCode.USER_HAVE_EXISTED);
         }
-        //添加工作信息
-        if(CollectionUtils.isNotEmpty(userModel.getWorkingExperiences())) {
-            for (WorkingExperienceModel workingExperience : userModel.getWorkingExperiences()) {
-                workingExperience.setUserId(user.getId());
-                workingExperienceService.create(workingExperience);
-            }
-        }
-        //添加EliasticSearchHelp
-        if (user.getId()!=null) {
-            elasticSearchHelp.mergeES(user,user.getId().toString());
-        }
-        return id;
+        userModel.setCreateTime(new Date());
+        userModel.setPassword(DigestUtils.md5Hex(userModel.getPassword()));
+        return createSelective(userModel);
     }
 
     @Transactional
@@ -420,5 +408,16 @@ public class UserServiceImpl implements UserService {
         return users.size()>0?users.get(0):null;
     }
 
+    private UserModel findUserByAccount(String mobilePhone) {
+        String sql = "select * from user where mobile_phone = ?";
+        UserModel userModel = null;
+        try {
+            userModel = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(UserModel.class),
+                    mobilePhone);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
 
+        return userModel;
+    }
 }

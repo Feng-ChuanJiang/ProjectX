@@ -22,124 +22,134 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/projectx")
 public class PhotoRestApiController {
 
-	private final Logger logger = LoggerFactory.getLogger(PhotoRestApiController.class);
+    private final Logger logger = LoggerFactory.getLogger(PhotoRestApiController.class);
 
-	@Autowired
-	private BeanMapper beanMapper;
+    @Autowired
+    private BeanMapper beanMapper;
 
-	@Autowired
-	private PhotoService photoService;
+    @Autowired
+    private PhotoService photoService;
 
-	@Value("${photo.base.url}")
-	private String baseDirectory;
+    @Value("${photo.base.url}")
+    private String baseDirectory;
 
-	@IgnoreAuth
-	@GetMapping(value = "/photo/{id}")
-	public void getPhotoById(@PathVariable Long id,
-							 @RequestParam(value = "width", required = false) Integer width,
-							 @RequestParam(value = "height", required = false) Integer height,
-							 HttpServletResponse response) {
+    @IgnoreAuth
+    @GetMapping(value = "/photo/{id}")
+    public void getPhotoById(@PathVariable Long id,
+                             @RequestParam(value = "width", required = false) Integer width,
+                             @RequestParam(value = "height", required = false) Integer height,
+                             HttpServletResponse response) {
 
-		PhotoModel photoModel = photoService.findByPrimaryKey(id);
-		response.setContentType(photoModel.getContentType());
-		OutputStream outputStream = null;
-		InputStream inputStream = null;
-		try {
-			outputStream = response.getOutputStream();
-			inputStream = FileUtils.openInputStream(new File(baseDirectory + "/" + photoModel.getPath() + "." + photoModel.getExtension()));
-			if (null == width && null == height) {
-				IOUtils.copy(inputStream, outputStream);
-			} else {
-				Thumbnails.of(inputStream)
-						.size(width, height)
-						.toOutputStream(outputStream);
-			}
+        PhotoModel photoModel = photoService.findByPrimaryKey(id);
+        response.setContentType(photoModel.getContentType());
+        OutputStream outputStream = null;
+        InputStream inputStream = null;
+        try {
+            outputStream = response.getOutputStream();
+            inputStream = FileUtils.openInputStream(new File(baseDirectory + "/" + photoModel.getPath() + "." + photoModel.getExtension()));
+            if (null == width && null == height) {
+                IOUtils.copy(inputStream, outputStream);
+            } else {
+                Thumbnails.of(inputStream)
+                        .size(width, height)
+                        .toOutputStream(outputStream);
+            }
 
-		} catch (IOException e) {
-			logger.error("expected error ", e);
-		} finally {
-			IOUtils.closeQuietly(inputStream);
-			IOUtils.closeQuietly(outputStream);
-		}
+        } catch (IOException e) {
+            logger.error("expected error ", e);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+            IOUtils.closeQuietly(outputStream);
+        }
 
-	}
+    }
 
-	@IgnoreAuth
-	@GetMapping(value = "/photo/jpg/{path:.+}")
-	public void getPhotoExtensionById(@PathVariable String path,
-									  @RequestParam(value = "width", required = false) Integer width,
-									  @RequestParam(value = "height", required = false) Integer height,
-									  HttpServletResponse response) {
+    @IgnoreAuth
+    @GetMapping(value = "/photo/jpg/{path:.+}")
+    public void getPhotoExtensionById(@PathVariable String path,
+                                      @RequestParam(value = "width", required = false) Integer width,
+                                      @RequestParam(value = "height", required = false) Integer height,
+                                      HttpServletResponse response) {
 
-		path = path.substring(0, path.indexOf("."));
-		PhotoModel photoModel = photoService.findByPrimaryKey(Long.parseLong(path));
-		response.setContentType(photoModel.getContentType());
-		OutputStream outputStream = null;
-		InputStream inputStream = null;
-		try {
-			outputStream = response.getOutputStream();
-			inputStream = FileUtils.openInputStream(new File(baseDirectory + "/" + photoModel.getPath() + "." + photoModel.getExtension()));
-			if (null == width && null == height) {
-				IOUtils.copy(inputStream, outputStream);
-			} else {
-				Thumbnails.of(inputStream)
-						.size(width, height)
-						.toOutputStream(outputStream);
-			}
+        path = path.substring(0, path.indexOf("."));
+        PhotoModel photoModel = photoService.findByPrimaryKey(Long.parseLong(path));
+        response.setContentType(photoModel.getContentType());
+        OutputStream outputStream = null;
+        InputStream inputStream = null;
+        try {
+            outputStream = response.getOutputStream();
+            inputStream = FileUtils.openInputStream(new File(baseDirectory + "/" + photoModel.getPath() + "." + photoModel.getExtension()));
+            if (null == width && null == height) {
+                IOUtils.copy(inputStream, outputStream);
+            } else {
+                Thumbnails.of(inputStream)
+                        .size(width, height)
+                        .toOutputStream(outputStream);
+            }
 
-		} catch (IOException e) {
-			logger.error("expected error ", e);
-		} finally {
-			IOUtils.closeQuietly(inputStream);
-			IOUtils.closeQuietly(outputStream);
-		}
+        } catch (IOException e) {
+            logger.error("expected error ", e);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+            IOUtils.closeQuietly(outputStream);
+        }
 
-	}
+    }
 
 
-	@PostMapping(value = "/{photoType}/photo")
-	public ResponseEnvelope<Long> uploadPhoto(@RequestParam MultipartFile file,
-											  @PathVariable Long photoType) {
-		PhotoModel photoModel = new PhotoModel();
-		photoModel.setCreateTime(new Date());
-		photoModel.setName(file.getName());
-		photoModel.setPhotoType(photoType);
-		photoModel.setContentType(file.getContentType());
-		String filename = RandomUtil.createRandom(true, 12);
-		String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-		String path = baseDirectory + "/" + filename + "." + extension;
-		photoModel.setPath(filename);
-		photoModel.setExtension(extension);
-		OutputStream outputStream = null;
-		InputStream inputStream = null;
-		try {
-			inputStream = file.getInputStream();
-			outputStream = FileUtils.openOutputStream(new File(path));
-			IOUtils.copy(inputStream, outputStream);
+    @PostMapping(value = "/{photoType}/photo")
+    public ResponseEnvelope<List<Long>> uploadPhoto(@RequestParam MultipartFile[] files,
+                                              @PathVariable Long photoType) {
+        List<Long> listId = new ArrayList<>();
+        if (files.length > 0) {
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    PhotoModel photoModel = new PhotoModel();
+                    photoModel.setCreateTime(new Date());
+                    photoModel.setName(file.getName());
+                    photoModel.setPhotoType(photoType);
+                    photoModel.setContentType(file.getContentType());
+                    String filename = RandomUtil.createRandom(true, 12);
+                    String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+                    String path = baseDirectory + "/" + filename + "." + extension;
+                    photoModel.setPath(filename);
+                    photoModel.setExtension(extension);
+                    OutputStream outputStream = null;
+                    InputStream inputStream = null;
+                    try {
+                        inputStream = file.getInputStream();
+                        outputStream = FileUtils.openOutputStream(new File(path));
+                        IOUtils.copy(inputStream, outputStream);
 
-		} catch (IOException e) {
-			logger.error("expected error ", e);
-		} finally {
-			IOUtils.closeQuietly(inputStream);
-			IOUtils.closeQuietly(outputStream);
-		}
+                    } catch (IOException e) {
+                        logger.error("expected error ", e);
+                    } finally {
+                        IOUtils.closeQuietly(inputStream);
+                        IOUtils.closeQuietly(outputStream);
+                    }
+                    photoService.createSelective(photoModel);
+                    listId.add(photoModel.getId());
+                }
+            }
 
-		photoService.createSelective(photoModel);
-		ResponseEnvelope<Long> responseEnv = new ResponseEnvelope<>(photoModel.getId(), true);
-		return responseEnv;
-	}
+        }
+        ResponseEnvelope<List<Long>> responseEnv = new ResponseEnvelope<>(listId, true);
+        return responseEnv;
+    }
 
-	@DeleteMapping(value = "/photo/{id}")
-	public ResponseEnvelope<String> deletePhoto(@PathVariable Long id) {
-		photoService.deletePhoto(id);
-		ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>("ok", true);
-		return responseEnv;
-	}
+    @DeleteMapping(value = "/photo/{id}")
+    public ResponseEnvelope<String> deletePhoto(@PathVariable Long id) {
+        photoService.deletePhoto(id);
+        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>("ok", true);
+        return responseEnv;
+    }
 
 }

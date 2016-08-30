@@ -3,11 +3,12 @@ package com.cci.projectx.core.model;
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @MapClass("com.cci.projectx.core.entity.User")
 public class UserModel{
-	
+
 	private Long id;
 	private String name;
 	private String password;
@@ -22,6 +23,7 @@ public class UserModel{
 	private BigDecimal longitude;
 	private BigDecimal latitude;
 	private Long praise;
+	private Date createTime;
 	private List<WorkingExperienceModel> workingExperiences;
 	private List<EducationModel> educations;
 		
@@ -151,5 +153,13 @@ public class UserModel{
 
 	public void setPraise(Long praise) {
 		this.praise = praise;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 }

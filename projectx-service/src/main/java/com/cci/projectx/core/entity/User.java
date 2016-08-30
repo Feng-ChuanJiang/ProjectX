@@ -1,15 +1,9 @@
 package com.cci.projectx.core.entity;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-
 import java.math.BigDecimal;
+import java.util.Date;
 
-
-
-@Document(indexName = "user-profile",type = "user")
 public class User {
-    @Id
     private Long id;
 
     private String name;
@@ -37,6 +31,8 @@ public class User {
     private BigDecimal latitude;
 
     private Long praise;
+
+    private Date createTime;
 
     public Long getId() {
         return id;
@@ -148,5 +144,13 @@ public class User {
 
     public void setPraise(Long praise) {
         this.praise = praise;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }
