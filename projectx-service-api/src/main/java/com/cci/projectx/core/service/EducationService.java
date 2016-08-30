@@ -1,10 +1,9 @@
 
 package com.cci.projectx.core.service;
 
-import com.cci.projectx.core.entity.Education;
 import com.cci.projectx.core.model.EducationModel;
-import java.util.Date;
 import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 public interface EducationService{
@@ -25,5 +24,5 @@ public long selectCount(EducationModel educationModel);
 
 public List<EducationModel> selectPage(EducationModel educationModel,Pageable pageable);
 
-    public List<Education> getEducationByEducationInfo(Education education);
+    public List<EducationModel> getEducationByEducationInfo(EducationModel education);
 }

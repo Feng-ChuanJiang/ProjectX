@@ -1,10 +1,9 @@
 
 package com.cci.projectx.core.service;
 
-import com.cci.projectx.core.entity.WorkingExperience;
 import com.cci.projectx.core.model.WorkingExperienceModel;
-import java.util.Date;
 import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 public interface WorkingExperienceService{
@@ -25,6 +24,6 @@ public long selectCount(WorkingExperienceModel workingExperienceModel);
 
 public List<WorkingExperienceModel> selectPage(WorkingExperienceModel workingExperienceModel,Pageable pageable);
 
-    public List<WorkingExperience> getWorkingByWorkInfo(WorkingExperience workingExperience);
+    public List<WorkingExperienceModel> getWorkingByWorkInfo(WorkingExperienceModel workingExperience);
 
 }

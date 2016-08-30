@@ -1,24 +1,17 @@
 package com.cci.projectx.core.controller;
 
-import com.cci.projectx.core.entity.WorkingExperience;
+import com.cci.projectx.core.model.WorkingExperienceModel;
+import com.cci.projectx.core.service.WorkingExperienceService;
+import com.cci.projectx.core.vo.WorkingExperienceVO;
+import com.wlw.pylon.core.beans.mapping.BeanMapper;
+import com.wlw.pylon.web.rest.ResponseEnvelope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
-import com.wlw.pylon.core.beans.mapping.BeanMapper;
-import com.wlw.pylon.web.rest.ResponseEnvelope;
-import com.wlw.pylon.web.rest.annotation.RestApiController;
-
-import com.cci.projectx.core.service.WorkingExperienceService;
-import com.cci.projectx.core.model.WorkingExperienceModel;
-import com.cci.projectx.core.vo.WorkingExperienceVO;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -78,11 +71,11 @@ public class WorkingExperienceRestApiController {
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
         return responseEnv;
 	}
-	@PostMapping(value = "workingExperience/getWorkingByWorkInfo")
-	public ResponseEnvelope<List<WorkingExperience>> getWorkingByWorkInfo(@RequestBody WorkingExperienceVO workingExperienceVO){
-		WorkingExperience workingExperience=beanMapper.map(workingExperienceVO,WorkingExperience.class);
-		List<WorkingExperience> workingExperienceList=workingExperienceService.getWorkingByWorkInfo(workingExperience);
-		ResponseEnvelope<List<WorkingExperience>> responseEnvelope=new ResponseEnvelope<List<WorkingExperience>>(workingExperienceList,true);
+	@PostMapping(value = "/workingExperience/like")
+	public ResponseEnvelope<List<WorkingExperienceModel>> getWorkingByWorkInfo(@RequestBody WorkingExperienceVO workingExperienceVO){
+		WorkingExperienceModel workingExperience=beanMapper.map(workingExperienceVO,WorkingExperienceModel.class);
+		List<WorkingExperienceModel> workingExperienceList=workingExperienceService.getWorkingByWorkInfo(workingExperience);
+		ResponseEnvelope<List<WorkingExperienceModel>> responseEnvelope=new ResponseEnvelope<>(workingExperienceList,true);
 
 		return  responseEnvelope;
 	}

@@ -2,7 +2,6 @@ package com.cci.projectx.core.controller;
 
 import com.cci.projectx.core.RandomUtil;
 import com.cci.projectx.core.annotation.IgnoreAuth;
-import com.cci.projectx.core.entity.User;
 import com.cci.projectx.core.model.FriendsModel;
 import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.service.UserService;
@@ -147,7 +146,7 @@ public class UserRestApiController {
 		return responseEnv;
 	}
 
-	@PostMapping(value = "/user/getUserByUserProfile")
+	@PostMapping(value = "/user/like")
 	public ResponseEnvelope<List<UserModel>> getUserByUserProfile(@RequestBody UserVO userVO){
 		UserModel user = beanMapper.map(userVO,UserModel.class);
 		List<UserModel> listUser=userService.getUserByUserProfile(user);

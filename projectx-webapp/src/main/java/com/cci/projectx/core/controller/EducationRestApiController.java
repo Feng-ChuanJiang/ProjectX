@@ -1,24 +1,17 @@
 package com.cci.projectx.core.controller;
 
-import com.cci.projectx.core.entity.Education;
+import com.cci.projectx.core.model.EducationModel;
+import com.cci.projectx.core.service.EducationService;
+import com.cci.projectx.core.vo.EducationVO;
+import com.wlw.pylon.core.beans.mapping.BeanMapper;
+import com.wlw.pylon.web.rest.ResponseEnvelope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
-import com.wlw.pylon.core.beans.mapping.BeanMapper;
-import com.wlw.pylon.web.rest.ResponseEnvelope;
-import com.wlw.pylon.web.rest.annotation.RestApiController;
-
-import com.cci.projectx.core.service.EducationService;
-import com.cci.projectx.core.model.EducationModel;
-import com.cci.projectx.core.vo.EducationVO;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -78,11 +71,11 @@ public class EducationRestApiController {
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
         return responseEnv;
 	}
-	@PostMapping(value = "/education/getEducationByEducationInfo")
-	public ResponseEnvelope<List<Education>> getEducationByEducationInfo(@RequestBody EducationVO educationVO){
-		Education education= beanMapper.map(educationVO,Education.class);
-		List<Education> educationList= educationService.getEducationByEducationInfo(education);
-		ResponseEnvelope<List<Education>> envelope =new ResponseEnvelope<List<Education>>(educationList,true);
+	@GetMapping(value = "/education/like")
+	public ResponseEnvelope<List<EducationModel>> getEducationByEducationInfo(@RequestBody EducationVO educationVO){
+		EducationModel education= beanMapper.map(educationVO,EducationModel.class);
+		List<EducationModel> educationList= educationService.getEducationByEducationInfo(education);
+		ResponseEnvelope<List<EducationModel>> envelope =new ResponseEnvelope<>(educationList,true);
 		return envelope;
 	}
 }
