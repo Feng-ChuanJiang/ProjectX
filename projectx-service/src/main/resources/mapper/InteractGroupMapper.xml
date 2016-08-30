@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cci.projectx.core.repository.InteractGroupRepository">
+  <resultMap id="BaseResultMap" type="com.cci.projectx.core.entity.InteractGroup">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, group_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from interact_group
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from interact_group
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.InteractGroup">
+    insert into interact_group (id, group_name)
+    values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.InteractGroup">
+    insert into interact_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="groupName != null">
+        group_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.InteractGroup">
+    update interact_group
+    <set>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cci.projectx.core.entity.InteractGroup">
+    update interact_group
+    set group_name = #{groupName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCount" parameterType="com.cci.projectx.core.entity.InteractGroup" resultType="java.lang.Integer">
+    select count(*) from interact_group
+    <where>
+      <if test="id != null">
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="groupName != null">
+        and group_name = #{groupName,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from interact_group where 1 = 1 
+    <if test="param1.id != null">
+      and id = #{param1.id,jdbcType=BIGINT}
+    </if>
+    <if test="param1.groupName != null">
+      and group_name = #{param1.groupName,jdbcType=VARCHAR}
+    </if>
+    <if test="param2.sort != null">
+      order by 
+      <foreach collection="param2.sort" item="order" separator=",">
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0">
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>
