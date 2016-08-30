@@ -1,9 +1,13 @@
 package com.cci.projectx.core.entity;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+
 import java.math.BigDecimal;
 import java.util.Date;
-
+@Document(indexName = "user-profile",type = "user")
 public class User {
+    @Id
     private Long id;
 
     private String name;
