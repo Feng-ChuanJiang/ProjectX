@@ -1,16 +1,19 @@
 package com.cci.projectx.core.controller;
 
+import com.cci.projectx.core.HRErrorCode;
 import com.cci.projectx.core.RandomUtil;
 import com.cci.projectx.core.annotation.IgnoreAuth;
 import com.cci.projectx.core.model.FriendsModel;
 import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.service.UserService;
 import com.cci.projectx.core.vo.FriendsVO;
+import com.cci.projectx.core.vo.UpdatePassVO;
 import com.cci.projectx.core.vo.UserInfoVO;
 import com.cci.projectx.core.vo.UserVO;
 import com.google.common.cache.Cache;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
 import com.wlw.pylon.web.rest.ResponseEnvelope;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +79,20 @@ public class UserRestApiController {
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
         return responseEnv;
 	}
-
+	@PutMapping(value = "/user/passrest")
+	public ResponseEnvelope<Integer> passrest(@RequestAttribute Long userId,
+											  @RequestBody UpdatePassVO updatePassVO) {
+		UserModel userModel = userService.findByPrimaryKey(userId);
+		if (!DigestUtils.md5Hex(updatePassVO.getOldPassword()).equals(userModel.getPassword())) {
+			HRErrorCode.throwBusinessException(HRErrorCode.OLD_PASSWORD_INCORRECT);
+		}
+		UserModel param = new UserModel();
+		param.setId(userId);
+		param.setPassword(DigestUtils.md5Hex(updatePassVO.getNewPassword()));
+		Integer result = userService.updateByPrimaryKeySelective(param);
+		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result, true);
+		return responseEnv;
+	}
     @DeleteMapping(value = "/user/{id}")
 	public ResponseEnvelope<Integer> deleteUserByPrimaryKey(@PathVariable Long id){
 		Integer  result = userService.deleteByPrimaryKey(id);
