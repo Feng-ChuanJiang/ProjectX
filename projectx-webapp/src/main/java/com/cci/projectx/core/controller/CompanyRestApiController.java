@@ -1,23 +1,17 @@
 package com.cci.projectx.core.controller;
 
+import com.cci.projectx.core.model.CompanyModel;
+import com.cci.projectx.core.service.CompanyService;
+import com.cci.projectx.core.vo.CompanyVO;
+import com.wlw.pylon.core.beans.mapping.BeanMapper;
+import com.wlw.pylon.web.rest.ResponseEnvelope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
-import com.wlw.pylon.core.beans.mapping.BeanMapper;
-import com.wlw.pylon.web.rest.ResponseEnvelope;
-import com.wlw.pylon.web.rest.annotation.RestApiController;
-
-import com.cci.projectx.core.service.CompanyService;
-import com.cci.projectx.core.model.CompanyModel;
-import com.cci.projectx.core.vo.CompanyVO;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,7 +27,7 @@ public class CompanyRestApiController {
 	@Autowired
 	private CompanyService companyService;
 
-	@GetMapping(value = "/company/{id}")
+	@GetMapping(value = "/core/company/{id}")
 	public ResponseEnvelope<CompanyVO> getCompanyById(@PathVariable Long id){
 		CompanyModel companyModel = companyService.findByPrimaryKey(id);
 		CompanyVO companyVO =beanMapper.map(companyModel, CompanyVO.class);
@@ -41,8 +35,8 @@ public class CompanyRestApiController {
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/company")
-    public ResponseEnvelope<Page<CompanyModel>> listCompany(CompanyVO companyVO,Pageable pageable){
+	@GetMapping(value = "/core/company")
+    public ResponseEnvelope<Page<CompanyModel>> listCompany(CompanyVO companyVO, Pageable pageable){
 
 		CompanyModel param = beanMapper.map(companyVO, CompanyModel.class);
         List<CompanyModel> companyModelModels = companyService.selectPage(param,pageable);
@@ -52,28 +46,28 @@ public class CompanyRestApiController {
         return responseEnv;
     }
 
-	@PostMapping(value = "/company")
+	@PostMapping(value = "/core/company")
 	public ResponseEnvelope<Integer> createCompany(@RequestBody CompanyVO companyVO){
 		CompanyModel companyModel = beanMapper.map(companyVO, CompanyModel.class);
-		Integer  result = companyService.create(companyModel);
+		Integer result = companyService.create(companyModel);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
         return responseEnv;
 	}
 
-    @DeleteMapping(value = "/company/{id}")
+    @DeleteMapping(value = "/core/company/{id}")
 	public ResponseEnvelope<Integer> deleteCompanyByPrimaryKey(@PathVariable Long id){
-		Integer  result = companyService.deleteByPrimaryKey(id);
+		Integer result = companyService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
         return responseEnv;
 	}
 
 
-    @PutMapping(value = "/company/{id}")
+    @PutMapping(value = "/core/company/{id}")
 	public ResponseEnvelope<Integer> updateCompanyByPrimaryKeySelective(@PathVariable Long id,
-					@RequestBody CompanyVO companyVO){
+																		@RequestBody CompanyVO companyVO){
 		CompanyModel companyModel = beanMapper.map(companyVO, CompanyModel.class);
 		companyModel.setId(id);
-		Integer  result = companyService.updateByPrimaryKeySelective(companyModel);
+		Integer result = companyService.updateByPrimaryKeySelective(companyModel);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
         return responseEnv;
 	}

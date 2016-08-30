@@ -1,11 +1,9 @@
 package com.cci.projectx.core.entity;
 
-public class Company {
+public class major {
     private Long id;
 
     private String name;
-
-    private String logo;
 
     private String remark;
 
@@ -23,14 +21,6 @@ public class Company {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getLogo() {
-        return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
     }
 
     public String getRemark() {

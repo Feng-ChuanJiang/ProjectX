@@ -6,8 +6,9 @@ import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 public class CompanyVO{
 	
 	private Long id;
-	private String companyName;
-	private String companyLogo;
+	private String name;
+	private String logo;
+	private String remark;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -17,20 +18,28 @@ public class CompanyVO{
 		return this.id;
 	}
 		
-	public void setCompanyName(String companyName){
-		this.companyName = companyName;
+	public void setName(String name){
+		this.name = name;
 	}
 	
-	public String getCompanyName(){
-		return this.companyName;
+	public String getName(){
+		return this.name;
 	}
 		
-	public void setCompanyLogo(String companyLogo){
-		this.companyLogo = companyLogo;
+	public void setLogo(String logo){
+		this.logo = logo;
 	}
 	
-	public String getCompanyLogo(){
-		return this.companyLogo;
+	public String getLogo(){
+		return this.logo;
+	}
+		
+	public void setRemark(String remark){
+		this.remark = remark;
+	}
+	
+	public String getRemark(){
+		return this.remark;
 	}
 		
 		

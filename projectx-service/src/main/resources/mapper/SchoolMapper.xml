@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cci.projectx.core.repository.CompanyRepository">
-  <resultMap id="BaseResultMap" type="com.cci.projectx.core.entity.Company">
+<mapper namespace="com.cci.projectx.core.repository.SchoolRepository">
+  <resultMap id="BaseResultMap" type="com.cci.projectx.core.entity.School">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="logo" jdbcType="VARCHAR" property="logo" />
@@ -13,21 +13,21 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from company
+    from school
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from company
+    delete from school
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.cci.projectx.core.entity.Company">
-    insert into company (id, name, logo, 
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.School">
+    insert into school (id, name, logo, 
       remark)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Company">
-    insert into company
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.School">
+    insert into school
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -57,8 +57,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.Company">
-    update company
+  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.School">
+    update school
     <set>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
@@ -72,15 +72,15 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.cci.projectx.core.entity.Company">
-    update company
+  <update id="updateByPrimaryKey" parameterType="com.cci.projectx.core.entity.School">
+    update school
     set name = #{name,jdbcType=VARCHAR},
       logo = #{logo,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectCount" parameterType="com.cci.projectx.core.entity.Company" resultType="java.lang.Integer">
-    select count(*) from company
+  <select id="selectCount" parameterType="com.cci.projectx.core.entity.School" resultType="java.lang.Integer">
+    select count(*) from school
     <where>
       <if test="id != null">
         and id = #{id,jdbcType=BIGINT}
@@ -99,7 +99,7 @@
   <select id="selectPage" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from company where 1 = 1 
+    from school where 1 = 1 
     <if test="param1.id != null">
       and id = #{param1.id,jdbcType=BIGINT}
     </if>

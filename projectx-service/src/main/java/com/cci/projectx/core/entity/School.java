@@ -1,6 +1,6 @@
 package com.cci.projectx.core.entity;
 
-public class Company {
+public class School {
     private Long id;
 
     private String name;

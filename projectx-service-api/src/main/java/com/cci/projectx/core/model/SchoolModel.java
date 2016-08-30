@@ -2,8 +2,8 @@ package com.cci.projectx.core.model;
 
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 
-@MapClass("com.cci.projectx.core.entity.Company")
-public class CompanyModel{
+@MapClass("com.cci.projectx.core.entity.School")
+public class SchoolModel {
 	
 	private Long id;
 	private String name;

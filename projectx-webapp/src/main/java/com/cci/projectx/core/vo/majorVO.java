@@ -1,13 +1,12 @@
-package com.cci.projectx.core.model;
+package com.cci.projectx.core.vo;
 
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 
-@MapClass("com.cci.projectx.core.entity.Company")
-public class CompanyModel{
+@MapClass("com.cci.projectx.core.model.majorModel")
+public class majorVO{
 	
 	private Long id;
 	private String name;
-	private String logo;
 	private String remark;
 		
 	public void setId(Long id){
@@ -24,14 +23,6 @@ public class CompanyModel{
 	
 	public String getName(){
 		return this.name;
-	}
-		
-	public void setLogo(String logo){
-		this.logo = logo;
-	}
-	
-	public String getLogo(){
-		return this.logo;
 	}
 		
 	public void setRemark(String remark){

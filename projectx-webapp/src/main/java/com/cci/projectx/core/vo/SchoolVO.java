@@ -1,9 +1,9 @@
-package com.cci.projectx.core.model;
+package com.cci.projectx.core.vo;
 
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 
-@MapClass("com.cci.projectx.core.entity.Company")
-public class CompanyModel{
+@MapClass("com.cci.projectx.core.model.SchoolModel")
+public class SchoolVO {
 	
 	private Long id;
 	private String name;

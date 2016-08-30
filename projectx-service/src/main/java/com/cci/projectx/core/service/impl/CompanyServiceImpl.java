@@ -1,15 +1,14 @@
 package com.cci.projectx.core.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Pageable;
-
 import com.cci.projectx.core.entity.Company;
-import com.cci.projectx.core.repository.CompanyRepository;
 import com.cci.projectx.core.model.CompanyModel;
+import com.cci.projectx.core.repository.CompanyRepository;
 import com.cci.projectx.core.service.CompanyService;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -55,7 +54,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<CompanyModel> selectPage(CompanyModel companyModel,Pageable pageable) {
+	public List<CompanyModel> selectPage(CompanyModel companyModel, Pageable pageable) {
 		Company company = beanMapper.map(companyModel, Company.class);
 		return beanMapper.mapAsList(companyRepo.selectPage(company,pageable),CompanyModel.class);
 	}

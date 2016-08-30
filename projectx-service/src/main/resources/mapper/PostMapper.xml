@@ -1,42 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cci.projectx.core.repository.CompanyRepository">
-  <resultMap id="BaseResultMap" type="com.cci.projectx.core.entity.Company">
+<mapper namespace="com.cci.projectx.core.repository.PostRepository">
+  <resultMap id="BaseResultMap" type="com.cci.projectx.core.entity.Post">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="logo" jdbcType="VARCHAR" property="logo" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, logo, remark
+    id, name, remark
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from company
+    from post
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from company
+    delete from post
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.cci.projectx.core.entity.Company">
-    insert into company (id, name, logo, 
-      remark)
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.Post">
+    insert into post (id, name, remark
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Company">
-    insert into company
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Post">
+    insert into post
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
       <if test="name != null">
         name,
-      </if>
-      <if test="logo != null">
-        logo,
       </if>
       <if test="remark != null">
         remark,
@@ -49,22 +45,16 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="logo != null">
-        #{logo,jdbcType=VARCHAR},
-      </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.Company">
-    update company
+  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.Post">
+    update post
     <set>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="logo != null">
-        logo = #{logo,jdbcType=VARCHAR},
       </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
@@ -72,24 +62,20 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.cci.projectx.core.entity.Company">
-    update company
+  <update id="updateByPrimaryKey" parameterType="com.cci.projectx.core.entity.Post">
+    update post
     set name = #{name,jdbcType=VARCHAR},
-      logo = #{logo,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectCount" parameterType="com.cci.projectx.core.entity.Company" resultType="java.lang.Integer">
-    select count(*) from company
+  <select id="selectCount" parameterType="com.cci.projectx.core.entity.Post" resultType="java.lang.Integer">
+    select count(*) from post
     <where>
       <if test="id != null">
         and id = #{id,jdbcType=BIGINT}
       </if>
       <if test="name != null">
         and name = #{name,jdbcType=VARCHAR}
-      </if>
-      <if test="logo != null">
-        and logo = #{logo,jdbcType=VARCHAR}
       </if>
       <if test="remark != null">
         and remark = #{remark,jdbcType=VARCHAR}
@@ -99,15 +85,12 @@
   <select id="selectPage" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from company where 1 = 1 
+    from post where 1 = 1 
     <if test="param1.id != null">
       and id = #{param1.id,jdbcType=BIGINT}
     </if>
     <if test="param1.name != null">
       and name = #{param1.name,jdbcType=VARCHAR}
-    </if>
-    <if test="param1.logo != null">
-      and logo = #{param1.logo,jdbcType=VARCHAR}
     </if>
     <if test="param1.remark != null">
       and remark = #{param1.remark,jdbcType=VARCHAR}
