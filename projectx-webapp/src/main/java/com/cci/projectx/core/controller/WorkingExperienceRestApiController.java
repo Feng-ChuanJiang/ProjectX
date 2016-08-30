@@ -72,7 +72,7 @@ public class WorkingExperienceRestApiController {
         return responseEnv;
 	}
 	@GetMapping(value = "/workingExperience/like")
-	public ResponseEnvelope<List<WorkingExperienceModel>> getWorkingByWorkInfo(@RequestBody WorkingExperienceVO workingExperienceVO){
+	public ResponseEnvelope<List<WorkingExperienceModel>> getWorkingByWorkInfo(WorkingExperienceVO workingExperienceVO){
 		WorkingExperienceModel workingExperience=beanMapper.map(workingExperienceVO,WorkingExperienceModel.class);
 		List<WorkingExperienceModel> workingExperienceList=workingExperienceService.getWorkingByWorkInfo(workingExperience);
 		ResponseEnvelope<List<WorkingExperienceModel>> responseEnvelope=new ResponseEnvelope<>(workingExperienceList,true);

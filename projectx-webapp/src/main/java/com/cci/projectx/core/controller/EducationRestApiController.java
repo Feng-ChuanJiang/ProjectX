@@ -72,7 +72,7 @@ public class EducationRestApiController {
         return responseEnv;
 	}
 	@GetMapping(value = "/education/like")
-	public ResponseEnvelope<List<EducationModel>> getEducationByEducationInfo(@RequestBody EducationVO educationVO){
+	public ResponseEnvelope<List<EducationModel>> getEducationByEducationInfo(EducationVO educationVO){
 		EducationModel education= beanMapper.map(educationVO,EducationModel.class);
 		List<EducationModel> educationList= educationService.getEducationByEducationInfo(education);
 		ResponseEnvelope<List<EducationModel>> envelope =new ResponseEnvelope<>(educationList,true);
