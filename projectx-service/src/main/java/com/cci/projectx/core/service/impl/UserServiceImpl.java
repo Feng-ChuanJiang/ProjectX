@@ -4,6 +4,7 @@ import com.cci.projectx.core.ElasticSearchHelp;
 import com.cci.projectx.core.FriendsType;
 import com.cci.projectx.core.HRErrorCode;
 import com.cci.projectx.core.JdbcTempateHelp;
+import com.cci.projectx.core.entity.Friends;
 import com.cci.projectx.core.entity.User;
 import com.cci.projectx.core.model.EducationModel;
 import com.cci.projectx.core.model.FriendsModel;
@@ -260,7 +261,7 @@ public class UserServiceImpl implements UserService {
      * @param friends
      * @return
      */
-    public int addFriends(FriendsModel friends) {
+    public int addFriends(Friends friends) {
         return jdbcTempateHelp.add(friends);
     }
 

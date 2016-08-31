@@ -3,6 +3,7 @@ package com.cci.projectx.core.controller;
 import com.cci.projectx.core.HRErrorCode;
 import com.cci.projectx.core.RandomUtil;
 import com.cci.projectx.core.annotation.IgnoreAuth;
+import com.cci.projectx.core.entity.Friends;
 import com.cci.projectx.core.model.FriendsModel;
 import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.service.UserService;
@@ -148,7 +149,8 @@ public class UserRestApiController {
 	@PostMapping(value = "/friend")
 	public ResponseEnvelope<Integer> addFriends(@RequestBody FriendsVO friendsVO ){
 		FriendsModel friendsModel = beanMapper.map(friendsVO, FriendsModel.class);
-		Integer  result = userService.addFriends(friendsModel);
+		Friends friends =beanMapper.map(friendsModel,Friends.class);
+		Integer  result = userService.addFriends(friends);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
 		return responseEnv;
 	}

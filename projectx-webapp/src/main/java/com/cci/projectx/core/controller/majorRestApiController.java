@@ -26,7 +26,7 @@ public class majorRestApiController {
 	@Autowired
 	private com.cci.projectx.core.service.majorService majorService;
 
-	@GetMapping(value = "/core/major/{id}")
+	@GetMapping(value = "/major/{id}")
 	public ResponseEnvelope<majorVO> getmajorById(@PathVariable Long id){
 		majorModel majorModel = majorService.findByPrimaryKey(id);
 		majorVO majorVO =beanMapper.map(majorModel, com.cci.projectx.core.vo.majorVO.class);
@@ -34,7 +34,7 @@ public class majorRestApiController {
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/core/major")
+	@GetMapping(value = "/major")
     public ResponseEnvelope<Page<majorModel>> listmajor(majorVO majorVO, Pageable pageable){
 
 		majorModel param = beanMapper.map(majorVO, majorModel.class);
@@ -45,7 +45,7 @@ public class majorRestApiController {
         return responseEnv;
     }
 
-	@PostMapping(value = "/core/major")
+	@PostMapping(value = "/major")
 	public ResponseEnvelope<Integer> createmajor(@RequestBody majorVO majorVO){
 		majorModel majorModel = beanMapper.map(majorVO, com.cci.projectx.core.model.majorModel.class);
 		Integer result = majorService.create(majorModel);
@@ -53,7 +53,7 @@ public class majorRestApiController {
         return responseEnv;
 	}
 
-    @DeleteMapping(value = "/core/major/{id}")
+    @DeleteMapping(value = "/major/{id}")
 	public ResponseEnvelope<Integer> deletemajorByPrimaryKey(@PathVariable Long id){
 		Integer result = majorService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
@@ -61,7 +61,7 @@ public class majorRestApiController {
 	}
 
 
-    @PutMapping(value = "/core/major/{id}")
+    @PutMapping(value = "/major/{id}")
 	public ResponseEnvelope<Integer> updatemajorByPrimaryKeySelective(@PathVariable Long id,
 																	  @RequestBody majorVO majorVO){
 		majorModel majorModel = beanMapper.map(majorVO, com.cci.projectx.core.model.majorModel.class);

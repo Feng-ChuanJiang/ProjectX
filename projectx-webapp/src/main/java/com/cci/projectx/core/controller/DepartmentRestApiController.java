@@ -27,7 +27,7 @@ public class DepartmentRestApiController {
 	@Autowired
 	private DepartmentService departmentService;
 
-	@GetMapping(value = "/core/department/{id}")
+	@GetMapping(value = "/department/{id}")
 	public ResponseEnvelope<DepartmentVO> getDepartmentById(@PathVariable Long id){
 		DepartmentModel departmentModel = departmentService.findByPrimaryKey(id);
 		DepartmentVO departmentVO =beanMapper.map(departmentModel, DepartmentVO.class);
@@ -35,7 +35,7 @@ public class DepartmentRestApiController {
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/core/department")
+	@GetMapping(value = "/department")
     public ResponseEnvelope<Page<DepartmentModel>> listDepartment(DepartmentVO departmentVO, Pageable pageable){
 
 		DepartmentModel param = beanMapper.map(departmentVO, DepartmentModel.class);
@@ -46,7 +46,7 @@ public class DepartmentRestApiController {
         return responseEnv;
     }
 
-	@PostMapping(value = "/core/department")
+	@PostMapping(value = "/department")
 	public ResponseEnvelope<Integer> createDepartment(@RequestBody DepartmentVO departmentVO){
 		DepartmentModel departmentModel = beanMapper.map(departmentVO, DepartmentModel.class);
 		Integer result = departmentService.create(departmentModel);
@@ -54,7 +54,7 @@ public class DepartmentRestApiController {
         return responseEnv;
 	}
 
-    @DeleteMapping(value = "/core/department/{id}")
+    @DeleteMapping(value = "/department/{id}")
 	public ResponseEnvelope<Integer> deleteDepartmentByPrimaryKey(@PathVariable Long id){
 		Integer result = departmentService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
@@ -62,7 +62,7 @@ public class DepartmentRestApiController {
 	}
 
 
-    @PutMapping(value = "/core/department/{id}")
+    @PutMapping(value = "/department/{id}")
 	public ResponseEnvelope<Integer> updateDepartmentByPrimaryKeySelective(@PathVariable Long id,
 																		   @RequestBody DepartmentVO departmentVO){
 		DepartmentModel departmentModel = beanMapper.map(departmentVO, DepartmentModel.class);
