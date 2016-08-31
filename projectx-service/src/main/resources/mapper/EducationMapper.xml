@@ -5,6 +5,8 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="university" jdbcType="VARCHAR" property="university" />
+    <result column="university_for_shor" jdbcType="VARCHAR" property="universityForShor" />
+    <result column="logo" jdbcType="VARCHAR" property="logo" />
     <result column="degree" jdbcType="VARCHAR" property="degree" />
     <result column="majorX" jdbcType="VARCHAR" property="majorx" />
     <result column="majorX_for_short" jdbcType="VARCHAR" property="majorxForShort" />
@@ -15,8 +17,8 @@
     <result column="sort" jdbcType="INTEGER" property="sort" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_id, university, degree, majorX, majorX_for_short, majorY, majorY_for_short, 
-    start_time, end_time, sort
+    id, user_id, university, university_for_shor, logo, degree, majorX, majorX_for_short, 
+    majorY, majorY_for_short, start_time, end_time, sort
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -28,17 +30,19 @@
     delete from education
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.cci.projectx.core.entity.Education" keyProperty="id" useGeneratedKeys="true">
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.Education">
     insert into education (id, user_id, university, 
-      degree, majorX, majorX_for_short, 
-      majorY, majorY_for_short, start_time, 
-      end_time, sort)
+      university_for_shor, logo, degree, 
+      majorX, majorX_for_short, majorY, 
+      majorY_for_short, start_time, end_time, 
+      sort)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{university,jdbcType=VARCHAR}, 
-      #{degree,jdbcType=VARCHAR}, #{majorx,jdbcType=VARCHAR}, #{majorxForShort,jdbcType=VARCHAR}, 
-      #{majory,jdbcType=VARCHAR}, #{majoryForShort,jdbcType=VARCHAR}, #{startTime,jdbcType=DATE}, 
-      #{endTime,jdbcType=DATE}, #{sort,jdbcType=INTEGER})
+      #{universityForShor,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, #{degree,jdbcType=VARCHAR}, 
+      #{majorx,jdbcType=VARCHAR}, #{majorxForShort,jdbcType=VARCHAR}, #{majory,jdbcType=VARCHAR}, 
+      #{majoryForShort,jdbcType=VARCHAR}, #{startTime,jdbcType=DATE}, #{endTime,jdbcType=DATE}, 
+      #{sort,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Education" keyProperty="id" useGeneratedKeys="true">
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Education">
     insert into education
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -49,6 +53,12 @@
       </if>
       <if test="university != null">
         university,
+      </if>
+      <if test="universityForShor != null">
+        university_for_shor,
+      </if>
+      <if test="logo != null">
+        logo,
       </if>
       <if test="degree != null">
         degree,
@@ -85,6 +95,12 @@
       <if test="university != null">
         #{university,jdbcType=VARCHAR},
       </if>
+      <if test="universityForShor != null">
+        #{universityForShor,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null">
+        #{logo,jdbcType=VARCHAR},
+      </if>
       <if test="degree != null">
         #{degree,jdbcType=VARCHAR},
       </if>
@@ -120,6 +136,12 @@
       <if test="university != null">
         university = #{university,jdbcType=VARCHAR},
       </if>
+      <if test="universityForShor != null">
+        university_for_shor = #{universityForShor,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null">
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
       <if test="degree != null">
         degree = #{degree,jdbcType=VARCHAR},
       </if>
@@ -151,6 +173,8 @@
     update education
     set user_id = #{userId,jdbcType=BIGINT},
       university = #{university,jdbcType=VARCHAR},
+      university_for_shor = #{universityForShor,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=VARCHAR},
       degree = #{degree,jdbcType=VARCHAR},
       majorX = #{majorx,jdbcType=VARCHAR},
       majorX_for_short = #{majorxForShort,jdbcType=VARCHAR},
@@ -172,6 +196,12 @@
       </if>
       <if test="university != null">
         and university = #{university,jdbcType=VARCHAR}
+      </if>
+      <if test="universityForShor != null">
+        and university_for_shor = #{universityForShor,jdbcType=VARCHAR}
+      </if>
+      <if test="logo != null">
+        and logo = #{logo,jdbcType=VARCHAR}
       </if>
       <if test="degree != null">
         and degree = #{degree,jdbcType=VARCHAR}
@@ -211,6 +241,12 @@
     </if>
     <if test="param1.university != null">
       and university = #{param1.university,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.universityForShor != null">
+      and university_for_shor = #{param1.universityForShor,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.logo != null">
+      and logo = #{param1.logo,jdbcType=VARCHAR}
     </if>
     <if test="param1.degree != null">
       and degree = #{param1.degree,jdbcType=VARCHAR}

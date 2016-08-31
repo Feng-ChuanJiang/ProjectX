@@ -1,6 +1,7 @@
 package com.cci.projectx.core.vo;
 
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
+
 import java.util.Date;
 
 @MapClass("com.cci.projectx.core.model.EducationModel")
@@ -9,6 +10,8 @@ public class EducationVO{
 	private Long id;
 	private Long userId;
 	private String university;
+	private String universityForShor;
+	private String logo;
 	private String degree;
 	private String majorx;
 	private String majorxForShort;
@@ -40,6 +43,22 @@ public class EducationVO{
 	
 	public String getUniversity(){
 		return this.university;
+	}
+		
+	public void setUniversityForShor(String universityForShor){
+		this.universityForShor = universityForShor;
+	}
+	
+	public String getUniversityForShor(){
+		return this.universityForShor;
+	}
+		
+	public void setLogo(String logo){
+		this.logo = logo;
+	}
+	
+	public String getLogo(){
+		return this.logo;
 	}
 		
 	public void setDegree(String degree){

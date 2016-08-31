@@ -1,6 +1,7 @@
 package com.cci.projectx.core.vo;
 
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
+
 import java.util.Date;
 
 @MapClass("com.cci.projectx.core.model.WorkingExperienceModel")
@@ -8,10 +9,13 @@ public class WorkingExperienceVO{
 	
 	private Long id;
 	private Long userId;
-	private Long companyId;
+	private String company;
 	private String companyForShort;
+	private String logo;
 	private String department;
 	private String departmentForShort;
+	private String position;
+	private String positionForShort;
 	private String title;
 	private String titleForShort;
 	private Date startTime;
@@ -34,12 +38,12 @@ public class WorkingExperienceVO{
 		return this.userId;
 	}
 		
-	public void setCompanyId(Long companyId){
-		this.companyId = companyId;
+	public void setCompany(String company){
+		this.company = company;
 	}
 	
-	public Long getCompanyId(){
-		return this.companyId;
+	public String getCompany(){
+		return this.company;
 	}
 		
 	public void setCompanyForShort(String companyForShort){
@@ -48,6 +52,14 @@ public class WorkingExperienceVO{
 	
 	public String getCompanyForShort(){
 		return this.companyForShort;
+	}
+		
+	public void setLogo(String logo){
+		this.logo = logo;
+	}
+	
+	public String getLogo(){
+		return this.logo;
 	}
 		
 	public void setDepartment(String department){
@@ -64,6 +76,22 @@ public class WorkingExperienceVO{
 	
 	public String getDepartmentForShort(){
 		return this.departmentForShort;
+	}
+		
+	public void setPosition(String position){
+		this.position = position;
+	}
+	
+	public String getPosition(){
+		return this.position;
+	}
+		
+	public void setPositionForShort(String positionForShort){
+		this.positionForShort = positionForShort;
+	}
+	
+	public String getPositionForShort(){
+		return this.positionForShort;
 	}
 		
 	public void setTitle(String title){
