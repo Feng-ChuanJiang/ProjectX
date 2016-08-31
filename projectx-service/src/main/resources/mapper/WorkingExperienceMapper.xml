@@ -4,10 +4,13 @@
   <resultMap id="BaseResultMap" type="com.cci.projectx.core.entity.WorkingExperience">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="company" jdbcType="VARCHAR" property="company" />
     <result column="company_for_short" jdbcType="VARCHAR" property="companyForShort" />
+    <result column="logo" jdbcType="VARCHAR" property="logo" />
     <result column="department" jdbcType="VARCHAR" property="department" />
     <result column="department_for_short" jdbcType="VARCHAR" property="departmentForShort" />
+    <result column="position" jdbcType="VARCHAR" property="position" />
+    <result column="position_for_short" jdbcType="VARCHAR" property="positionForShort" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="title_for_short" jdbcType="VARCHAR" property="titleForShort" />
     <result column="start_time" jdbcType="DATE" property="startTime" />
@@ -15,8 +18,8 @@
     <result column="sort" jdbcType="INTEGER" property="sort" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_id, company_id, company_for_short, department, department_for_short, title, 
-    title_for_short, start_time, end_time, sort
+    id, user_id, company, company_for_short, logo, department, department_for_short, 
+    position, position_for_short, title, title_for_short, start_time, end_time, sort
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -28,17 +31,19 @@
     delete from working_experience
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.cci.projectx.core.entity.WorkingExperience" keyProperty="id" useGeneratedKeys="true">
-    insert into working_experience (id, user_id, company_id, 
-      company_for_short, department, department_for_short, 
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.WorkingExperience">
+    insert into working_experience (id, user_id, company, 
+      company_for_short, logo, department, 
+      department_for_short, position, position_for_short, 
       title, title_for_short, start_time, 
       end_time, sort)
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{companyId,jdbcType=BIGINT}, 
-      #{companyForShort,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, #{departmentForShort,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{company,jdbcType=VARCHAR}, 
+      #{companyForShort,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, 
+      #{departmentForShort,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, #{positionForShort,jdbcType=VARCHAR}, 
       #{title,jdbcType=VARCHAR}, #{titleForShort,jdbcType=VARCHAR}, #{startTime,jdbcType=DATE}, 
       #{endTime,jdbcType=DATE}, #{sort,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.WorkingExperience" keyProperty="id" useGeneratedKeys="true">
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.WorkingExperience">
     insert into working_experience
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -47,17 +52,26 @@
       <if test="userId != null">
         user_id,
       </if>
-      <if test="companyId != null">
-        company_id,
+      <if test="company != null">
+        company,
       </if>
       <if test="companyForShort != null">
         company_for_short,
+      </if>
+      <if test="logo != null">
+        logo,
       </if>
       <if test="department != null">
         department,
       </if>
       <if test="departmentForShort != null">
         department_for_short,
+      </if>
+      <if test="position != null">
+        position,
+      </if>
+      <if test="positionForShort != null">
+        position_for_short,
       </if>
       <if test="title != null">
         title,
@@ -82,17 +96,26 @@
       <if test="userId != null">
         #{userId,jdbcType=BIGINT},
       </if>
-      <if test="companyId != null">
-        #{companyId,jdbcType=BIGINT},
+      <if test="company != null">
+        #{company,jdbcType=VARCHAR},
       </if>
       <if test="companyForShort != null">
         #{companyForShort,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null">
+        #{logo,jdbcType=VARCHAR},
       </if>
       <if test="department != null">
         #{department,jdbcType=VARCHAR},
       </if>
       <if test="departmentForShort != null">
         #{departmentForShort,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="positionForShort != null">
+        #{positionForShort,jdbcType=VARCHAR},
       </if>
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
@@ -117,17 +140,26 @@
       <if test="userId != null">
         user_id = #{userId,jdbcType=BIGINT},
       </if>
-      <if test="companyId != null">
-        company_id = #{companyId,jdbcType=BIGINT},
+      <if test="company != null">
+        company = #{company,jdbcType=VARCHAR},
       </if>
       <if test="companyForShort != null">
         company_for_short = #{companyForShort,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null">
+        logo = #{logo,jdbcType=VARCHAR},
       </if>
       <if test="department != null">
         department = #{department,jdbcType=VARCHAR},
       </if>
       <if test="departmentForShort != null">
         department_for_short = #{departmentForShort,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="positionForShort != null">
+        position_for_short = #{positionForShort,jdbcType=VARCHAR},
       </if>
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
@@ -150,10 +182,13 @@
   <update id="updateByPrimaryKey" parameterType="com.cci.projectx.core.entity.WorkingExperience">
     update working_experience
     set user_id = #{userId,jdbcType=BIGINT},
-      company_id = #{companyId,jdbcType=BIGINT},
+      company = #{company,jdbcType=VARCHAR},
       company_for_short = #{companyForShort,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=VARCHAR},
       department = #{department,jdbcType=VARCHAR},
       department_for_short = #{departmentForShort,jdbcType=VARCHAR},
+      position = #{position,jdbcType=VARCHAR},
+      position_for_short = #{positionForShort,jdbcType=VARCHAR},
       title = #{title,jdbcType=VARCHAR},
       title_for_short = #{titleForShort,jdbcType=VARCHAR},
       start_time = #{startTime,jdbcType=DATE},
@@ -170,17 +205,26 @@
       <if test="userId != null">
         and user_id = #{userId,jdbcType=BIGINT}
       </if>
-      <if test="companyId != null">
-        and company_id = #{companyId,jdbcType=BIGINT}
+      <if test="company != null">
+        and company = #{company,jdbcType=VARCHAR}
       </if>
       <if test="companyForShort != null">
         and company_for_short = #{companyForShort,jdbcType=VARCHAR}
+      </if>
+      <if test="logo != null">
+        and logo = #{logo,jdbcType=VARCHAR}
       </if>
       <if test="department != null">
         and department = #{department,jdbcType=VARCHAR}
       </if>
       <if test="departmentForShort != null">
         and department_for_short = #{departmentForShort,jdbcType=VARCHAR}
+      </if>
+      <if test="position != null">
+        and position = #{position,jdbcType=VARCHAR}
+      </if>
+      <if test="positionForShort != null">
+        and position_for_short = #{positionForShort,jdbcType=VARCHAR}
       </if>
       <if test="title != null">
         and title = #{title,jdbcType=VARCHAR}
@@ -209,17 +253,26 @@
     <if test="param1.userId != null">
       and user_id = #{param1.userId,jdbcType=BIGINT}
     </if>
-    <if test="param1.companyId != null">
-      and company_id = #{param1.companyId,jdbcType=BIGINT}
+    <if test="param1.company != null">
+      and company = #{param1.company,jdbcType=VARCHAR}
     </if>
     <if test="param1.companyForShort != null">
       and company_for_short = #{param1.companyForShort,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.logo != null">
+      and logo = #{param1.logo,jdbcType=VARCHAR}
     </if>
     <if test="param1.department != null">
       and department = #{param1.department,jdbcType=VARCHAR}
     </if>
     <if test="param1.departmentForShort != null">
       and department_for_short = #{param1.departmentForShort,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.position != null">
+      and position = #{param1.position,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.positionForShort != null">
+      and position_for_short = #{param1.positionForShort,jdbcType=VARCHAR}
     </if>
     <if test="param1.title != null">
       and title = #{param1.title,jdbcType=VARCHAR}

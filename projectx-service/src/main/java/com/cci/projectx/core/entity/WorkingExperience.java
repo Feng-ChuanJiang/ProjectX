@@ -14,13 +14,19 @@ public class WorkingExperience {
 
     private Long userId;
 
-    private Long companyId;
+    private String company;
 
     private String companyForShort;
+
+    private String logo;
 
     private String department;
 
     private String departmentForShort;
+
+    private String position;
+
+    private String positionForShort;
 
     private String title;
 
@@ -48,12 +54,12 @@ public class WorkingExperience {
         this.userId = userId;
     }
 
-    public Long getCompanyId() {
-        return companyId;
+    public String getCompany() {
+        return company;
     }
 
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public String getCompanyForShort() {
@@ -62,6 +68,14 @@ public class WorkingExperience {
 
     public void setCompanyForShort(String companyForShort) {
         this.companyForShort = companyForShort;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 
     public String getDepartment() {
@@ -78,6 +92,22 @@ public class WorkingExperience {
 
     public void setDepartmentForShort(String departmentForShort) {
         this.departmentForShort = departmentForShort;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getPositionForShort() {
+        return positionForShort;
+    }
+
+    public void setPositionForShort(String positionForShort) {
+        this.positionForShort = positionForShort;
     }
 
     public String getTitle() {

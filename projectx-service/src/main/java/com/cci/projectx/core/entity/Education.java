@@ -16,6 +16,10 @@ public class Education {
 
     private String university;
 
+    private String universityForShor;
+
+    private String logo;
+
     private String degree;
 
     private String majorx;
@@ -54,6 +58,22 @@ public class Education {
 
     public void setUniversity(String university) {
         this.university = university;
+    }
+
+    public String getUniversityForShor() {
+        return universityForShor;
+    }
+
+    public void setUniversityForShor(String universityForShor) {
+        this.universityForShor = universityForShor;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 
     public String getDegree() {
