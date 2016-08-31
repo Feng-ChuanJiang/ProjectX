@@ -20,6 +20,8 @@ import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -112,8 +114,8 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             List<WorkingExperienceModel> w = findworkingExperienceByUserId(user.getId());
             List<EducationModel> e = findEducationByUserId(user.getId());
-            userModel.setWorkingExperiences(w.size() > 0 ? w.subList(0, 1) : w);
-            userModel.setEducations(e.size() > 0 ? e.subList(0, 1) : e);
+            userModel.setWorkingExperiences(w);
+            userModel.setEducations(e);
         }
         return userModel;
     }
@@ -221,74 +223,22 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 根据编号得到用户信息和公司背景简称
+     * 根据编号得到 最新的用户信息和公司背景简称
      *
      * @param id
      * @return
      */
     @Override
-    public Map<String, Object> findUserShortById(Long id) {
-        String sql = "SELECT  U.ID,U.NAME,U.PHOTOS,W.COMPANY_FOR_SHORT COMPANYFORSHORT,W.DEPARTMENT_FOR_SHORT DEPARTMENTFORSHORT,W.TITLE_FOR_SHORT TITLEFORSHORT FROM \n" +
-                     "USER U ,(SELECT * FROM WORKING_EXPERIENCE W WHERE W.USER_ID=? ORDER BY SORT LIMIT 1)W WHERE U.ID=W.USER_ID";
-        return  jdbcTemplate.queryForMap(sql, id);
-
-    }
-
-    /**
-     * 得到朋友信息（每个用户背景信息对象的指针）
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public List<Map<String, Object>> findUserFriendsById(Long userId) {
-        String sql = "SELECT U.* FROM USER U,FRIENDS F WHERE U.ID=F.FRIEND_ID AND F.STATE=? AND F.USER_ID=?";
-        BeanPropertyRowMapper<UserModel> argTypes = new BeanPropertyRowMapper<>(UserModel.class);
-        List<UserModel> userlist = jdbcTemplate.query(sql, new Object[]{FriendsType.ALREADYFRIENDS.getType(),userId}, argTypes);
-        return getBackdropId(userlist);
-    }
-
-
-    /**
-     * 得到朋友信息，朋友信息不等于【单个或多个朋友编号】（每个用户背景信息对象的指针）
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public List<Map<String, Object>> findUserFriendsNotId(Long userId, Long[] friendsId) {
-        String sql = "SELECT U.* FROM USER U,FRIENDS F WHERE U.ID=F.FRIEND_ID AND F.USER_ID=? AND F.STATE=? AND F.FRIEND_ID NOT IN(" + StringUtils.join(friendsId) + ")";
-        BeanPropertyRowMapper<UserModel> argTypes = new BeanPropertyRowMapper<>(UserModel.class);
-        List<UserModel> userlist = jdbcTemplate.query(sql, new Object[]{FriendsType.ALREADYFRIENDS.getType(),userId}, argTypes);
-        return getBackdropId(userlist);
-    }
-
-    /**
-     * 得到正在申请的朋友（每个用户背景信息对象的指针）
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public List<Map<String, Object>> findApplyforFriends(Long userId) {
-        String sql = "SELECT U.* FROM USER U,FRIENDS F WHERE U.ID=F.FRIEND_ID AND F.USER_ID=? AND F.STATE=? ";
-        BeanPropertyRowMapper<UserModel> argTypes = new BeanPropertyRowMapper<>(UserModel.class);
-        List<UserModel> userlist = jdbcTemplate.query(sql, new Object[]{FriendsType.APPLYFRIENDS.getType(),userId}, argTypes);
-        return getBackdropId(userlist);
-    }
-
-    /**
-     * 得到等待验证的朋友（每个用户背景信息对象的指针）
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public List<Map<String, Object>> findWaitingFriends(Long userId) {
-        String sql = "SELECT U.* FROM USER U,FRIENDS F WHERE U.ID=F.USER_ID AND F.FRIEND_ID=? AND F.STATE=? ";
-        BeanPropertyRowMapper<UserModel> argTypes = new BeanPropertyRowMapper<>(UserModel.class);
-        List<UserModel> userlist = jdbcTemplate.query(sql, new Object[]{FriendsType.APPLYFRIENDS.getType(),userId}, argTypes);
-        return getBackdropId(userlist);
+    public UserModel findUserShortById(Long id) {
+        User user = userRepo.selectByPrimaryKey(id);
+        UserModel userModel=beanMapper.map(user, UserModel.class);
+        if (user != null) {
+            List<WorkingExperienceModel> w = findworkingExperienceByUserId(user.getId());
+            List<EducationModel> e = findEducationByUserId(user.getId());
+            userModel.setWorkingExperiences(w.size() > 0 ? w.subList(0, 1) : w);
+            userModel.setEducations(e.size() > 0 ? e.subList(0, 1) : e);
+        }
+        return userModel;
     }
 
     /**
@@ -323,7 +273,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public int deleteFriends(FriendsModel friends) {
         String sql = "DELETE FROM FRIENDS  WHERE USER_ID=? AND FRIEND_ID=?";
-        return jdbcTemplate.update(sql, new Object[]{friends.getUserId(), friends.getFriendId()});
+        jdbcTemplate.update(sql, friends.getFriendId(), friends.getUserId());
+        return jdbcTemplate.update(sql,friends.getUserId(), friends.getFriendId());
     }
 
     /**
@@ -408,6 +359,260 @@ public class UserServiceImpl implements UserService {
         return users.size()>0?users.get(0):null;
     }
 
+    /**
+     * 根据用户编号得到好友总数
+     * @param userId
+     * @return
+     */
+    @Override
+   public int  findfriendsCount(Long userId){
+       String sql="SELECT count(1) FROM FRIENDS WHERE STATE=? AND  (USER_ID=? OR FRIEND_ID=?)";
+       return jdbcTemplate.queryForObject(sql, Integer.class,FriendsType.ALREADYFRIENDS.getType(),userId,userId);
+   }
+
+
+
+    /**
+     * 根据用户编号朋友
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public  Page<UserModel> findUserFriendsById(Long userId,Pageable pageable) {
+        String sql = "SELECT B.* FROM (\n" +
+                     "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                     "UNION\n" +
+                     "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                     ")A,`USER` B WHERE A.FRIEND_ID =B.ID LIMIT ? , ? ";
+
+        List<UserModel> content =jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(UserModel.class),FriendsType.ALREADYFRIENDS.getType(),userId,FriendsType.ALREADYFRIENDS.getType(),userId,pageable.getOffset(),pageable.getPageSize());
+        sql = "SELECT COUNT(1) FROM (\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                ")A,`USER` B WHERE A.FRIEND_ID =B.ID";
+
+        long count =jdbcTemplate.queryForObject(sql,Long.class,FriendsType.ALREADYFRIENDS.getType(),userId,FriendsType.ALREADYFRIENDS.getType(),userId);
+        Page<UserModel> page=new PageImpl<>(content,pageable,count);
+        return page;
+    }
+
+
+    /**
+     * 得到共同好友数量
+     * @param userIdOne
+     * @param userIdTwo
+     * @return
+     */
+    @Override
+    public int  findCommonFriendsCount(Long userIdOne,Long userIdTwo){
+        String sql="SELECT COUNT(1) FROM (\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=1 AND USER_ID=10 \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=1 AND FRIEND_ID=10 \n" +
+                ")A,(\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=1 AND USER_ID=11 \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=1 AND FRIEND_ID=11 \n" +
+                ")B WHERE A.FRIEND_ID=B.FRIEND_ID";
+        return jdbcTemplate.queryForObject(sql, Integer.class,FriendsType.ALREADYFRIENDS.getType(),userIdOne,userIdOne,FriendsType.ALREADYFRIENDS.getType(),userIdTwo,userIdTwo);
+    }
+    /**
+     * 得到共同好友
+     * @param userIdOne
+     * @param userIdTwo
+     * @return
+     */
+    @Override
+    public Page<UserModel>  findCommonFriends(Long userIdOne,Long userIdTwo,Pageable pageable){
+
+
+        String sql="SELECT D.* FROM (\n" +
+                "SELECT A.FRIEND_ID FROM (\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                ")A,(\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                ")B WHERE A.FRIEND_ID=B.FRIEND_ID )C ,USER D WHERE C.FRIEND_ID=D.ID LIMIT ? , ?";
+
+        List<UserModel> content =jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(UserModel.class),FriendsType.ALREADYFRIENDS.getType(),userIdOne,
+                FriendsType.ALREADYFRIENDS.getType(),userIdOne,FriendsType.ALREADYFRIENDS.getType(),userIdTwo,FriendsType.ALREADYFRIENDS.getType(),userIdTwo,pageable.getOffset(),pageable.getPageSize());
+        sql="SELECT COUNT(1) FROM (\n" +
+                "SELECT A.FRIEND_ID FROM (\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                ")A,(\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                ")B WHERE A.FRIEND_ID=B.FRIEND_ID )C ,USER D WHERE C.FRIEND_ID=D.ID";
+
+        long count =jdbcTemplate.queryForObject(sql,Long.class,FriendsType.ALREADYFRIENDS.getType(),userIdOne,
+                FriendsType.ALREADYFRIENDS.getType(),userIdOne,FriendsType.ALREADYFRIENDS.getType(),userIdTwo,FriendsType.ALREADYFRIENDS.getType(),userIdTwo);
+        Page<UserModel> page=new PageImpl<>(content,pageable,count);
+        return page;
+    }
+
+
+    /**
+     * 根据教育编号得到校友数量
+     * @param educationId
+     * @return
+     */
+    @Override
+    public int findSchoolfellowCount(Long educationId){
+       EducationModel educationModel= educationService.findByPrimaryKey(educationId);
+        Long userId=educationModel.getUserId();
+        String sql="SELECT COUNT(1) FROM (\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                ")A,(SELECT USER_ID FROM EDUCATION WHERE UNIVERSITY=(SELECT UNIVERSITY FROM EDUCATION WHERE ID=?))B,USER C\n" +
+                "WHERE A.FRIEND_ID=B.USER_ID AND B.USER_ID=C.ID";
+        return jdbcTemplate.queryForObject(sql, Integer.class,FriendsType.ALREADYFRIENDS.getType(),userId,FriendsType.ALREADYFRIENDS.getType(),userId,educationId);
+
+    }
+
+    /**
+     * 根据教育编号得到校友
+     * @param educationId
+     * @param pageable
+     * @return
+     */
+    @Override
+    public  Page<UserModel> findSchoolfellow(Long educationId,Pageable pageable) {
+        EducationModel educationModel= educationService.findByPrimaryKey(educationId);
+        Long userId=educationModel.getUserId();
+        String sql="SELECT C.* FROM (\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                ")A,(SELECT USER_ID FROM EDUCATION WHERE UNIVERSITY=(SELECT UNIVERSITY FROM EDUCATION WHERE ID=?))B,USER C\n" +
+                "WHERE A.FRIEND_ID=B.USER_ID AND B.USER_ID=C.ID LIMIT ? , ?";
+
+        List<UserModel> content =jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(UserModel.class),FriendsType.ALREADYFRIENDS.getType(),userId,FriendsType.ALREADYFRIENDS.getType(),userId,educationId,pageable.getOffset(),pageable.getPageSize());
+         sql="SELECT COUNT(1) FROM (\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                ")A,(SELECT USER_ID FROM EDUCATION WHERE UNIVERSITY=(SELECT UNIVERSITY FROM EDUCATION WHERE ID=?))B,USER C\n" +
+                "WHERE A.FRIEND_ID=B.USER_ID AND B.USER_ID=C.ID";
+        long count =jdbcTemplate.queryForObject(sql,Long.class,FriendsType.ALREADYFRIENDS.getType(),userId,FriendsType.ALREADYFRIENDS.getType(),userId,educationId);
+        Page<UserModel> page=new PageImpl<>(content,pageable,count);
+        return page;
+    }
+    /**
+     * 根据工作编号得到同事数量
+     * @param workingId
+     * @return
+     */
+    @Override
+    public int findColleagueCount(Long workingId){
+        WorkingExperienceModel workingExperienceModel= workingExperienceService.findByPrimaryKey(workingId);
+        Long userId=workingExperienceModel.getUserId();
+        String sql="SELECT COUNT(1) FROM (\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                ")A,(SELECT USER_ID FROM WORKING_EXPERIENCE WHERE COMPANY=(SELECT COMPANY FROM WORKING_EXPERIENCE WHERE ID=?))B,USER C\n" +
+                "WHERE A.FRIEND_ID=B.USER_ID AND B.USER_ID=C.ID";
+        return jdbcTemplate.queryForObject(sql, Integer.class,FriendsType.ALREADYFRIENDS.getType(),userId,FriendsType.ALREADYFRIENDS.getType(),userId,workingId);
+
+    }
+
+    /**
+     * 根据工作编号得到同事
+     * @param workingId
+     * @param pageable
+     * @return
+     */
+    @Override
+    public  Page<UserModel> findColleague(Long workingId,Pageable pageable) {
+        WorkingExperienceModel workingExperienceModel= workingExperienceService.findByPrimaryKey(workingId);
+        Long userId=workingExperienceModel.getUserId();
+        String sql="SELECT C.* FROM (\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                ")A,(SELECT USER_ID FROM WORKING_EXPERIENCE WHERE COMPANY=(SELECT COMPANY FROM WORKING_EXPERIENCE WHERE ID=?))B,USER C\n" +
+                "WHERE A.FRIEND_ID=B.USER_ID AND B.USER_ID=C.ID LIMIT ? , ?";
+
+        List<UserModel> content =jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(UserModel.class),FriendsType.ALREADYFRIENDS.getType(),userId,FriendsType.ALREADYFRIENDS.getType(),userId,workingId,pageable.getOffset(),pageable.getPageSize());
+        sql="SELECT COUNT(1) FROM (\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                ")A,(SELECT USER_ID FROM WORKING_EXPERIENCE WHERE COMPANY=(SELECT COMPANY FROM WORKING_EXPERIENCE WHERE ID=?))B,USER C\n" +
+                "WHERE A.FRIEND_ID=B.USER_ID AND B.USER_ID=C.ID";
+        long count =jdbcTemplate.queryForObject(sql,Long.class,FriendsType.ALREADYFRIENDS.getType(),userId,FriendsType.ALREADYFRIENDS.getType(),userId,workingId);
+        Page<UserModel> page=new PageImpl<>(content,pageable,count);
+        return page;
+    }
+
+
+    /**
+     * 得到朋友信息，朋友信息不等于【单个或多个朋友编号】
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public Page<UserModel> findUserFriendsNotId(Long userId, Long[] friendsId,Pageable pageable) {
+
+        String sql = "SELECT B.* FROM (\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                ")A,`USER` B WHERE A.FRIEND_ID =B.ID AND B.ID NOT IN(" + StringUtils.join(friendsId) + ") LIMIT ? , ? ";
+
+        List<UserModel> content =jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(UserModel.class),FriendsType.ALREADYFRIENDS.getType(),userId,FriendsType.ALREADYFRIENDS.getType(),userId,pageable.getOffset(),pageable.getPageSize());
+        sql = "SELECT COUNT(1) FROM (\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                ")A,`USER` B WHERE A.FRIEND_ID =B.ID AND B.ID NOT IN(" + StringUtils.join(friendsId) + ")";
+
+        long count =jdbcTemplate.queryForObject(sql,Long.class,FriendsType.ALREADYFRIENDS.getType(),userId,FriendsType.ALREADYFRIENDS.getType(),userId);
+        Page<UserModel> page=new PageImpl<>(content,pageable,count);
+        return page;
+
+    }
+
+    /**
+     * 得到正在申请的朋友（
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> findApplyforFriends(Long userId) {
+        String sql = "SELECT U.* FROM USER U,FRIENDS F WHERE U.ID=F.FRIEND_ID AND F.USER_ID=? AND F.STATE=? ";
+        BeanPropertyRowMapper<UserModel> argTypes = new BeanPropertyRowMapper<>(UserModel.class);
+        List<UserModel> userlist = jdbcTemplate.query(sql,argTypes,userId,FriendsType.APPLYFRIENDS.getType());
+        return getBackdropId(userlist);
+    }
+
+    /**
+     * 得到等待验证的朋友
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> findWaitingFriends(Long userId) {
+        String sql = "SELECT U.* FROM USER U,FRIENDS F WHERE U.ID=F.USER_ID AND F.FRIEND_ID=? AND F.STATE=? ";
+        BeanPropertyRowMapper<UserModel> argTypes = new BeanPropertyRowMapper<>(UserModel.class);
+        List<UserModel> userlist = jdbcTemplate.query(sql,argTypes,userId,FriendsType.APPLYFRIENDS.getType());
+        return getBackdropId(userlist);
+    }
+
+
+
     private UserModel findUserByAccount(String mobilePhone) {
         String sql = "select * from user where mobile_phone = ?";
         UserModel userModel = null;
@@ -420,4 +625,5 @@ public class UserServiceImpl implements UserService {
 
         return userModel;
     }
+
 }

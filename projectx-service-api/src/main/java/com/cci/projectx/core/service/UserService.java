@@ -5,6 +5,7 @@ import com.cci.projectx.core.model.EducationModel;
 import com.cci.projectx.core.model.FriendsModel;
 import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.model.WorkingExperienceModel;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -46,15 +47,30 @@ public interface UserService {
 
     public List<UserModel> getUserByUserProfile(UserModel user);
 
-    public Map<String, Object> findUserShortById(Long id);
+    public UserModel findUserShortById(Long id) ;
 
-    public List<Map<String, Object>> findUserFriendsNotId(Long userId, Long[] friendsId);
+    public Page<UserModel> findUserFriendsNotId(Long userId, Long[] friendsId,Pageable pageable);
 
-    public List<Map<String, Object>> findUserFriendsById(Long userId);
+    public Page<UserModel> findUserFriendsById(Long userId, Pageable pageable) ;
 
     public List<Map<String, Object>> findApplyforFriends(Long userId);
 
     public List<Map<String, Object>> findWaitingFriends(Long userId);
+
+    public  Page<UserModel> findColleague(Long workingId,Pageable pageable);
+
+    public int findColleagueCount(Long workingId);
+
+    public  Page<UserModel> findSchoolfellow(Long educationId,Pageable pageable);
+
+    public int findSchoolfellowCount(Long educationId);
+
+    public Page<UserModel>  findCommonFriends(Long userIdOne,Long userIdTwo,Pageable pageable);
+
+    public int  findCommonFriendsCount(Long userIdOne,Long userIdTwo);
+
+    public int  findfriendsCount(Long userId);
+
 
 
 }

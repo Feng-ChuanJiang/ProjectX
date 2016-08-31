@@ -111,7 +111,7 @@ public class UserRestApiController {
         return responseEnv;
 	}
 
-    @GetMapping(value = "/user/getUserShortById/{id}")
+    @GetMapping(value = "/user/short/{id}")
 	  public ResponseEnvelope<Map> getUserShortById(@PathVariable Long id){
 		Map<String, Object> map=userService.findUserShortById(id);
 		ResponseEnvelope<Map> responseEnv = new ResponseEnvelope<Map>(map,true);
@@ -119,16 +119,16 @@ public class UserRestApiController {
 	}
 
 	@GetMapping(value = "/friends/{id}")
-	public ResponseEnvelope<List<Map<String,Object>>> findUserFriendsById(@PathVariable Long id){
-		List<Map<String,Object>> lisMap=userService.findUserFriendsById(id);
-		ResponseEnvelope<List<Map<String,Object>>> responseEnv = new ResponseEnvelope<List<Map<String,Object>>>(lisMap,true);
+	public ResponseEnvelope<Page<UserModel>> findUserFriendsById(@PathVariable Long id, Pageable pageable){
+		Page<UserModel> page=userService.findUserFriendsById(id,pageable);
+		ResponseEnvelope<Page<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
 		return responseEnv;
 	}
 
 	@GetMapping(value = "/friends/{userId}/{friendsId}")
-	public ResponseEnvelope<List<Map<String,Object>>> findUserFriendsNotId(@PathVariable Long userId,@PathVariable Long[] friendsId){
-		List<Map<String,Object>> lisMap=userService.findUserFriendsNotId(userId, friendsId);
-		ResponseEnvelope<List<Map<String,Object>>> responseEnv = new ResponseEnvelope<List<Map<String,Object>>>(lisMap,true);
+	public ResponseEnvelope<Page<UserModel>> findUserFriendsNotId(@PathVariable Long userId,@PathVariable Long[] friendsId,Pageable pageable){
+		Page<UserModel> page=userService.findUserFriendsNotId(userId,friendsId,pageable);
+		ResponseEnvelope<Page<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
 		return responseEnv;
 	}
 	@GetMapping(value = "/friends/{userId}/apply")
@@ -171,4 +171,54 @@ public class UserRestApiController {
 		return responseEnv;
 	}
 
+	///////////////////////////////////////////////////
+
+	@GetMapping(value = "/friends/total/{id}")
+	public ResponseEnvelope<Integer> findfriendsCount(@PathVariable Long id){
+		int userIds=userService.findfriendsCount(id);
+		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(userIds,true);
+		return responseEnv;
+	}
+
+	@GetMapping(value = "/friends/common/total/{userIdOne}/{userIdTwo}")
+	public ResponseEnvelope<Integer> findCommonFriendsCount(@PathVariable Long userIdOne,@PathVariable Long userIdTwo){
+		int userIds=userService.findCommonFriendsCount(userIdOne,userIdTwo);
+		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(userIds,true);
+		return responseEnv;
+	}
+
+	@GetMapping(value = "/friends/school/total/{educationId}")
+	public ResponseEnvelope<Integer> findSchoolfellowCount(@PathVariable Long educationId){
+		int educationIds=userService.findSchoolfellowCount(educationId);
+		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(educationIds,true);
+		return responseEnv;
+	}
+
+	@GetMapping(value = "/friends/colleague/total/{workingId}")
+	public ResponseEnvelope<Integer> findColleagueCount(@PathVariable Long workingId){
+		int workingIds=userService.findColleagueCount(workingId);
+		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(workingIds,true);
+		return responseEnv;
+	}
+
+	@GetMapping(value = "/friends/common/{userIdOne}/{userIdTwo}")
+	public ResponseEnvelope<Page<UserModel>> findCommonFriends(@PathVariable Long userIdOne,@PathVariable Long userIdTwo, Pageable pageable){
+		Page<UserModel> page=userService.findCommonFriends(userIdOne,userIdTwo,pageable);
+		ResponseEnvelope<Page<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
+		return responseEnv;
+	}
+
+	@GetMapping(value = "/friends/school/{educationId}")
+	public ResponseEnvelope<Page<UserModel>> findSchoolfellow(@PathVariable Long educationId, Pageable pageable){
+		Page<UserModel> page=userService.findSchoolfellow(educationId,pageable);
+		ResponseEnvelope<Page<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
+		return responseEnv;
+	}
+
+	@GetMapping(value = "/friends/colleague/{workingId}")
+	public ResponseEnvelope<Page<UserModel>> findColleague(@PathVariable Long workingId, Pageable pageable){
+		Page<UserModel> page=userService.findColleague(workingId,pageable);
+		ResponseEnvelope<Page<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
+		return responseEnv;
+	}
 }
