@@ -27,7 +27,7 @@ public class LndustryRestApiController {
 	@Autowired
 	private LndustryService lndustryService;
 
-	@GetMapping(value = "/core/lndustry/{id}")
+	@GetMapping(value = "/lndustry/{id}")
 	public ResponseEnvelope<LndustryVO> getLndustryById(@PathVariable Long id){
 		LndustryModel lndustryModel = lndustryService.findByPrimaryKey(id);
 		LndustryVO lndustryVO =beanMapper.map(lndustryModel, LndustryVO.class);
@@ -35,7 +35,7 @@ public class LndustryRestApiController {
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/core/lndustry")
+	@GetMapping(value = "/lndustry")
     public ResponseEnvelope<Page<LndustryModel>> listLndustry(LndustryVO lndustryVO, Pageable pageable){
 
 		LndustryModel param = beanMapper.map(lndustryVO, LndustryModel.class);
@@ -46,7 +46,7 @@ public class LndustryRestApiController {
         return responseEnv;
     }
 
-	@PostMapping(value = "/core/lndustry")
+	@PostMapping(value = "/lndustry")
 	public ResponseEnvelope<Integer> createLndustry(@RequestBody LndustryVO lndustryVO){
 		LndustryModel lndustryModel = beanMapper.map(lndustryVO, LndustryModel.class);
 		Integer result = lndustryService.create(lndustryModel);
@@ -54,7 +54,7 @@ public class LndustryRestApiController {
         return responseEnv;
 	}
 
-    @DeleteMapping(value = "/core/lndustry/{id}")
+    @DeleteMapping(value = "/lndustry/{id}")
 	public ResponseEnvelope<Integer> deleteLndustryByPrimaryKey(@PathVariable Long id){
 		Integer result = lndustryService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
@@ -62,7 +62,7 @@ public class LndustryRestApiController {
 	}
 
 
-    @PutMapping(value = "/core/lndustry/{id}")
+    @PutMapping(value = "/lndustry/{id}")
 	public ResponseEnvelope<Integer> updateLndustryByPrimaryKeySelective(@PathVariable Long id,
 																		 @RequestBody LndustryVO lndustryVO){
 		LndustryModel lndustryModel = beanMapper.map(lndustryVO, LndustryModel.class);

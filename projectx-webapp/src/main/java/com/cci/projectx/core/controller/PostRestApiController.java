@@ -27,7 +27,7 @@ public class PostRestApiController {
 	@Autowired
 	private PostService postService;
 
-	@GetMapping(value = "/core/post/{id}")
+	@GetMapping(value = "/post/{id}")
 	public ResponseEnvelope<PostVO> getPostById(@PathVariable Long id){
 		PostModel postModel = postService.findByPrimaryKey(id);
 		PostVO postVO =beanMapper.map(postModel, PostVO.class);
@@ -35,7 +35,7 @@ public class PostRestApiController {
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/core/post")
+	@GetMapping(value = "/post")
     public ResponseEnvelope<Page<PostModel>> listPost(PostVO postVO, Pageable pageable){
 
 		PostModel param = beanMapper.map(postVO, PostModel.class);
@@ -46,7 +46,7 @@ public class PostRestApiController {
         return responseEnv;
     }
 
-	@PostMapping(value = "/core/post")
+	@PostMapping(value = "/post")
 	public ResponseEnvelope<Integer> createPost(@RequestBody PostVO postVO){
 		PostModel postModel = beanMapper.map(postVO, PostModel.class);
 		Integer result = postService.create(postModel);
@@ -54,7 +54,7 @@ public class PostRestApiController {
         return responseEnv;
 	}
 
-    @DeleteMapping(value = "/core/post/{id}")
+    @DeleteMapping(value = "/post/{id}")
 	public ResponseEnvelope<Integer> deletePostByPrimaryKey(@PathVariable Long id){
 		Integer result = postService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
@@ -62,7 +62,7 @@ public class PostRestApiController {
 	}
 
 
-    @PutMapping(value = "/core/post/{id}")
+    @PutMapping(value = "/post/{id}")
 	public ResponseEnvelope<Integer> updatePostByPrimaryKeySelective(@PathVariable Long id,
 																	 @RequestBody PostVO postVO){
 		PostModel postModel = beanMapper.map(postVO, PostModel.class);

@@ -27,7 +27,7 @@ public class SchoolRestApiController {
 	@Autowired
 	private SchoolService schoolService;
 
-	@GetMapping(value = "/core/school/{id}")
+	@GetMapping(value = "/school/{id}")
 	public ResponseEnvelope<SchoolVO> getSchoolById(@PathVariable Long id){
 		SchoolModel schoolModel = schoolService.findByPrimaryKey(id);
 		SchoolVO schoolVO =beanMapper.map(schoolModel, SchoolVO.class);
@@ -35,7 +35,7 @@ public class SchoolRestApiController {
 		return responseEnv;
 	}
 
-	@GetMapping(value = "/core/school")
+	@GetMapping(value = "/school")
     public ResponseEnvelope<Page<SchoolModel>> listSchool(SchoolVO schoolVO, Pageable pageable){
 
 		SchoolModel param = beanMapper.map(schoolVO, SchoolModel.class);
@@ -46,7 +46,7 @@ public class SchoolRestApiController {
         return responseEnv;
     }
 
-	@PostMapping(value = "/core/school")
+	@PostMapping(value = "/school")
 	public ResponseEnvelope<Integer> createSchool(@RequestBody SchoolVO schoolVO){
 		SchoolModel schoolModel = beanMapper.map(schoolVO, SchoolModel.class);
 		Integer result = schoolService.create(schoolModel);
@@ -54,7 +54,7 @@ public class SchoolRestApiController {
         return responseEnv;
 	}
 
-    @DeleteMapping(value = "/core/school/{id}")
+    @DeleteMapping(value = "/school/{id}")
 	public ResponseEnvelope<Integer> deleteSchoolByPrimaryKey(@PathVariable Long id){
 		Integer result = schoolService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
@@ -62,7 +62,7 @@ public class SchoolRestApiController {
 	}
 
 
-    @PutMapping(value = "/core/school/{id}")
+    @PutMapping(value = "/school/{id}")
 	public ResponseEnvelope<Integer> updateSchoolByPrimaryKeySelective(@PathVariable Long id,
 																	   @RequestBody SchoolVO schoolVO){
 		SchoolModel schoolModel = beanMapper.map(schoolVO, SchoolModel.class);
