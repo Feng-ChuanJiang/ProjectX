@@ -51,7 +51,7 @@ public class majorServiceImpl implements majorService {
 	public int deleteByPrimaryKey(Long id) {
 		int mid=majorRepo.deleteByPrimaryKey(id);
 		if(mid>0){
-			elasticSearchHelp.deleteES(major.class,mid);
+			elasticSearchHelp.deleteES(major.class,id);
 		}
 
 		return mid;

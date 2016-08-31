@@ -54,7 +54,7 @@ public class LndustryServiceImpl implements LndustryService {
 	public int deleteByPrimaryKey(Long id) {
 		int pid=lndustryRepo.deleteByPrimaryKey(id);
 		if(pid>0){
-			elasticSearchHelp.deleteES(Lndustry.class,pid);
+			elasticSearchHelp.deleteES(Lndustry.class,id);
 		}
 		return pid;
 	}

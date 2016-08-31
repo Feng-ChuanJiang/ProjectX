@@ -52,7 +52,7 @@ public class SchoolServiceImpl implements SchoolService {
 
 		int sid=schoolRepo.deleteByPrimaryKey(id);
 		if(sid>0){
-			elasticSearchHelp.deleteES(School.class,sid);
+			elasticSearchHelp.deleteES(School.class,id);
 
 		}
 		return sid;

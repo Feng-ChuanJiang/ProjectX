@@ -52,7 +52,7 @@ public class PostServiceImpl implements PostService {
 	public int deleteByPrimaryKey(Long id) {
 		int pid=postRepo.deleteByPrimaryKey(id);
 		if(pid>0){
-			elasticSearchHelp.deleteES(Post.class,pid);
+			elasticSearchHelp.deleteES(Post.class,id);
 		}
 
 		return pid;
