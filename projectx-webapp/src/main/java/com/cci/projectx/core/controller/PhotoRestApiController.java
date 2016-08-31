@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/projectx")
+@RequestMapping("/")
 public class PhotoRestApiController {
 
     private final Logger logger = LoggerFactory.getLogger(PhotoRestApiController.class);

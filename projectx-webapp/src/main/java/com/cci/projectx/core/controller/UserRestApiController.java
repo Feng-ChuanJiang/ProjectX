@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/projectx")
+@RequestMapping("/")
 public class UserRestApiController {
 
 	private final Logger logger = LoggerFactory.getLogger(UserRestApiController.class);

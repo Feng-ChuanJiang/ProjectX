@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/projectx")
+@RequestMapping("/")
 public class CompanyRestApiController {
 
 	private final Logger logger = LoggerFactory.getLogger(CompanyRestApiController.class);

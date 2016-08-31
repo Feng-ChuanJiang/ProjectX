@@ -1,7 +1,6 @@
 
 package com.cci.projectx.core.service;
 
-import com.cci.projectx.core.entity.Company;
 import com.cci.projectx.core.model.CompanyModel;
 import org.springframework.data.domain.Pageable;
 
