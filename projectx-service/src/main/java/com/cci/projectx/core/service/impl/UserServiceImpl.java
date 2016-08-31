@@ -261,8 +261,9 @@ public class UserServiceImpl implements UserService {
      * @param friends
      * @return
      */
-    public int addFriends(Friends friends) {
-        return jdbcTempateHelp.add(friends);
+    public int addFriends(FriendsModel friends) {
+        Friends friend =beanMapper.map(friends,Friends.class);
+        return jdbcTempateHelp.add(friend);
     }
 
     /**

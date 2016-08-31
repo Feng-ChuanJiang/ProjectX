@@ -1,7 +1,6 @@
 
 package com.cci.projectx.core.service;
 
-import com.cci.projectx.core.entity.Friends;
 import com.cci.projectx.core.model.EducationModel;
 import com.cci.projectx.core.model.FriendsModel;
 import com.cci.projectx.core.model.UserModel;
@@ -36,7 +35,7 @@ public interface UserService {
 
     public List<EducationModel> findEducationByUserId(Long userId);
 
-    public int addFriends(Friends friends);
+    public int addFriends(FriendsModel friends);
 
     public int deleteFriends(FriendsModel friends);
 

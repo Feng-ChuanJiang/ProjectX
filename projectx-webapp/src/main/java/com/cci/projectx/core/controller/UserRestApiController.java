@@ -3,7 +3,6 @@ package com.cci.projectx.core.controller;
 import com.cci.projectx.core.HRErrorCode;
 import com.cci.projectx.core.RandomUtil;
 import com.cci.projectx.core.annotation.IgnoreAuth;
-import com.cci.projectx.core.entity.Friends;
 import com.cci.projectx.core.model.FriendsModel;
 import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.service.UserService;
@@ -113,9 +112,9 @@ public class UserRestApiController {
 	}
 
     @GetMapping(value = "/user/short/{id}")
-	  public ResponseEnvelope<Map> getUserShortById(@PathVariable Long id){
-		Map<String, Object> map=userService.findUserShortById(id);
-		ResponseEnvelope<Map> responseEnv = new ResponseEnvelope<Map>(map,true);
+	  public ResponseEnvelope<UserModel> getUserShortById(@PathVariable Long id){
+		UserModel userModel=userService.findUserShortById(id);
+		ResponseEnvelope<UserModel> responseEnv = new ResponseEnvelope<>(userModel,true);
 		return responseEnv;
 	}
 
@@ -149,8 +148,7 @@ public class UserRestApiController {
 	@PostMapping(value = "/friend")
 	public ResponseEnvelope<Integer> addFriends(@RequestBody FriendsVO friendsVO ){
 		FriendsModel friendsModel = beanMapper.map(friendsVO, FriendsModel.class);
-		Friends friends =beanMapper.map(friendsModel,Friends.class);
-		Integer  result = userService.addFriends(friends);
+		Integer  result = userService.addFriends(friendsModel);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
 		return responseEnv;
 	}
