@@ -1,5 +1,6 @@
 package com.cci.projectx.core.service.impl;
 
+import com.cci.projectx.core.ElasticSearchHelp;
 import com.cci.projectx.core.entity.School;
 import com.cci.projectx.core.model.SchoolModel;
 import com.cci.projectx.core.repository.SchoolRepository;
@@ -21,22 +22,40 @@ public class SchoolServiceImpl implements SchoolService {
 	@Autowired
 	private SchoolRepository schoolRepo;
 
+	@Autowired
+	private ElasticSearchHelp elasticSearchHelp;
 	@Transactional
 	@Override
 	public int create(SchoolModel schoolModel) {
-		return schoolRepo.insert(beanMapper.map(schoolModel, School.class));
+		School school=beanMapper.map(schoolModel,School.class);
+		int id=schoolRepo.insert(school);
+		if(school.getId()!=null){
+			elasticSearchHelp.mergeES(school,school.getId().toString());
+		}
+		return id;
 	}
 
 	@Transactional
 	@Override
 	public int createSelective(SchoolModel schoolModel) {
-		return schoolRepo.insertSelective(beanMapper.map(schoolModel, School.class));
+		School school=beanMapper.map(schoolModel,School.class);
+		int id=schoolRepo.insertSelective(school);
+		if(school.getId()!=null){
+			elasticSearchHelp.mergeES(school,school.getId().toString());
+		}
+		return id;
 	}
 
 	@Transactional
 	@Override
 	public int deleteByPrimaryKey(Long id) {
-		return schoolRepo.deleteByPrimaryKey(id);
+
+		int sid=schoolRepo.deleteByPrimaryKey(id);
+		if(sid>0){
+			elasticSearchHelp.deleteES(School.class,sid);
+
+		}
+		return sid;
 	}
 
 	@Transactional(readOnly = true)
@@ -62,13 +81,37 @@ public class SchoolServiceImpl implements SchoolService {
 	@Transactional
 	@Override
 	public int updateByPrimaryKey(SchoolModel schoolModel) {
-		return schoolRepo.updateByPrimaryKey(beanMapper.map(schoolModel, School.class));
+		School school=beanMapper.map(schoolModel,School.class);
+		int id=schoolRepo.updateByPrimaryKey(school);
+		if(school.getId()!=null){
+			elasticSearchHelp.mergeES(school,school.getId().toString());
+		}
+		return id;
 	}
 	
 	@Transactional
 	@Override
 	public int updateByPrimaryKeySelective(SchoolModel schoolModel) {
-		return schoolRepo.updateByPrimaryKeySelective(beanMapper.map(schoolModel, School.class));
+		School school=beanMapper.map(schoolModel,School.class);
+		int id=schoolRepo.updateByPrimaryKeySelective(school);
+		if(school.getId()!=null){
+			elasticSearchHelp.mergeES(school,school.getId().toString());
+		}
+		return id;
+	}
+
+	/**
+	 * es模糊查询
+	 * @param schoolModel
+	 * @return
+	 */
+	@Transactional
+	@Override
+	public List<SchoolModel> getSchool(SchoolModel schoolModel){
+		School school=beanMapper.map(schoolModel,School.class);
+		List<SchoolModel> schoolModelList=elasticSearchHelp.findESForList(school);
+
+		return  schoolModelList;
 	}
 
 }

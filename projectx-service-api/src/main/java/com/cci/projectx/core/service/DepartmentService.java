@@ -24,4 +24,5 @@ public long selectCount(DepartmentModel departmentModel);
 
 public List<DepartmentModel> selectPage(DepartmentModel departmentModel, Pageable pageable);
 
+public List<DepartmentModel> getDepartment(DepartmentModel departmentModel);
 }

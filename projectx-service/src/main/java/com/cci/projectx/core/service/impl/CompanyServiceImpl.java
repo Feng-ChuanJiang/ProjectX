@@ -1,6 +1,8 @@
 package com.cci.projectx.core.service.impl;
 
+import com.cci.projectx.core.ElasticSearchHelp;
 import com.cci.projectx.core.entity.Company;
+import com.cci.projectx.core.model.CommentModel;
 import com.cci.projectx.core.model.CompanyModel;
 import com.cci.projectx.core.repository.CompanyRepository;
 import com.cci.projectx.core.service.CompanyService;
@@ -21,22 +23,54 @@ public class CompanyServiceImpl implements CompanyService {
 	@Autowired
 	private CompanyRepository companyRepo;
 
+	@Autowired
+	private ElasticSearchHelp elasticSearchHelp;
+
+	/**
+	 * 插入的的时候保存到es中去
+	 * @param companyModel
+	 * @return
+	 */
 	@Transactional
 	@Override
 	public int create(CompanyModel companyModel) {
-		return companyRepo.insert(beanMapper.map(companyModel, Company.class));
+		Company company=beanMapper.map(companyModel,Company.class);
+		int id=companyRepo.insert(company);
+		if(company.getId()!=null){
+		elasticSearchHelp.mergeES(company,company.getId().toString());
+		}
+		return id;
 	}
 
+	/**
+	 * 插入的时候保存到es中去
+	 * @param companyModel
+	 * @return
+	 */
 	@Transactional
 	@Override
 	public int createSelective(CompanyModel companyModel) {
-		return companyRepo.insertSelective(beanMapper.map(companyModel, Company.class));
+		Company company=beanMapper.map(companyModel,Company.class);
+		int id=companyRepo.insertSelective(company);
+		if(company.getId()!=null){
+			elasticSearchHelp.mergeES(company,company.getId().toString());
+		}
+		return id;
 	}
 
+	/**
+	 * 同时清理es数据
+	 * @param id
+	 * @return
+	 */
 	@Transactional
 	@Override
 	public int deleteByPrimaryKey(Long id) {
-		return companyRepo.deleteByPrimaryKey(id);
+		int pid=companyRepo.deleteByPrimaryKey(id);
+		if(pid>0){
+			elasticSearchHelp.deleteES(Company.class,id);
+		}
+		return pid;
 	}
 
 	@Transactional(readOnly = true)
@@ -62,13 +96,31 @@ public class CompanyServiceImpl implements CompanyService {
 	@Transactional
 	@Override
 	public int updateByPrimaryKey(CompanyModel companyModel) {
-		return companyRepo.updateByPrimaryKey(beanMapper.map(companyModel, Company.class));
+
+		Company company=beanMapper.map(companyModel,Company.class);
+		int id=companyRepo.updateByPrimaryKey(company);
+		if(company.getId()!=null){
+			elasticSearchHelp.mergeES(company,company.getId().toString());
+		}
+		return id;
 	}
 	
 	@Transactional
 	@Override
 	public int updateByPrimaryKeySelective(CompanyModel companyModel) {
-		return companyRepo.updateByPrimaryKeySelective(beanMapper.map(companyModel, Company.class));
+		Company company=beanMapper.map(companyModel,Company.class);
+		int id=companyRepo.updateByPrimaryKeySelective(company);
+		if(company.getId()!=null){
+			elasticSearchHelp.mergeES(company,company.getId().toString());
+		}
+		return id;
 	}
+	@Transactional
+	@Override
+	public List<CompanyModel> getCompany(CompanyModel companyModel){
+    		Company company=beanMapper.map(companyModel,Company.class);
+			List<CompanyModel> companyModelList=elasticSearchHelp.findESForList(company);
 
+		return  companyModelList;
+	}
 }

@@ -24,4 +24,11 @@ public long selectCount(CommentModel commentModel);
 
 public List<CommentModel> selectPage(CommentModel commentModel,Pageable pageable);
 
+    /**
+     * 通过es查询数据
+      * @param commentModel
+     * @return
+     */
+public List<CommentModel> getComment(CommentModel commentModel);
+
 }

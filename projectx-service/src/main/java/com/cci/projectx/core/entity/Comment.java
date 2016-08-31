@@ -1,8 +1,12 @@
 package com.cci.projectx.core.entity;
 
-import java.util.Date;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 
+import java.util.Date;
+@Document(indexName = "user-profile",type = "user-comment")
 public class Comment {
+    @Id
     private Long id;
 
     private Long userId;

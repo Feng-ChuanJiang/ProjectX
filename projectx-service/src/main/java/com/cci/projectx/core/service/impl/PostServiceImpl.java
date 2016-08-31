@@ -1,5 +1,6 @@
 package com.cci.projectx.core.service.impl;
 
+import com.cci.projectx.core.ElasticSearchHelp;
 import com.cci.projectx.core.entity.Post;
 import com.cci.projectx.core.model.PostModel;
 import com.cci.projectx.core.repository.PostRepository;
@@ -21,22 +22,40 @@ public class PostServiceImpl implements PostService {
 	@Autowired
 	private PostRepository postRepo;
 
+	@Autowired
+	private ElasticSearchHelp elasticSearchHelp;
 	@Transactional
 	@Override
 	public int create(PostModel postModel) {
-		return postRepo.insert(beanMapper.map(postModel, Post.class));
+		Post post=beanMapper.map(postModel,Post.class);
+		int id=postRepo.insert(post);
+		if(post.getId()!=null){
+			elasticSearchHelp.mergeES(post,post.getId().toString());
+		}
+
+		return id;
 	}
 
 	@Transactional
 	@Override
 	public int createSelective(PostModel postModel) {
-		return postRepo.insertSelective(beanMapper.map(postModel, Post.class));
+		Post post=beanMapper.map(postModel,Post.class);
+		int id=postRepo.insertSelective(post);
+		if(post.getId()!=null){
+			elasticSearchHelp.mergeES(post,post.getId().toString());
+		}
+		return id;
 	}
 
 	@Transactional
 	@Override
 	public int deleteByPrimaryKey(Long id) {
-		return postRepo.deleteByPrimaryKey(id);
+		int pid=postRepo.deleteByPrimaryKey(id);
+		if(pid>0){
+			elasticSearchHelp.deleteES(Post.class,pid);
+		}
+
+		return pid;
 	}
 
 	@Transactional(readOnly = true)
@@ -62,13 +81,31 @@ public class PostServiceImpl implements PostService {
 	@Transactional
 	@Override
 	public int updateByPrimaryKey(PostModel postModel) {
-		return postRepo.updateByPrimaryKey(beanMapper.map(postModel, Post.class));
+
+		Post post=beanMapper.map(postModel,Post.class);
+		int id=postRepo.updateByPrimaryKey(post);
+		if(post.getId()!=null){
+			elasticSearchHelp.mergeES(post,post.getId().toString());
+		}
+		return id;
 	}
 	
 	@Transactional
 	@Override
 	public int updateByPrimaryKeySelective(PostModel postModel) {
-		return postRepo.updateByPrimaryKeySelective(beanMapper.map(postModel, Post.class));
+		Post post=beanMapper.map(postModel,Post.class);
+		int id=postRepo.updateByPrimaryKeySelective(post);
+		if(post.getId()!=null){
+			elasticSearchHelp.mergeES(post,post.getId().toString());
+		}
+		return id;
+	}
+	@Transactional
+	@Override
+	public List<PostModel> getPost(PostModel postModel){
+		Post post=beanMapper.map(postModel,Post.class);
+		List<PostModel> postModelList=elasticSearchHelp.findESForList(post);
+		return  postModelList;
 	}
 
 }

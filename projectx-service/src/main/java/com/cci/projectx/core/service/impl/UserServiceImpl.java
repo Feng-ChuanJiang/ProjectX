@@ -262,7 +262,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     public int addFriends(FriendsModel friends) {
-        Friends friend =beanMapper.map(friends,Friends.class);
+        Friends friend =beanMapper.map(friends, Friends.class);
         return jdbcTempateHelp.add(friend);
     }
 
@@ -276,7 +276,7 @@ public class UserServiceImpl implements UserService {
     public int deleteFriends(FriendsModel friends) {
         String sql = "DELETE FROM FRIENDS  WHERE USER_ID=? AND FRIEND_ID=?";
         jdbcTemplate.update(sql, friends.getFriendId(), friends.getUserId());
-        return jdbcTemplate.update(sql,friends.getUserId(), friends.getFriendId());
+        return jdbcTemplate.update(sql, friends.getUserId(), friends.getFriendId());
     }
 
     /**
@@ -369,7 +369,7 @@ public class UserServiceImpl implements UserService {
     @Override
    public int  findfriendsCount(Long userId){
        String sql="SELECT count(1) FROM FRIENDS WHERE STATE=? AND  (USER_ID=? OR FRIEND_ID=?)";
-       return jdbcTemplate.queryForObject(sql, Integer.class,FriendsType.ALREADYFRIENDS.getType(),userId,userId);
+       return jdbcTemplate.queryForObject(sql, Integer.class, FriendsType.ALREADYFRIENDS.getType(), userId, userId);
    }
 
 
@@ -409,16 +409,16 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public int  findCommonFriendsCount(Long userIdOne,Long userIdTwo){
-        String sql="SELECT COUNT(1) FROM (\n" +
-                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=1 AND USER_ID=10 \n" +
-                "UNION\n" +
-                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=1 AND FRIEND_ID=10 \n" +
-                ")A,(\n" +
-                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=1 AND USER_ID=11 \n" +
-                "UNION\n" +
-                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=1 AND FRIEND_ID=11 \n" +
-                ")B WHERE A.FRIEND_ID=B.FRIEND_ID";
-        return jdbcTemplate.queryForObject(sql, Integer.class,FriendsType.ALREADYFRIENDS.getType(),userIdOne,userIdOne,FriendsType.ALREADYFRIENDS.getType(),userIdTwo,userIdTwo);
+        String sql="SELECT COUNT(1) FROM ( " +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION \n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                ")A,( \n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
+                "UNION \n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? \n" +
+                " )B WHERE A.FRIEND_ID=B.FRIEND_ID";
+        return jdbcTemplate.queryForObject(sql, Integer.class,FriendsType.ALREADYFRIENDS.getType(),userIdOne,FriendsType.ALREADYFRIENDS.getType(),userIdOne,FriendsType.ALREADYFRIENDS.getType(),userIdTwo,FriendsType.ALREADYFRIENDS.getType(),userIdTwo);
     }
     /**
      * 得到共同好友

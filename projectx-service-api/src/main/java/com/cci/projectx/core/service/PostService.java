@@ -24,4 +24,5 @@ public long selectCount(PostModel postModel);
 
 public List<PostModel> selectPage(PostModel postModel, Pageable pageable);
 
+    public List<PostModel> getPost(PostModel postModel);
 }

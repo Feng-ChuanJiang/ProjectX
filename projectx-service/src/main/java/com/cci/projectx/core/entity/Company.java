@@ -1,6 +1,11 @@
 package com.cci.projectx.core.entity;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+
+@Document(indexName = "user-profile",type = "user-company")
 public class Company {
+    @Id
     private Long id;
 
     private String name;

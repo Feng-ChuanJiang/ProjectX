@@ -24,4 +24,5 @@ public long selectCount(majorModel majorModel);
 
 public List<majorModel> selectPage(majorModel majorModel, Pageable pageable);
 
+    public List<majorModel> getMajor(majorModel model);
 }

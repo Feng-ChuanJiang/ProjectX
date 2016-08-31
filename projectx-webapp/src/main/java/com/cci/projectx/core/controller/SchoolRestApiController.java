@@ -71,5 +71,12 @@ public class SchoolRestApiController {
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
         return responseEnv;
 	}
+	@GetMapping(value = "/school/like")
+	public  ResponseEnvelope<List<SchoolModel>> getSchool(SchoolVO schoolVO){
+		SchoolModel schoolModel=beanMapper.map(schoolVO,SchoolModel.class);
+		List<SchoolModel> schoolModelList=schoolService.getSchool(schoolModel);
+		ResponseEnvelope<List<SchoolModel>> responseEnvelope=new ResponseEnvelope<>(schoolModelList,true);
+		return responseEnvelope;
+	}
 
 }

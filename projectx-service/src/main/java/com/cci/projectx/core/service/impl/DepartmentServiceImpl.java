@@ -1,5 +1,6 @@
 package com.cci.projectx.core.service.impl;
 
+import com.cci.projectx.core.ElasticSearchHelp;
 import com.cci.projectx.core.entity.Department;
 import com.cci.projectx.core.model.DepartmentModel;
 import com.cci.projectx.core.repository.DepartmentRepository;
@@ -21,22 +22,39 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Autowired
 	private DepartmentRepository departmentRepo;
 
+	@Autowired
+	private ElasticSearchHelp elasticSearchHelp;
 	@Transactional
 	@Override
 	public int create(DepartmentModel departmentModel) {
-		return departmentRepo.insert(beanMapper.map(departmentModel, Department.class));
+		Department department=beanMapper.map(departmentModel,Department.class);
+		int id=departmentRepo.insert(department);
+		if(department.getId()!=null){
+			elasticSearchHelp.mergeES(department,department.getId().toString());
+		}
+		return id;
 	}
 
 	@Transactional
 	@Override
 	public int createSelective(DepartmentModel departmentModel) {
-		return departmentRepo.insertSelective(beanMapper.map(departmentModel, Department.class));
+		Department department=beanMapper.map(departmentModel,Department.class);
+		int id =departmentRepo.insertSelective(department);
+		if(department.getId()!=null){
+			elasticSearchHelp.mergeES(department,department.getId().toString());
+		}
+		return id;
 	}
 
 	@Transactional
 	@Override
 	public int deleteByPrimaryKey(Long id) {
-		return departmentRepo.deleteByPrimaryKey(id);
+		int pid=departmentRepo.deleteByPrimaryKey(id);
+		if(pid>0){
+			elasticSearchHelp.deleteES(Department.class,id);
+		}
+
+		return pid;
 	}
 
 	@Transactional(readOnly = true)
@@ -62,13 +80,32 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Transactional
 	@Override
 	public int updateByPrimaryKey(DepartmentModel departmentModel) {
-		return departmentRepo.updateByPrimaryKey(beanMapper.map(departmentModel, Department.class));
+
+		Department department=beanMapper.map(departmentModel,Department.class);
+		int id =departmentRepo.updateByPrimaryKey(department);
+		if(department.getId()!=null){
+			elasticSearchHelp.mergeES(department,department.getId().toString());
+		}
+		return id;
 	}
 	
 	@Transactional
 	@Override
 	public int updateByPrimaryKeySelective(DepartmentModel departmentModel) {
-		return departmentRepo.updateByPrimaryKeySelective(beanMapper.map(departmentModel, Department.class));
+
+		Department department=beanMapper.map(departmentModel,Department.class);
+		int id =departmentRepo.updateByPrimaryKeySelective(department);
+		if(department.getId()!=null){
+			elasticSearchHelp.mergeES(department,department.getId().toString());
+		}
+		return id;
+	}
+	@Transactional
+	@Override
+	public  List<DepartmentModel> getDepartment(DepartmentModel departmentModel){
+		Department department=beanMapper.map(departmentModel,Department.class);
+		List<DepartmentModel> departmentModels=elasticSearchHelp.findESForList(department);
+		return  departmentModels;
 	}
 
 }

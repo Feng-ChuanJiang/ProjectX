@@ -20,13 +20,13 @@
     delete from company
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.cci.projectx.core.entity.Company">
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.Company" keyProperty="id" useGeneratedKeys="true">
     insert into company (id, name, logo, 
       remark)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Company">
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Company" keyProperty="id" useGeneratedKeys="true">
     insert into company
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

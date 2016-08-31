@@ -72,4 +72,13 @@ public class DepartmentRestApiController {
         return responseEnv;
 	}
 
+
+	@GetMapping(value = "/department/like")
+	public ResponseEnvelope<List<DepartmentModel>> getCommentInfo(DepartmentVO commentVO){
+		DepartmentModel commentModel=beanMapper.map(commentVO,DepartmentModel.class);
+		List<DepartmentModel> tModelList=departmentService.getDepartment(commentModel);
+		ResponseEnvelope<List<DepartmentModel>> responseEnvelope=new ResponseEnvelope<>(tModelList,true);
+		return responseEnvelope;
+	}
+
 }

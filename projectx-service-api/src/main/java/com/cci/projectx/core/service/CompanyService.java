@@ -1,6 +1,7 @@
 
 package com.cci.projectx.core.service;
 
+import com.cci.projectx.core.entity.Company;
 import com.cci.projectx.core.model.CompanyModel;
 import org.springframework.data.domain.Pageable;
 
@@ -24,4 +25,5 @@ public long selectCount(CompanyModel companyModel);
 
 public List<CompanyModel> selectPage(CompanyModel companyModel, Pageable pageable);
 
+    public List<CompanyModel> getCompany(CompanyModel companyModel);
 }

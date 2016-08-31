@@ -22,7 +22,7 @@
     delete from comment
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.cci.projectx.core.entity.Comment">
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.Comment"  keyProperty="id" useGeneratedKeys="true">
     insert into comment (id, user_id, Interact_id, 
       creat_time, comment, type
       )
@@ -30,7 +30,7 @@
       #{creatTime,jdbcType=TIMESTAMP}, #{comment,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Comment">
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Comment"  keyProperty="id" useGeneratedKeys="true">
     insert into comment
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

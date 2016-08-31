@@ -1,5 +1,6 @@
 package com.cci.projectx.core.service.impl;
 
+import com.cci.projectx.core.ElasticSearchHelp;
 import com.cci.projectx.core.entity.major;
 import com.cci.projectx.core.model.majorModel;
 import com.cci.projectx.core.repository.majorRepository;
@@ -21,22 +22,39 @@ public class majorServiceImpl implements majorService {
 	@Autowired
 	private majorRepository majorRepo;
 
+	@Autowired
+	private ElasticSearchHelp elasticSearchHelp;
 	@Transactional
 	@Override
 	public int create(majorModel majorModel) {
-		return majorRepo.insert(beanMapper.map(majorModel, major.class));
+		major m=beanMapper.map(majorModel,major.class);
+		int id=majorRepo.insert(m);
+		if(m.getId()!=null){
+			elasticSearchHelp.mergeES(m,m.getId().toString());
+		}
+		return id;
 	}
 
 	@Transactional
 	@Override
 	public int createSelective(majorModel majorModel) {
-		return majorRepo.insertSelective(beanMapper.map(majorModel, major.class));
+		major m=beanMapper.map(majorModel,major.class);
+		int id=majorRepo.insertSelective(m);
+		if(m.getId()!=null){
+			elasticSearchHelp.mergeES(m,m.getId().toString());
+		}
+		return id;
 	}
 
 	@Transactional
 	@Override
 	public int deleteByPrimaryKey(Long id) {
-		return majorRepo.deleteByPrimaryKey(id);
+		int mid=majorRepo.deleteByPrimaryKey(id);
+		if(mid>0){
+			elasticSearchHelp.deleteES(major.class,mid);
+		}
+
+		return mid;
 	}
 
 	@Transactional(readOnly = true)
@@ -62,13 +80,31 @@ public class majorServiceImpl implements majorService {
 	@Transactional
 	@Override
 	public int updateByPrimaryKey(majorModel majorModel) {
-		return majorRepo.updateByPrimaryKey(beanMapper.map(majorModel, major.class));
+		major m=beanMapper.map(majorModel,major.class);
+		int id=majorRepo.updateByPrimaryKey(m);
+		if(m.getId()!=null){
+			elasticSearchHelp.mergeES(m,m.getId().toString());
+		}
+		return id;
 	}
 	
 	@Transactional
 	@Override
 	public int updateByPrimaryKeySelective(majorModel majorModel) {
-		return majorRepo.updateByPrimaryKeySelective(beanMapper.map(majorModel, major.class));
+		major m=beanMapper.map(majorModel,major.class);
+		int id=majorRepo.updateByPrimaryKeySelective(m);
+		if(m.getId()!=null){
+			elasticSearchHelp.mergeES(m,m.getId().toString());
+		}
+		return id;
+	}
+
+	@Override
+	public  List<majorModel> getMajor(majorModel model){
+		major m=beanMapper.map(model,major.class);
+		List<majorModel> modelList=elasticSearchHelp.findESForList(m);
+
+		return modelList;
 	}
 
 }

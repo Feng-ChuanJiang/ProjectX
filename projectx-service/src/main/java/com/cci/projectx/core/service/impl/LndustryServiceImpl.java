@@ -1,5 +1,6 @@
 package com.cci.projectx.core.service.impl;
 
+import com.cci.projectx.core.ElasticSearchHelp;
 import com.cci.projectx.core.entity.Lndustry;
 import com.cci.projectx.core.model.LndustryModel;
 import com.cci.projectx.core.repository.LndustryRepository;
@@ -21,22 +22,41 @@ public class LndustryServiceImpl implements LndustryService {
 	@Autowired
 	private LndustryRepository lndustryRepo;
 
+	@Autowired
+	private ElasticSearchHelp elasticSearchHelp;
 	@Transactional
 	@Override
 	public int create(LndustryModel lndustryModel) {
-		return lndustryRepo.insert(beanMapper.map(lndustryModel, Lndustry.class));
+		Lndustry lndustry=beanMapper.map(lndustryModel,Lndustry.class);
+		int id=lndustryRepo.insert(lndustry);
+		if(lndustry.getId()!=null){
+			elasticSearchHelp.mergeES(lndustry,lndustry.getId().toString());
+
+		}
+		return id;
 	}
 
 	@Transactional
 	@Override
 	public int createSelective(LndustryModel lndustryModel) {
-		return lndustryRepo.insertSelective(beanMapper.map(lndustryModel, Lndustry.class));
+
+		Lndustry lndustry=beanMapper.map(lndustryModel,Lndustry.class);
+		int id=lndustryRepo.insertSelective(lndustry);
+		if(lndustry.getId()!=null){
+			elasticSearchHelp.mergeES(lndustry,lndustry.getId().toString());
+
+		}
+		return id;
 	}
 
 	@Transactional
 	@Override
 	public int deleteByPrimaryKey(Long id) {
-		return lndustryRepo.deleteByPrimaryKey(id);
+		int pid=lndustryRepo.deleteByPrimaryKey(id);
+		if(pid>0){
+			elasticSearchHelp.deleteES(Lndustry.class,pid);
+		}
+		return pid;
 	}
 
 	@Transactional(readOnly = true)
@@ -62,13 +82,33 @@ public class LndustryServiceImpl implements LndustryService {
 	@Transactional
 	@Override
 	public int updateByPrimaryKey(LndustryModel lndustryModel) {
-		return lndustryRepo.updateByPrimaryKey(beanMapper.map(lndustryModel, Lndustry.class));
+		Lndustry lndustry=beanMapper.map(lndustryModel,Lndustry.class);
+		int id=lndustryRepo.updateByPrimaryKey(lndustry);
+		if(lndustry.getId()!=null){
+			elasticSearchHelp.mergeES(lndustry,lndustry.getId().toString());
+
+		}
+		return id;
 	}
 	
 	@Transactional
 	@Override
 	public int updateByPrimaryKeySelective(LndustryModel lndustryModel) {
-		return lndustryRepo.updateByPrimaryKeySelective(beanMapper.map(lndustryModel, Lndustry.class));
+		Lndustry lndustry=beanMapper.map(lndustryModel,Lndustry.class);
+		int id=lndustryRepo.updateByPrimaryKeySelective(lndustry);
+		if(lndustry.getId()!=null){
+			elasticSearchHelp.mergeES(lndustry,lndustry.getId().toString());
+
+		}
+		return id;
+	}
+
+	@Transactional
+	@Override
+	public List<LndustryModel> getLndustry(LndustryModel lndustryModel){
+		Lndustry lndustry=beanMapper.map(lndustryModel,Lndustry.class);
+		List<LndustryModel> lndustryModelList=elasticSearchHelp.findESForList(lndustry);
+		return  lndustryModelList;
 	}
 
 }

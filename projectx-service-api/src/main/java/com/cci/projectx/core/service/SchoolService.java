@@ -24,4 +24,5 @@ public long selectCount(SchoolModel schoolModel);
 
 public List<SchoolModel> selectPage(SchoolModel schoolModel, Pageable pageable);
 
+    public List<SchoolModel> getSchool(SchoolModel schoolModel);
 }

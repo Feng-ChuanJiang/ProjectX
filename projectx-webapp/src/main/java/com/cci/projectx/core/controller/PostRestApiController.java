@@ -72,4 +72,12 @@ public class PostRestApiController {
         return responseEnv;
 	}
 
+	@GetMapping(value = "/post/like")
+	public ResponseEnvelope<List<PostModel>> getCommentInfo(PostVO postVO){
+		PostModel Model=beanMapper.map(postVO,PostModel.class);
+		List<PostModel> tModelList=postService.getPost(Model);
+		ResponseEnvelope<List<PostModel>> responseEnvelope=new ResponseEnvelope<>(tModelList,true);
+		return responseEnvelope;
+	}
+
 }

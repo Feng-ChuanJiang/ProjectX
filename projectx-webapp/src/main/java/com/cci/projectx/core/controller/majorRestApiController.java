@@ -71,4 +71,12 @@ public class majorRestApiController {
         return responseEnv;
 	}
 
+
+	@GetMapping(value = "/major/like")
+	public ResponseEnvelope<List<majorModel>> getCommentInfo(majorVO mavo){
+		majorModel Model=beanMapper.map(mavo,majorModel.class);
+		List<majorModel> tModelList=majorService.getMajor(Model);
+		ResponseEnvelope<List<majorModel>> responseEnvelope=new ResponseEnvelope<>(tModelList,true);
+		return responseEnvelope;
+	}
 }

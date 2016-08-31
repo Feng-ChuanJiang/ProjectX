@@ -19,13 +19,13 @@
     delete from department
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.cci.projectx.core.entity.Department">
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.Department" keyProperty="id" useGeneratedKeys="true">
     insert into department (id, name, remark
       )
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Department">
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Department" keyProperty="id" useGeneratedKeys="true">
     insert into department
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

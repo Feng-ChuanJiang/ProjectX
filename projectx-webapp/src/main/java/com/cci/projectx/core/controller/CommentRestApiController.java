@@ -129,4 +129,12 @@ public class CommentRestApiController {
         return responseEnv;
 	}
 
+
+	@GetMapping(value = "/comment/like")
+	public ResponseEnvelope<List<CommentModel>> getCommentInfo(CommentVO commentVO){
+		CommentModel commentModel=beanMapper.map(commentVO,CommentModel.class);
+		List<CommentModel> commentModelList=commentService.getComment(commentModel);
+		ResponseEnvelope<List<CommentModel>> responseEnvelope=new ResponseEnvelope<>(commentModelList,true);
+		return responseEnvelope;
+	}
 }

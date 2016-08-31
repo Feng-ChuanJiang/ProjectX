@@ -1,5 +1,6 @@
 package com.cci.projectx.core.service.impl;
 
+import com.cci.projectx.core.ElasticSearchHelp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,22 +23,57 @@ public class CommentServiceImpl implements CommentService {
 	@Autowired
 	private CommentRepository commentRepo;
 
+	@Autowired
+	private ElasticSearchHelp searchHelp;
+
+	/**
+	 * 在新增数据的时候同时插入ES
+	 * @param commentModel
+	 * @return
+	 */
 	@Transactional
 	@Override
 	public int create(CommentModel commentModel) {
-		return commentRepo.insert(beanMapper.map(commentModel, Comment.class));
-	}
 
+		Comment comment= beanMapper.map(commentModel,Comment.class);
+		int id =commentRepo.insert(comment);
+		if(comment.getId()!=null){
+			searchHelp.mergeES(comment,comment.getId().toString());
+		}
+
+
+		return id;
+	}
+	/**
+	 * 在新增数据的时候同时插入ES
+	 * @param commentModel
+	 * @return
+	 */
 	@Transactional
 	@Override
 	public int createSelective(CommentModel commentModel) {
-		return commentRepo.insertSelective(beanMapper.map(commentModel, Comment.class));
+		Comment comment=beanMapper.map(commentModel,Comment.class);
+		int id= commentRepo.insertSelective(comment);
+		if(comment.getId()!=null){
+			searchHelp.mergeES(comment,comment.getId().toString());
+		}
+		return id;
 	}
 
+	/**
+	 * 删除数据同时删除es数据
+	 * @param id
+	 * @return
+	 */
 	@Transactional
 	@Override
 	public int deleteByPrimaryKey(Long id) {
-		return commentRepo.deleteByPrimaryKey(id);
+
+		int wid=commentRepo.deleteByPrimaryKey(id);
+		if(wid>0){
+			searchHelp.deleteES(Comment.class,id);
+		}
+		return wid;
 	}
 
 	@Transactional(readOnly = true)
@@ -63,13 +99,36 @@ public class CommentServiceImpl implements CommentService {
 	@Transactional
 	@Override
 	public int updateByPrimaryKey(CommentModel commentModel) {
-		return commentRepo.updateByPrimaryKey(beanMapper.map(commentModel, Comment.class));
+		Comment comment=beanMapper.map(commentModel,Comment.class);
+		int id=commentRepo.updateByPrimaryKey(comment);
+		if(comment.getId()!=null){
+			searchHelp.mergeES(comment,comment.getId().toString());
+		}
+		return id;
 	}
 	
 	@Transactional
 	@Override
 	public int updateByPrimaryKeySelective(CommentModel commentModel) {
-		return commentRepo.updateByPrimaryKeySelective(beanMapper.map(commentModel, Comment.class));
+		Comment comment=beanMapper.map(commentModel,Comment.class);
+		int id=commentRepo.updateByPrimaryKeySelective(comment);
+		if(comment.getId()!=null){
+			searchHelp.mergeES(comment,comment.getId().toString());
+		}
+		return id;
+	}
+
+	/**
+	 * 通过模糊查询互动信息es
+	 * @param commentModel
+	 * @return
+	 */
+	@Transactional
+	@Override
+	public List<CommentModel> getComment(CommentModel commentModel){
+		Comment comment=beanMapper.map(commentModel,Comment.class);
+		List<CommentModel> commentModelList=searchHelp.findESForList(comment);
+		return  commentModelList;
 	}
 
 }

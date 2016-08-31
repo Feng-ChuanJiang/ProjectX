@@ -72,4 +72,12 @@ public class CompanyRestApiController {
         return responseEnv;
 	}
 
+	@GetMapping(value = "/company/like")
+	public ResponseEnvelope<List<CompanyModel>> getCommentInfo(CompanyVO commentVO){
+		CompanyModel commentModel=beanMapper.map(commentVO,CompanyModel.class);
+		List<CompanyModel> tModelList=companyService.getCompany(commentModel);
+		ResponseEnvelope<List<CompanyModel>> responseEnvelope=new ResponseEnvelope<>(tModelList,true);
+		return responseEnvelope;
+	}
+
 }

@@ -23,5 +23,6 @@ public int deleteByPrimaryKey(Long id);
 public long selectCount(LndustryModel lndustryModel);
 
 public List<LndustryModel> selectPage(LndustryModel lndustryModel, Pageable pageable);
+    public List<LndustryModel> getLndustry(LndustryModel lndustryModel);
 
 }

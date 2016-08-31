@@ -72,4 +72,12 @@ public class LndustryRestApiController {
         return responseEnv;
 	}
 
+	@GetMapping(value = "/lndustry/like")
+	public ResponseEnvelope<List<LndustryModel>> getIndeustry(LndustryVO lndustryVO){
+		LndustryModel lndustryModel=beanMapper.map(lndustryVO,LndustryModel.class);
+		List<LndustryModel> lndustryModelList=lndustryService.getLndustry(lndustryModel);
+		ResponseEnvelope<List<LndustryModel>> responseEnvelope=new ResponseEnvelope<>(lndustryModelList,true);
+		return  responseEnvelope;
+	}
+
 }
