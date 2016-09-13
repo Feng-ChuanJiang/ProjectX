@@ -67,7 +67,7 @@ public class EducationRestApiController {
 					@RequestBody EducationVO educationVO){
 		EducationModel educationModel = beanMapper.map(educationVO, EducationModel.class);
 		educationModel.setId(id);
-		Integer  result = educationService.updateByPrimaryKeySelective(educationModel);
+		Integer  result = educationService.updateByPrimaryKey(educationModel);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
         return responseEnv;
 	}

@@ -67,7 +67,7 @@ public class WorkingExperienceRestApiController {
 					@RequestBody WorkingExperienceVO workingExperienceVO){
 		WorkingExperienceModel workingExperienceModel = beanMapper.map(workingExperienceVO, WorkingExperienceModel.class);
 		workingExperienceModel.setId(id);
-		Integer  result = workingExperienceService.updateByPrimaryKeySelective(workingExperienceModel);
+		Integer  result = workingExperienceService.updateByPrimaryKey(workingExperienceModel);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
         return responseEnv;
 	}

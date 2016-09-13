@@ -71,6 +71,11 @@ public interface UserService {
 
     public int  findfriendsCount(Long userId);
 
+    public Map<String,Object> findRelation(Long userId,List<String> list);
+
+    public int updateFriends(FriendsModel friends);
+    public void register(UserModel user,String captcha);
+
 
 
 }

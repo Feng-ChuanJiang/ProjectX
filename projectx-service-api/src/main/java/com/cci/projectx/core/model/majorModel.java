@@ -3,7 +3,7 @@ package com.cci.projectx.core.model;
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 
 @MapClass("com.cci.projectx.core.entity.major")
-public class majorModel{
+public class MajorModel {
 	
 	private Long id;
 	private String name;

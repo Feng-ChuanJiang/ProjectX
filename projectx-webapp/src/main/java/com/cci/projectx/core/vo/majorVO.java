@@ -2,7 +2,7 @@ package com.cci.projectx.core.vo;
 
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 
-@MapClass("com.cci.projectx.core.model.majorModel")
+@MapClass("com.cci.projectx.core.model.MajorModel")
 public class majorVO{
 	
 	private Long id;

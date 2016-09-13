@@ -1,10 +1,12 @@
 package com.cci.projectx.core.controller;
 
 import com.cci.projectx.core.model.CompanyModel;
+import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.service.CompanyService;
 import com.cci.projectx.core.vo.CompanyVO;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
 import com.wlw.pylon.web.rest.ResponseEnvelope;
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/")
@@ -37,7 +40,7 @@ public class CompanyRestApiController {
 
 	@GetMapping(value = "/company")
     public ResponseEnvelope<Page<CompanyModel>> listCompany(CompanyVO companyVO, Pageable pageable){
-
+		System.out.println(companyVO.getName());
 		CompanyModel param = beanMapper.map(companyVO, CompanyModel.class);
         List<CompanyModel> companyModelModels = companyService.selectPage(param,pageable);
         long count=companyService.selectCount(param);
@@ -77,6 +80,15 @@ public class CompanyRestApiController {
 		CompanyModel commentModel=beanMapper.map(commentVO,CompanyModel.class);
 		List<CompanyModel> tModelList=companyService.getCompany(commentModel);
 		ResponseEnvelope<List<CompanyModel>> responseEnvelope=new ResponseEnvelope<>(tModelList,true);
+		return responseEnvelope;
+	}
+
+	@GetMapping(value = "/company/relation")
+	public ResponseEnvelope<Map<String ,List<UserModel>>> getRelatComment(Long userId,String name){
+		Map<String ,List<UserModel>> map=new HashedMap();
+		map.put("oneRelation",companyService.getOneRelatCompany(userId,name));
+		map.put("twoRelation",companyService.getTwoRelatCompany(userId,name));
+		ResponseEnvelope<Map<String ,List<UserModel>>> responseEnvelope=new ResponseEnvelope<>(map,true);
 		return responseEnvelope;
 	}
 

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cci.projectx.core.repository.RunInfoRepository">
+  <resultMap id="BaseResultMap" type="com.cci.projectx.core.entity.RunInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+    <result column="longitude1" jdbcType="DECIMAL" property="longitude1" />
+    <result column="latitude1" jdbcType="DECIMAL" property="latitude1" />
+    <result column="longitude2" jdbcType="DECIMAL" property="longitude2" />
+    <result column="latitude2" jdbcType="DECIMAL" property="latitude2" />
+    <result column="longitude3" jdbcType="DECIMAL" property="longitude3" />
+    <result column="latitude3" jdbcType="DECIMAL" property="latitude3" />
+    <result column="longitude4" jdbcType="DECIMAL" property="longitude4" />
+    <result column="latitude4" jdbcType="DECIMAL" property="latitude4" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, longitude, latitude, longitude1, latitude1, longitude2, latitude2, longitude3, 
+    latitude3, longitude4, latitude4
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from runinfo
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from runinfo
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.RunInfo">
+    insert into runinfo (id, user_id, longitude, 
+      latitude, longitude1, latitude1, 
+      longitude2, latitude2, longitude3, 
+      latitude3, longitude4, latitude4
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{longitude,jdbcType=DECIMAL}, 
+      #{latitude,jdbcType=DECIMAL}, #{longitude1,jdbcType=DECIMAL}, #{latitude1,jdbcType=DECIMAL}, 
+      #{longitude2,jdbcType=DECIMAL}, #{latitude2,jdbcType=DECIMAL}, #{longitude3,jdbcType=DECIMAL}, 
+      #{latitude3,jdbcType=DECIMAL}, #{longitude4,jdbcType=DECIMAL}, #{latitude4,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.RunInfo">
+    insert into runinfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="longitude != null">
+        longitude,
+      </if>
+      <if test="latitude != null">
+        latitude,
+      </if>
+      <if test="longitude1 != null">
+        longitude1,
+      </if>
+      <if test="latitude1 != null">
+        latitude1,
+      </if>
+      <if test="longitude2 != null">
+        longitude2,
+      </if>
+      <if test="latitude2 != null">
+        latitude2,
+      </if>
+      <if test="longitude3 != null">
+        longitude3,
+      </if>
+      <if test="latitude3 != null">
+        latitude3,
+      </if>
+      <if test="longitude4 != null">
+        longitude4,
+      </if>
+      <if test="latitude4 != null">
+        latitude4,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="longitude != null">
+        #{longitude,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude != null">
+        #{latitude,jdbcType=DECIMAL},
+      </if>
+      <if test="longitude1 != null">
+        #{longitude1,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude1 != null">
+        #{latitude1,jdbcType=DECIMAL},
+      </if>
+      <if test="longitude2 != null">
+        #{longitude2,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude2 != null">
+        #{latitude2,jdbcType=DECIMAL},
+      </if>
+      <if test="longitude3 != null">
+        #{longitude3,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude3 != null">
+        #{latitude3,jdbcType=DECIMAL},
+      </if>
+      <if test="longitude4 != null">
+        #{longitude4,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude4 != null">
+        #{latitude4,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.RunInfo">
+    update runinfo
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="longitude != null">
+        longitude = #{longitude,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude != null">
+        latitude = #{latitude,jdbcType=DECIMAL},
+      </if>
+      <if test="longitude1 != null">
+        longitude1 = #{longitude1,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude1 != null">
+        latitude1 = #{latitude1,jdbcType=DECIMAL},
+      </if>
+      <if test="longitude2 != null">
+        longitude2 = #{longitude2,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude2 != null">
+        latitude2 = #{latitude2,jdbcType=DECIMAL},
+      </if>
+      <if test="longitude3 != null">
+        longitude3 = #{longitude3,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude3 != null">
+        latitude3 = #{latitude3,jdbcType=DECIMAL},
+      </if>
+      <if test="longitude4 != null">
+        longitude4 = #{longitude4,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude4 != null">
+        latitude4 = #{latitude4,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cci.projectx.core.entity.RunInfo">
+    update runinfo
+    set user_id = #{userId,jdbcType=BIGINT},
+      longitude = #{longitude,jdbcType=DECIMAL},
+      latitude = #{latitude,jdbcType=DECIMAL},
+      longitude1 = #{longitude1,jdbcType=DECIMAL},
+      latitude1 = #{latitude1,jdbcType=DECIMAL},
+      longitude2 = #{longitude2,jdbcType=DECIMAL},
+      latitude2 = #{latitude2,jdbcType=DECIMAL},
+      longitude3 = #{longitude3,jdbcType=DECIMAL},
+      latitude3 = #{latitude3,jdbcType=DECIMAL},
+      longitude4 = #{longitude4,jdbcType=DECIMAL},
+      latitude4 = #{latitude4,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCount" parameterType="com.cci.projectx.core.entity.RunInfo" resultType="java.lang.Integer">
+    select count(*) from runinfo
+    <where>
+      <if test="id != null">
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="longitude != null">
+        and longitude = #{longitude,jdbcType=DECIMAL}
+      </if>
+      <if test="latitude != null">
+        and latitude = #{latitude,jdbcType=DECIMAL}
+      </if>
+      <if test="longitude1 != null">
+        and longitude1 = #{longitude1,jdbcType=DECIMAL}
+      </if>
+      <if test="latitude1 != null">
+        and latitude1 = #{latitude1,jdbcType=DECIMAL}
+      </if>
+      <if test="longitude2 != null">
+        and longitude2 = #{longitude2,jdbcType=DECIMAL}
+      </if>
+      <if test="latitude2 != null">
+        and latitude2 = #{latitude2,jdbcType=DECIMAL}
+      </if>
+      <if test="longitude3 != null">
+        and longitude3 = #{longitude3,jdbcType=DECIMAL}
+      </if>
+      <if test="latitude3 != null">
+        and latitude3 = #{latitude3,jdbcType=DECIMAL}
+      </if>
+      <if test="longitude4 != null">
+        and longitude4 = #{longitude4,jdbcType=DECIMAL}
+      </if>
+      <if test="latitude4 != null">
+        and latitude4 = #{latitude4,jdbcType=DECIMAL}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from runinfo where 1 = 1 
+    <if test="param1.id != null">
+      and id = #{param1.id,jdbcType=BIGINT}
+    </if>
+    <if test="param1.userId != null">
+      and user_id = #{param1.userId,jdbcType=BIGINT}
+    </if>
+    <if test="param1.longitude != null">
+      and longitude = #{param1.longitude,jdbcType=DECIMAL}
+    </if>
+    <if test="param1.latitude != null">
+      and latitude = #{param1.latitude,jdbcType=DECIMAL}
+    </if>
+    <if test="param1.longitude1 != null">
+      and longitude1 = #{param1.longitude1,jdbcType=DECIMAL}
+    </if>
+    <if test="param1.latitude1 != null">
+      and latitude1 = #{param1.latitude1,jdbcType=DECIMAL}
+    </if>
+    <if test="param1.longitude2 != null">
+      and longitude2 = #{param1.longitude2,jdbcType=DECIMAL}
+    </if>
+    <if test="param1.latitude2 != null">
+      and latitude2 = #{param1.latitude2,jdbcType=DECIMAL}
+    </if>
+    <if test="param1.longitude3 != null">
+      and longitude3 = #{param1.longitude3,jdbcType=DECIMAL}
+    </if>
+    <if test="param1.latitude3 != null">
+      and latitude3 = #{param1.latitude3,jdbcType=DECIMAL}
+    </if>
+    <if test="param1.longitude4 != null">
+      and longitude4 = #{param1.longitude4,jdbcType=DECIMAL}
+    </if>
+    <if test="param1.latitude4 != null">
+      and latitude4 = #{param1.latitude4,jdbcType=DECIMAL}
+    </if>
+    <if test="param2.sort != null">
+      order by 
+      <foreach collection="param2.sort" item="order" separator=",">
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0">
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>

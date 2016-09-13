@@ -25,14 +25,6 @@
     <bean id="orikaBeanMapper" class="com.wlw.pylon.core.beans.mapping.orika.OrikaBeanMapper">
         <property name="basePackage" value="com.cci.projectx.core.model.**"></property>
     </bean>
-    <!-- 引入配置文件 -->
-    <bean id="propertiesReader" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="locations">
-            <list>
-                <value>classpath*:properties/file.properties</value>
-            </list>
-        </property>
-    </bean>
     <!--i18n-->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basenames">

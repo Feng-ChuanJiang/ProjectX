@@ -6,23 +6,23 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface EducationService{
+public interface EducationService {
 
-public int create(EducationModel educationModel);
+    public int create(EducationModel educationModel);
 
-public int createSelective(EducationModel educationModel);
+    public int createSelective(EducationModel educationModel);
 
-public EducationModel findByPrimaryKey(Long id);
+    public EducationModel findByPrimaryKey(Long id);
 
-public int updateByPrimaryKey(EducationModel educationModel);
+    public int updateByPrimaryKey(EducationModel educationModel);
 
-public int updateByPrimaryKeySelective(EducationModel educationModel);
+    public int updateByPrimaryKeySelective(EducationModel educationModel);
 
-public int deleteByPrimaryKey(Long id);
+    public int deleteByPrimaryKey(Long id);
 
-public long selectCount(EducationModel educationModel);
+    public long selectCount(EducationModel educationModel);
 
-public List<EducationModel> selectPage(EducationModel educationModel,Pageable pageable);
+    public List<EducationModel> selectPage(EducationModel educationModel, Pageable pageable);
 
     public List<EducationModel> getEducationByEducationInfo(EducationModel education);
 }

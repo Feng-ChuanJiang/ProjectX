@@ -1,10 +1,12 @@
 package com.cci.projectx.core.controller;
 
 import com.cci.projectx.core.model.SchoolModel;
+import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.service.SchoolService;
 import com.cci.projectx.core.vo.SchoolVO;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
 import com.wlw.pylon.web.rest.ResponseEnvelope;
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/")
@@ -76,6 +79,15 @@ public class SchoolRestApiController {
 		SchoolModel schoolModel=beanMapper.map(schoolVO,SchoolModel.class);
 		List<SchoolModel> schoolModelList=schoolService.getSchool(schoolModel);
 		ResponseEnvelope<List<SchoolModel>> responseEnvelope=new ResponseEnvelope<>(schoolModelList,true);
+		return responseEnvelope;
+	}
+
+	@GetMapping(value = "/school/relation")
+	public ResponseEnvelope<Map<String ,List<UserModel>>> getRelatSchool(Long userId, String name){
+		Map<String ,List<UserModel>> map=new HashedMap();
+		map.put("oneRelation",schoolService.getOneRelatCompany(userId,name));
+		map.put("twoRelation",schoolService.getTwoRelatCompany(userId,name));
+		ResponseEnvelope<Map<String ,List<UserModel>>> responseEnvelope=new ResponseEnvelope<>(map,true);
 		return responseEnvelope;
 	}
 

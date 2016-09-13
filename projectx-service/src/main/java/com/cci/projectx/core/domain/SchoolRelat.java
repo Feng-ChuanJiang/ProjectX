@@ -1,0 +1,49 @@
+package com.cci.projectx.core.domain;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+import org.neo4j.ogm.annotation.EndNode;
+import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.RelationshipEntity;
+import org.neo4j.ogm.annotation.StartNode;
+
+/**
+ * Created by 33303 on 2016/9/11.
+ */
+@JsonIdentityInfo(generator=JSOGGenerator.class)
+@RelationshipEntity(type = "SCHOOL")
+public class SchoolRelat {
+    @GraphId
+    private Long id;
+    @StartNode
+    private UserNeo user;
+
+    @EndNode
+    private SchoolNeo school;
+
+
+
+    public UserNeo getUser() {
+        return user;
+    }
+
+    public void setUser(UserNeo user) {
+        this.user = user;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public SchoolNeo getSchool() {
+        return school;
+    }
+
+    public void setSchool(SchoolNeo school) {
+        this.school = school;
+    }
+}

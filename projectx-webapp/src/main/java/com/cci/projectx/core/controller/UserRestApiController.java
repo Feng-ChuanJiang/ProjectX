@@ -6,10 +6,7 @@ import com.cci.projectx.core.annotation.IgnoreAuth;
 import com.cci.projectx.core.model.FriendsModel;
 import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.service.UserService;
-import com.cci.projectx.core.vo.FriendsVO;
-import com.cci.projectx.core.vo.UpdatePassVO;
-import com.cci.projectx.core.vo.UserInfoVO;
-import com.cci.projectx.core.vo.UserVO;
+import com.cci.projectx.core.vo.*;
 import com.google.common.cache.Cache;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
 import com.wlw.pylon.web.rest.ResponseEnvelope;
@@ -43,14 +40,22 @@ public class UserRestApiController {
 
 	@IgnoreAuth
 	@PostMapping(value = "/user/login")
-	public ResponseEnvelope<UserInfoVO> userLogin(@RequestBody UserVO userVO) {
-		UserModel userModel = beanMapper.map(userVO, UserModel.class);
+	public ResponseEnvelope<UserInfoVO> userLogin(@RequestBody LoginVO loginVO) {
+		UserModel userModel = beanMapper.map(loginVO, UserModel.class);
 		UserModel existedUser = userService.login(userModel);
 		UserInfoVO userInfoVO = beanMapper.map(existedUser, UserInfoVO.class);
 		String sessionId = RandomUtil.generateAuthToken();
 		sessionCache.put(sessionId, existedUser.getId());
 		userInfoVO.setSessionId(sessionId);
 		ResponseEnvelope<UserInfoVO> responseEnv = new ResponseEnvelope<>(userInfoVO, true);
+		return responseEnv;
+	}
+	@IgnoreAuth
+	@PostMapping(value = "/user/register")
+	public ResponseEnvelope<String> userRegister(@RequestBody RegisterVO registerVO) {
+		UserModel userModel = beanMapper.map(registerVO, UserModel.class);
+		userService.register(userModel,registerVO.getCaptcha());
+		ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>("ok",true);
 		return responseEnv;
 	}
 	@GetMapping(value = "/user/{id}")
@@ -106,7 +111,7 @@ public class UserRestApiController {
 					@RequestBody UserVO userVO){
 		UserModel userModel = beanMapper.map(userVO, UserModel.class);
 		userModel.setId(id);
-		Integer  result = userService.updateByPrimaryKeySelective(userModel);
+		Integer  result = userService.updateByPrimaryKey(userModel);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
         return responseEnv;
 	}
@@ -149,6 +154,13 @@ public class UserRestApiController {
 	public ResponseEnvelope<Integer> addFriends(@RequestBody FriendsVO friendsVO ){
 		FriendsModel friendsModel = beanMapper.map(friendsVO, FriendsModel.class);
 		Integer  result = userService.addFriends(friendsModel);
+		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
+		return responseEnv;
+	}
+	@PutMapping(value = "/friend")
+	public ResponseEnvelope<Integer> updateFriends(@RequestBody FriendsVO friendsVO ){
+		FriendsModel friendsModel = beanMapper.map(friendsVO, FriendsModel.class);
+		Integer  result = userService.updateFriends(friendsModel);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
 		return responseEnv;
 	}
@@ -221,4 +233,11 @@ public class UserRestApiController {
 		ResponseEnvelope<Page<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
 		return responseEnv;
 	}
+	@PostMapping(value = "/friends/relation")
+	public ResponseEnvelope<Map<String,Object>> findRelation(@RequestBody FriendPhoneVO phones){
+		Map<String,Object> page=userService.findRelation(phones.getUserId(),phones.getPhones());
+		ResponseEnvelope<Map<String,Object>> responseEnv = new ResponseEnvelope<>(page,true);
+		return responseEnv;
+	}
+
 }

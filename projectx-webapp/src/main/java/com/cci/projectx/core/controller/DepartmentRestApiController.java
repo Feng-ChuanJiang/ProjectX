@@ -1,10 +1,12 @@
 package com.cci.projectx.core.controller;
 
 import com.cci.projectx.core.model.DepartmentModel;
+import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.service.DepartmentService;
 import com.cci.projectx.core.vo.DepartmentVO;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
 import com.wlw.pylon.web.rest.ResponseEnvelope;
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/")
@@ -78,6 +81,15 @@ public class DepartmentRestApiController {
 		DepartmentModel commentModel=beanMapper.map(commentVO,DepartmentModel.class);
 		List<DepartmentModel> tModelList=departmentService.getDepartment(commentModel);
 		ResponseEnvelope<List<DepartmentModel>> responseEnvelope=new ResponseEnvelope<>(tModelList,true);
+		return responseEnvelope;
+	}
+
+	@GetMapping(value = "/department/relation")
+	public ResponseEnvelope<Map<String ,List<UserModel>>> getRelatDepartment(Long userId, String name){
+		Map<String ,List<UserModel>> map=new HashedMap();
+		map.put("oneRelation",departmentService.getOneRelatCompany(userId,name));
+		map.put("twoRelation",departmentService.getTwoRelatCompany(userId,name));
+		ResponseEnvelope<Map<String ,List<UserModel>>> responseEnvelope=new ResponseEnvelope<>(map,true);
 		return responseEnvelope;
 	}
 

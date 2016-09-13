@@ -4,6 +4,7 @@ import org.neo4j.ogm.session.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.neo4j.config.Neo4jConfiguration;
+import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableScheduling
 @Configuration
-//@EnableNeo4jRepositories(basePackages = "com.projectx.oms.neo4j.repositories")
+@EnableNeo4jRepositories(basePackages = "com.cci.projectx.core.neorepository")
 public class MyNeo4jConfiguration extends Neo4jConfiguration {
 
     public static final String URL = System.getenv("NEO4J_URL") != null ? System.getenv("NEO4J_URL") : "http://neo4j:123456@localhost:7474";

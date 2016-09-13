@@ -1,10 +1,12 @@
 package com.cci.projectx.core.controller;
 
 import com.cci.projectx.core.model.PostModel;
+import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.service.PostService;
 import com.cci.projectx.core.vo.PostVO;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
 import com.wlw.pylon.web.rest.ResponseEnvelope;
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/")
@@ -77,6 +80,15 @@ public class PostRestApiController {
 		PostModel Model=beanMapper.map(postVO,PostModel.class);
 		List<PostModel> tModelList=postService.getPost(Model);
 		ResponseEnvelope<List<PostModel>> responseEnvelope=new ResponseEnvelope<>(tModelList,true);
+		return responseEnvelope;
+	}
+
+	@GetMapping(value = "/post/relation")
+	public ResponseEnvelope<Map<String ,List<UserModel>>> getRelatPost(Long userId, String name){
+		Map<String ,List<UserModel>> map=new HashedMap();
+		map.put("oneRelation",postService.getOneRelatCompany(userId,name));
+		map.put("twoRelation",postService.getTwoRelatCompany(userId,name));
+		ResponseEnvelope<Map<String ,List<UserModel>>> responseEnvelope=new ResponseEnvelope<>(map,true);
 		return responseEnvelope;
 	}
 

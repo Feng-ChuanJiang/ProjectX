@@ -13,7 +13,6 @@ public class UserVO{
 
 	private Long id;
 	private String name;
-	private String password;
 	private String photos;
 	private String mobilePhone;
 	private String gender;
@@ -43,14 +42,6 @@ public class UserVO{
 
 	public String getName(){
 		return this.name;
-	}
-
-	public void setPassword(String password){
-		this.password = password;
-	}
-
-	public String getPassword(){
-		return this.password;
 	}
 
 	public void setPhotos(String photos){
