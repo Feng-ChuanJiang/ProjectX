@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.neo4j.template.Neo4jOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,10 +23,7 @@ public class CommentRestApiController {
 
 	@Autowired
 	private BeanMapper beanMapper;
-	@Autowired
-	ElasticsearchTemplate elasticsearchTemplate;
-	@Autowired
-	Neo4jOperations neo4jTemplate;
+
 	@Autowired
 	private CommentService commentService;
 
@@ -41,7 +36,7 @@ public class CommentRestApiController {
 	}
 
 	@GetMapping(value = "/comment")
-    public ResponseEnvelope<Page<CommentModel>> listComment(CommentVO commentVO,Pageable pageable){
+    public ResponseEnvelope<Page<CommentModel>> listComment(CommentVO commentVO, Pageable pageable){
 
 		CommentModel param = beanMapper.map(commentVO, CommentModel.class);
         List<CommentModel> commentModelModels = commentService.selectPage(param,pageable);
@@ -54,14 +49,14 @@ public class CommentRestApiController {
 	@PostMapping(value = "/comment")
 	public ResponseEnvelope<Integer> createComment(@RequestBody CommentVO commentVO){
 		CommentModel commentModel = beanMapper.map(commentVO, CommentModel.class);
-		Integer  result = commentService.create(commentModel);
+		Integer result = commentService.create(commentModel);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
         return responseEnv;
 	}
 
     @DeleteMapping(value = "/comment/{id}")
 	public ResponseEnvelope<Integer> deleteCommentByPrimaryKey(@PathVariable Long id){
-		Integer  result = commentService.deleteByPrimaryKey(id);
+		Integer result = commentService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
         return responseEnv;
 	}
@@ -69,20 +64,12 @@ public class CommentRestApiController {
 
     @PutMapping(value = "/comment/{id}")
 	public ResponseEnvelope<Integer> updateCommentByPrimaryKeySelective(@PathVariable Long id,
-					@RequestBody CommentVO commentVO){
+																		@RequestBody CommentVO commentVO){
 		CommentModel commentModel = beanMapper.map(commentVO, CommentModel.class);
 		commentModel.setId(id);
-		Integer  result = commentService.updateByPrimaryKeySelective(commentModel);
+		Integer result = commentService.updateByPrimaryKeySelective(commentModel);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
         return responseEnv;
 	}
 
-
-	@GetMapping(value = "/comment/like")
-	public ResponseEnvelope<List<CommentModel>> getCommentInfo(CommentVO commentVO){
-		CommentModel commentModel=beanMapper.map(commentVO,CommentModel.class);
-		List<CommentModel> commentModelList=commentService.getComment(commentModel);
-		ResponseEnvelope<List<CommentModel>> responseEnvelope=new ResponseEnvelope<>(commentModelList,true);
-		return responseEnvelope;
-	}
 }

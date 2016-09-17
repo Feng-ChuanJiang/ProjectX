@@ -3,13 +3,12 @@ package com.cci.projectx.core;
 /**
  * Created by 33303 on 2016/8/28.
  */
-public enum GroupPermissionType {
+public enum InteractPermissionType {
     FRIENDPERMISSION(1),//朋友可见
-    ALLPERMISSION(2),   //说有人可见
-    GROUPPERMISSION(3); //指定圈可见
+    ASSIGNPERMISSION(2) ;  //指定人可看
 
     private int type;
-    private GroupPermissionType(int type){
+    private InteractPermissionType(int type){
         this.type=type;
     }
     public int getType(){

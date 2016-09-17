@@ -2,8 +2,8 @@ package com.cci.projectx.core.vo;
 
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 
-@MapClass("com.cci.projectx.core.model.InteractGroupModel")
-public class InteractGroupVO {
+@MapClass("com.cci.projectx.core.model.CircleModel")
+public class CircleVO{
 	
 	private Long id;
 	private String groupName;

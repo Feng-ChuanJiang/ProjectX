@@ -2,8 +2,8 @@ package com.cci.projectx.core.model;
 
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 
-@MapClass("com.cci.projectx.core.entity.InteractGroup")
-public class InteractGroupModel {
+@MapClass("com.cci.projectx.core.entity.Circle")
+public class CircleModel{
 	
 	private Long id;
 	private String groupName;

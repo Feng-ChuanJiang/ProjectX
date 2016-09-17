@@ -1,6 +1,6 @@
 package com.cci.projectx.core.entity;
 
-public class InteractGroup {
+public class Circle {
     private Long id;
 
     private String groupName;

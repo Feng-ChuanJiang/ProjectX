@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cci.projectx.core.repository.InteractPermissionRepository">
+  <resultMap id="BaseResultMap" type="com.cci.projectx.core.entity.InteractPermission">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="interact_id" jdbcType="BIGINT" property="interactId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="friend_id" jdbcType="BIGINT" property="friendId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, interact_id, user_id, friend_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from interact_permission
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from interact_permission
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.InteractPermission">
+    insert into interact_permission (id, interact_id, user_id, 
+      friend_id)
+    values (#{id,jdbcType=BIGINT}, #{interactId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
+      #{friendId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.InteractPermission">
+    insert into interact_permission
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="interactId != null">
+        interact_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="friendId != null">
+        friend_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="interactId != null">
+        #{interactId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="friendId != null">
+        #{friendId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.InteractPermission">
+    update interact_permission
+    <set>
+      <if test="interactId != null">
+        interact_id = #{interactId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="friendId != null">
+        friend_id = #{friendId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cci.projectx.core.entity.InteractPermission">
+    update interact_permission
+    set interact_id = #{interactId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      friend_id = #{friendId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCount" parameterType="com.cci.projectx.core.entity.InteractPermission" resultType="java.lang.Integer">
+    select count(*) from interact_permission
+    <where>
+      <if test="id != null">
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="interactId != null">
+        and interact_id = #{interactId,jdbcType=BIGINT}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="friendId != null">
+        and friend_id = #{friendId,jdbcType=BIGINT}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from interact_permission where 1 = 1 
+    <if test="param1.id != null">
+      and id = #{param1.id,jdbcType=BIGINT}
+    </if>
+    <if test="param1.interactId != null">
+      and interact_id = #{param1.interactId,jdbcType=BIGINT}
+    </if>
+    <if test="param1.userId != null">
+      and user_id = #{param1.userId,jdbcType=BIGINT}
+    </if>
+    <if test="param1.friendId != null">
+      and friend_id = #{param1.friendId,jdbcType=BIGINT}
+    </if>
+    <if test="param2.sort != null">
+      order by 
+      <foreach collection="param2.sort" item="order" separator=",">
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0">
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>

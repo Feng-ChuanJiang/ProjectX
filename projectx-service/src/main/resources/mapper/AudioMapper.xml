@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cci.projectx.core.repository.AudioRepository">
+  <resultMap id="BaseResultMap" type="com.cci.projectx.core.entity.Audio">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="content_type" jdbcType="VARCHAR" property="contentType" />
+    <result column="extension" jdbcType="VARCHAR" property="extension" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, path, create_time, content_type, extension
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from audio
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from audio
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.Audio" useGeneratedKeys="true" keyProperty="id">
+    insert into audio (id, name, path, 
+      create_time, content_type, extension
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{contentType,jdbcType=VARCHAR}, #{extension,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Audio" useGeneratedKeys="true" keyProperty="id">
+    insert into audio
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="path != null">
+        path,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="contentType != null">
+        content_type,
+      </if>
+      <if test="extension != null">
+        extension,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contentType != null">
+        #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="extension != null">
+        #{extension,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.Audio">
+    update audio
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contentType != null">
+        content_type = #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="extension != null">
+        extension = #{extension,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cci.projectx.core.entity.Audio">
+    update audio
+    set name = #{name,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      content_type = #{contentType,jdbcType=VARCHAR},
+      extension = #{extension,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCount" parameterType="com.cci.projectx.core.entity.Audio" resultType="java.lang.Integer">
+    select count(*) from audio
+    <where>
+      <if test="id != null">
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="name != null">
+        and name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="path != null">
+        and path = #{path,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="contentType != null">
+        and content_type = #{contentType,jdbcType=VARCHAR}
+      </if>
+      <if test="extension != null">
+        and extension = #{extension,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from audio where 1 = 1 
+    <if test="param1.id != null">
+      and id = #{param1.id,jdbcType=BIGINT}
+    </if>
+    <if test="param1.name != null">
+      and name = #{param1.name,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.path != null">
+      and path = #{param1.path,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.createTime != null">
+      and create_time = #{param1.createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="param1.contentType != null">
+      and content_type = #{param1.contentType,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.extension != null">
+      and extension = #{param1.extension,jdbcType=VARCHAR}
+    </if>
+    <if test="param2.sort != null">
+      order by 
+      <foreach collection="param2.sort" item="order" separator=",">
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0">
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>

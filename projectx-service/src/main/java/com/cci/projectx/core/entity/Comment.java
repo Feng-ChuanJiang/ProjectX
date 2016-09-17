@@ -1,12 +1,8 @@
 package com.cci.projectx.core.entity;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-
 import java.util.Date;
-@Document(indexName = "user-profile",type = "user-comment")
+
 public class Comment {
-    @Id
     private Long id;
 
     private Long userId;
@@ -16,6 +12,8 @@ public class Comment {
     private Date creatTime;
 
     private String comment;
+
+    private Integer audio;
 
     private Integer type;
 
@@ -57,6 +55,14 @@ public class Comment {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Integer getAudio() {
+        return audio;
+    }
+
+    public void setAudio(Integer audio) {
+        this.audio = audio;
     }
 
     public Integer getType() {

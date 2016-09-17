@@ -10,9 +10,7 @@ public class InteractVO{
 	private Long id;
 	private String content;
 	private Long userId;
-	private Long groupId;
 	private Date createTime;
-	private Integer privacyPermission;
 	private Integer tag;
 	private BigDecimal longitude;
 	private BigDecimal latitude;
@@ -42,29 +40,13 @@ public class InteractVO{
 	public Long getUserId(){
 		return this.userId;
 	}
-		
-	public void setGroupId(Long groupId){
-		this.groupId = groupId;
-	}
-	
-	public Long getGroupId(){
-		return this.groupId;
-	}
-		
+
 	public void setCreateTime(Date createTime){
 		this.createTime = createTime;
 	}
 	
 	public Date getCreateTime(){
 		return this.createTime;
-	}
-		
-	public void setPrivacyPermission(Integer privacyPermission){
-		this.privacyPermission = privacyPermission;
-	}
-	
-	public Integer getPrivacyPermission(){
-		return this.privacyPermission;
 	}
 		
 	public void setTag(Integer tag){

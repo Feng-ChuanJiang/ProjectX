@@ -1,16 +1,18 @@
 package com.cci.projectx.core.vo;
 
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
+
 import java.util.Date;
 
 @MapClass("com.cci.projectx.core.model.CommentModel")
-public class CommentVO{
+public class CommentVO {
 	
 	private Long id;
 	private Long userId;
 	private Long interactId;
 	private Date creatTime;
 	private String comment;
+	private Integer audio;
 	private Integer type;
 		
 	public void setId(Long id){
@@ -51,6 +53,14 @@ public class CommentVO{
 	
 	public String getComment(){
 		return this.comment;
+	}
+		
+	public void setAudio(Integer audio){
+		this.audio = audio;
+	}
+	
+	public Integer getAudio(){
+		return this.audio;
 	}
 		
 	public void setType(Integer type){

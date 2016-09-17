@@ -36,6 +36,10 @@ public class User {
 
     private Long praise;
 
+    private Date birthday;
+
+    private Integer birthdayType;
+
     private Date createTime;
 
     public Long getId() {
@@ -148,6 +152,22 @@ public class User {
 
     public void setPraise(Long praise) {
         this.praise = praise;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public Integer getBirthdayType() {
+        return birthdayType;
+    }
+
+    public void setBirthdayType(Integer birthdayType) {
+        this.birthdayType = birthdayType;
     }
 
     public Date getCreateTime() {

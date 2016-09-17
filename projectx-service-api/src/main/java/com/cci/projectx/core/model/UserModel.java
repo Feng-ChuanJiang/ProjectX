@@ -23,6 +23,8 @@ public class UserModel{
 	private BigDecimal longitude;
 	private BigDecimal latitude;
 	private Long praise;
+	private Date birthday;
+	private Integer birthdayType;
 	private Date createTime;
 	private List<WorkingExperienceModel> workingExperiences;
 	private List<EducationModel> educations;
@@ -145,6 +147,22 @@ public class UserModel{
 
 	public void setEducations(List<EducationModel> educations) {
 		this.educations = educations;
+	}
+
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+
+	public Integer getBirthdayType() {
+		return birthdayType;
+	}
+
+	public void setBirthdayType(Integer birthdayType) {
+		this.birthdayType = birthdayType;
 	}
 
 	public Long getPraise() {

@@ -1,28 +1,37 @@
 
 package com.cci.projectx.core.service;
 
-import com.cci.projectx.core.model.majorModel;
+import com.cci.projectx.core.model.MajorModel;
+import com.cci.projectx.core.model.UserModel;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface majorService{
+public interface MajorService {
 
-public int create(majorModel majorModel);
+    public int create(MajorModel majorModel);
 
-public int createSelective(majorModel majorModel);
+    public int createSelective(MajorModel majorModel);
 
-public majorModel findByPrimaryKey(Long id);
+    public MajorModel findByPrimaryKey(Long id);
 
-public int updateByPrimaryKey(majorModel majorModel);
+    public int updateByPrimaryKey(MajorModel majorModel);
 
-public int updateByPrimaryKeySelective(majorModel majorModel);
+    public int updateByPrimaryKeySelective(MajorModel majorModel);
 
-public int deleteByPrimaryKey(Long id);
+    public int deleteByPrimaryKey(Long id);
 
-public long selectCount(majorModel majorModel);
+    public long selectCount(MajorModel majorModel);
 
-public List<majorModel> selectPage(majorModel majorModel, Pageable pageable);
+    public List<MajorModel> selectPage(MajorModel majorModel, Pageable pageable);
 
-    public List<majorModel> getMajor(majorModel model);
+    public List<MajorModel> getMajor(MajorModel model);
+
+    public int findCountByName(String name);
+
+    public Long findIdByName(String name);
+
+    public List<UserModel> getOneRelatCompany(Long userId, String name);
+
+    public List<UserModel> getTwoRelatCompany(Long userId, String name);
 }

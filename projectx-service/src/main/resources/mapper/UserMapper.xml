@@ -16,11 +16,13 @@
     <result column="longitude" jdbcType="DECIMAL" property="longitude" />
     <result column="latitude" jdbcType="DECIMAL" property="latitude" />
     <result column="praise" jdbcType="BIGINT" property="praise" />
+    <result column="birthday" jdbcType="DATE" property="birthday" />
+    <result column="birthday_type" jdbcType="INTEGER" property="birthdayType" />
     <result column="create_time" jdbcType="DATE" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, password, photos, mobile_phone, gender, constellation, Age, lndustry, group_id, 
-    labels, longitude, latitude, praise, create_time
+    labels, longitude, latitude, praise, birthday, birthday_type, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -37,14 +39,14 @@
       photos, mobile_phone, gender, 
       constellation, Age, lndustry, 
       group_id, labels, longitude, 
-      latitude, praise, create_time
-      )
+      latitude, praise, birthday, 
+      birthday_type, create_time)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{photos,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, 
       #{constellation,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{lndustry,jdbcType=VARCHAR}, 
       #{groupId,jdbcType=BIGINT}, #{labels,jdbcType=VARCHAR}, #{longitude,jdbcType=DECIMAL}, 
-      #{latitude,jdbcType=DECIMAL}, #{praise,jdbcType=BIGINT}, #{createTime,jdbcType=DATE}
-      )
+      #{latitude,jdbcType=DECIMAL}, #{praise,jdbcType=BIGINT}, #{birthday,jdbcType=DATE}, 
+      #{birthdayType,jdbcType=INTEGER}, #{createTime,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.User" keyProperty="id" useGeneratedKeys="true">
     insert into user
@@ -90,6 +92,12 @@
       </if>
       <if test="praise != null">
         praise,
+      </if>
+      <if test="birthday != null">
+        birthday,
+      </if>
+      <if test="birthdayType != null">
+        birthday_type,
       </if>
       <if test="createTime != null">
         create_time,
@@ -138,12 +146,18 @@
       <if test="praise != null">
         #{praise,jdbcType=BIGINT},
       </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="birthdayType != null">
+        #{birthdayType,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=DATE},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.User" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.cci.projectx.core.entity.User">
     update user
     <set>
       <if test="name != null">
@@ -185,6 +199,12 @@
       <if test="praise != null">
         praise = #{praise,jdbcType=BIGINT},
       </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="birthdayType != null">
+        birthday_type = #{birthdayType,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=DATE},
       </if>
@@ -206,6 +226,8 @@
       longitude = #{longitude,jdbcType=DECIMAL},
       latitude = #{latitude,jdbcType=DECIMAL},
       praise = #{praise,jdbcType=BIGINT},
+      birthday = #{birthday,jdbcType=DATE},
+      birthday_type = #{birthdayType,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=DATE}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -253,6 +275,12 @@
       </if>
       <if test="praise != null">
         and praise = #{praise,jdbcType=BIGINT}
+      </if>
+      <if test="birthday != null">
+        and birthday = #{birthday,jdbcType=DATE}
+      </if>
+      <if test="birthdayType != null">
+        and birthday_type = #{birthdayType,jdbcType=INTEGER}
       </if>
       <if test="createTime != null">
         and create_time = #{createTime,jdbcType=DATE}
@@ -304,6 +332,12 @@
     </if>
     <if test="param1.praise != null">
       and praise = #{param1.praise,jdbcType=BIGINT}
+    </if>
+    <if test="param1.birthday != null">
+      and birthday = #{param1.birthday,jdbcType=DATE}
+    </if>
+    <if test="param1.birthdayType != null">
+      and birthday_type = #{param1.birthdayType,jdbcType=INTEGER}
     </if>
     <if test="param1.createTime != null">
       and create_time = #{param1.createTime,jdbcType=DATE}

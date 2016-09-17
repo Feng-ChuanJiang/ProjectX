@@ -7,10 +7,11 @@
     <result column="Interact_id" jdbcType="BIGINT" property="interactId" />
     <result column="creat_time" jdbcType="TIMESTAMP" property="creatTime" />
     <result column="comment" jdbcType="VARCHAR" property="comment" />
+    <result column="audio" jdbcType="INTEGER" property="audio" />
     <result column="type" jdbcType="INTEGER" property="type" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_id, Interact_id, creat_time, comment, type
+    id, user_id, Interact_id, creat_time, comment, audio, type
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -22,15 +23,15 @@
     delete from comment
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.cci.projectx.core.entity.Comment"  keyProperty="id" useGeneratedKeys="true">
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.Comment">
     insert into comment (id, user_id, Interact_id, 
-      creat_time, comment, type
-      )
+      creat_time, comment, audio, 
+      type)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{interactId,jdbcType=BIGINT}, 
-      #{creatTime,jdbcType=TIMESTAMP}, #{comment,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}
-      )
+      #{creatTime,jdbcType=TIMESTAMP}, #{comment,jdbcType=VARCHAR}, #{audio,jdbcType=INTEGER}, 
+      #{type,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Comment"  keyProperty="id" useGeneratedKeys="true">
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Comment">
     insert into comment
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -47,6 +48,9 @@
       </if>
       <if test="comment != null">
         comment,
+      </if>
+      <if test="audio != null">
+        audio,
       </if>
       <if test="type != null">
         type,
@@ -68,6 +72,9 @@
       <if test="comment != null">
         #{comment,jdbcType=VARCHAR},
       </if>
+      <if test="audio != null">
+        #{audio,jdbcType=INTEGER},
+      </if>
       <if test="type != null">
         #{type,jdbcType=INTEGER},
       </if>
@@ -88,6 +95,9 @@
       <if test="comment != null">
         comment = #{comment,jdbcType=VARCHAR},
       </if>
+      <if test="audio != null">
+        audio = #{audio,jdbcType=INTEGER},
+      </if>
       <if test="type != null">
         type = #{type,jdbcType=INTEGER},
       </if>
@@ -100,6 +110,7 @@
       Interact_id = #{interactId,jdbcType=BIGINT},
       creat_time = #{creatTime,jdbcType=TIMESTAMP},
       comment = #{comment,jdbcType=VARCHAR},
+      audio = #{audio,jdbcType=INTEGER},
       type = #{type,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -120,6 +131,9 @@
       </if>
       <if test="comment != null">
         and comment = #{comment,jdbcType=VARCHAR}
+      </if>
+      <if test="audio != null">
+        and audio = #{audio,jdbcType=INTEGER}
       </if>
       <if test="type != null">
         and type = #{type,jdbcType=INTEGER}
@@ -144,6 +158,9 @@
     </if>
     <if test="param1.comment != null">
       and comment = #{param1.comment,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.audio != null">
+      and audio = #{param1.audio,jdbcType=INTEGER}
     </if>
     <if test="param1.type != null">
       and type = #{param1.type,jdbcType=INTEGER}

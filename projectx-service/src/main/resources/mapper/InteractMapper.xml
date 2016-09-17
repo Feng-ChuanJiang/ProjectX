@@ -28,7 +28,7 @@
     delete from interact
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.cci.projectx.core.entity.Interact">
+  <insert id="insert" parameterType="com.cci.projectx.core.entity.Interact" keyProperty="id" useGeneratedKeys="true">
     insert into interact (id, content, user_id, 
       group_id, create_time, privacy_permission, 
       tag, longitude, latitude, 
@@ -38,7 +38,7 @@
       #{tag,jdbcType=INTEGER}, #{longitude,jdbcType=DECIMAL}, #{latitude,jdbcType=DECIMAL}, 
       #{addressDescribe,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Interact">
+  <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Interact" keyProperty="id" useGeneratedKeys="true">
     insert into interact
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
