@@ -43,7 +43,8 @@ public class UserRestApiController {
 	public ResponseEnvelope<UserInfoVO> userLogin(@RequestBody LoginVO loginVO) {
 		UserModel userModel = beanMapper.map(loginVO, UserModel.class);
 		UserModel existedUser = userService.login(userModel);
-		UserInfoVO userInfoVO = beanMapper.map(existedUser, UserInfoVO.class);
+		UserModel user=userService.findByPrimaryKey(existedUser.getId());
+		UserInfoVO userInfoVO = beanMapper.map(user, UserInfoVO.class);
 		String sessionId = RandomUtil.generateAuthToken();
 		sessionCache.put(sessionId, existedUser.getId());
 		userInfoVO.setSessionId(sessionId);
@@ -129,7 +130,7 @@ public class UserRestApiController {
 		ResponseEnvelope<Page<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
 		return responseEnv;
 	}
-
+    //得到朋友信息，朋友信息不等于【单个或多个朋友编号】
 	@GetMapping(value = "/friends/{userId}/{friendsId}")
 	public ResponseEnvelope<Page<UserModel>> findUserFriendsNotId(@PathVariable Long userId,@PathVariable Long[] friendsId,Pageable pageable){
 		Page<UserModel> page=userService.findUserFriendsNotId(userId,friendsId,pageable);
@@ -182,62 +183,80 @@ public class UserRestApiController {
 		ResponseEnvelope<List<UserModel>> responseEnv = new ResponseEnvelope<>(listUser,true);
 		return responseEnv;
 	}
+	//共同同事
+	@GetMapping(value = "/user/like/{name}")
+	public ResponseEnvelope<List<UserModel>> findUserByLikeName(@PathVariable String name){
+		List<UserModel> page=userService.findUserByLikeName(name);
+		ResponseEnvelope<List<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
+		return responseEnv;
+	}
+
+	//共同同事
+	@GetMapping(value = "/user/like/{userId}/{name}")
+	public ResponseEnvelope<List<UserModel>> findFriendUserByLikeName(@PathVariable Long userId,@PathVariable String name){
+		List<UserModel> page=userService.findFriendUserByLikeName(userId,name);
+		ResponseEnvelope<List<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
+		return responseEnv;
+	}
+
 
 	///////////////////////////////////////////////////
-
+    //好友总数
 	@GetMapping(value = "/friends/total/{id}")
 	public ResponseEnvelope<Integer> findfriendsCount(@PathVariable Long id){
 		int userIds=userService.findfriendsCount(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(userIds,true);
 		return responseEnv;
 	}
-
+     //共同好友总数
 	@GetMapping(value = "/friends/common/total/{userIdOne}/{userIdTwo}")
 	public ResponseEnvelope<Integer> findCommonFriendsCount(@PathVariable Long userIdOne,@PathVariable Long userIdTwo){
 		int userIds=userService.findCommonFriendsCount(userIdOne,userIdTwo);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(userIds,true);
 		return responseEnv;
 	}
-
+   //共同校友总数
 	@GetMapping(value = "/friends/school/total/{educationId}")
 	public ResponseEnvelope<Integer> findSchoolfellowCount(@PathVariable Long educationId){
 		int educationIds=userService.findSchoolfellowCount(educationId);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(educationIds,true);
 		return responseEnv;
 	}
-
+   //共同同事总数
 	@GetMapping(value = "/friends/colleague/total/{workingId}")
 	public ResponseEnvelope<Integer> findColleagueCount(@PathVariable Long workingId){
 		int workingIds=userService.findColleagueCount(workingId);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(workingIds,true);
 		return responseEnv;
 	}
-
+   //共同好友总数
 	@GetMapping(value = "/friends/common/{userIdOne}/{userIdTwo}")
 	public ResponseEnvelope<Page<UserModel>> findCommonFriends(@PathVariable Long userIdOne,@PathVariable Long userIdTwo, Pageable pageable){
 		Page<UserModel> page=userService.findCommonFriends(userIdOne,userIdTwo,pageable);
 		ResponseEnvelope<Page<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
 		return responseEnv;
 	}
-
+   //共同校友
 	@GetMapping(value = "/friends/school/{educationId}")
 	public ResponseEnvelope<Page<UserModel>> findSchoolfellow(@PathVariable Long educationId, Pageable pageable){
 		Page<UserModel> page=userService.findSchoolfellow(educationId,pageable);
 		ResponseEnvelope<Page<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
 		return responseEnv;
 	}
-
+   //共同同事
 	@GetMapping(value = "/friends/colleague/{workingId}")
 	public ResponseEnvelope<Page<UserModel>> findColleague(@PathVariable Long workingId, Pageable pageable){
 		Page<UserModel> page=userService.findColleague(workingId,pageable);
 		ResponseEnvelope<Page<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
 		return responseEnv;
 	}
+	//根据电话得到朋友信息
 	@PostMapping(value = "/friends/relation")
 	public ResponseEnvelope<Map<String,Object>> findRelation(@RequestBody FriendPhoneVO phones){
 		Map<String,Object> page=userService.findRelation(phones.getUserId(),phones.getPhones());
 		ResponseEnvelope<Map<String,Object>> responseEnv = new ResponseEnvelope<>(page,true);
 		return responseEnv;
 	}
+
 
 }

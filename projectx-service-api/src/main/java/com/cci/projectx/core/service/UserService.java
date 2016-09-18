@@ -47,35 +47,39 @@ public interface UserService {
 
     public List<UserModel> getUserByUserProfile(UserModel user);
 
-    public UserModel findUserShortById(Long id) ;
+    public UserModel findUserShortById(Long id);
 
-    public Page<UserModel> findUserFriendsNotId(Long userId, Long[] friendsId,Pageable pageable);
+    public Page<UserModel> findUserFriendsNotId(Long userId, Long[] friendsId, Pageable pageable);
 
-    public Page<UserModel> findUserFriendsById(Long userId, Pageable pageable) ;
+    public Page<UserModel> findUserFriendsById(Long userId, Pageable pageable);
 
     public List<Map<String, Object>> findApplyforFriends(Long userId);
 
     public List<Map<String, Object>> findWaitingFriends(Long userId);
 
-    public  Page<UserModel> findColleague(Long workingId,Pageable pageable);
+    public Page<UserModel> findColleague(Long workingId, Pageable pageable);
 
     public int findColleagueCount(Long workingId);
 
-    public  Page<UserModel> findSchoolfellow(Long educationId,Pageable pageable);
+    public Page<UserModel> findSchoolfellow(Long educationId, Pageable pageable);
 
     public int findSchoolfellowCount(Long educationId);
 
-    public Page<UserModel>  findCommonFriends(Long userIdOne,Long userIdTwo,Pageable pageable);
+    public Page<UserModel> findCommonFriends(Long userIdOne, Long userIdTwo, Pageable pageable);
 
-    public int  findCommonFriendsCount(Long userIdOne,Long userIdTwo);
+    public int findCommonFriendsCount(Long userIdOne, Long userIdTwo);
 
-    public int  findfriendsCount(Long userId);
+    public int findfriendsCount(Long userId);
 
-    public Map<String,Object> findRelation(Long userId,List<String> list);
+    public Map<String, Object> findRelation(Long userId, List<String> list);
 
     public int updateFriends(FriendsModel friends);
-    public void register(UserModel user,String captcha);
 
+    public void register(UserModel user, String captcha);
+
+    public List<UserModel> findUserByLikeName(String name);
+
+    public List<UserModel> findFriendUserByLikeName(Long userId, String name);
 
 
 }

@@ -113,14 +113,14 @@ public class UserServiceImpl implements UserService {
         //添加行业关系
         if (!StringUtils.isEmpty(user.getLndustry())) {
             //查询mysql里面是否有
-            if (lndustryService.findCountByName(user.getLndustry())==0) {
+            if (lndustryService.findCountByName(user.getLndustry()) == 0) {
                 LndustryModel lndustryModel = new LndustryModel();
                 lndustryModel.setName(user.getLndustry());
                 lndustryService.create(lndustryModel);
             }
-            Long lndustyrId=lndustryService.findIdByName(user.getLndustry());
+            Long lndustyrId = lndustryService.findIdByName(user.getLndustry());
             //添加关系
-            if(lndustyrId!=null) {
+            if (lndustyrId != null) {
                 LndustryNeo lndustryNeo = lndustryNeoRepository.findByLndustryId(lndustyrId);
                 lndustryNeoRepository.deleteLndustryRelat(user.getId(), lndustryNeo.getLndustryId());
                 lndustryNeoRepository.addLndustryRelat(user.getId(), lndustryNeo.getLndustryId());
@@ -138,8 +138,8 @@ public class UserServiceImpl implements UserService {
         UserModel user = findByPrimaryKey(id);
         if (StringUtils.isNotEmpty(user.getLndustry())) {
             //删除关系
-            Long lndustyrId=lndustryService.findIdByName(user.getLndustry());
-            if(lndustyrId!=null){
+            Long lndustyrId = lndustryService.findIdByName(user.getLndustry());
+            if (lndustyrId != null) {
                 LndustryNeo lndustryNeo = lndustryNeoRepository.findByLndustryId(lndustyrId);
                 if (lndustryNeo != null) {
                     lndustryNeoRepository.deleteLndustryRelat(user.getId(), lndustryNeo.getLndustryId());
@@ -214,17 +214,17 @@ public class UserServiceImpl implements UserService {
     public int updateByPrimaryKey(UserModel userModel) {
         //更新行业关系
         UserModel user = findByPrimaryKey(userModel.getId());
-        if (!StringUtils.equals(user.getLndustry(),userModel.getLndustry())) {
+        if (!StringUtils.equals(user.getLndustry(), userModel.getLndustry())) {
             //查询mysql里面是否有
-            if (lndustryService.findCountByName(userModel.getLndustry())==0) {
+            if (lndustryService.findCountByName(userModel.getLndustry()) == 0) {
                 LndustryModel lndustryModel = new LndustryModel();
                 lndustryModel.setName(userModel.getLndustry());
                 lndustryService.create(lndustryModel);
             }
-            Long lndustyrId=lndustryService.findIdByName(user.getLndustry());
-            Long lndustyrIdM=lndustryService.findIdByName(userModel.getLndustry());
+            Long lndustyrId = lndustryService.findIdByName(user.getLndustry());
+            Long lndustyrIdM = lndustryService.findIdByName(userModel.getLndustry());
             //修改关系
-            if(lndustyrId!=null&&lndustyrIdM!=null) {
+            if (lndustyrId != null && lndustyrIdM != null) {
                 LndustryNeo lndustryNeo = lndustryNeoRepository.findByLndustryId(lndustyrId);
                 LndustryNeo lndustryNeoM = lndustryNeoRepository.findByLndustryId(lndustyrIdM);
                 lndustryNeoRepository.deleteLndustryRelat(user.getId(), lndustryNeo.getLndustryId());
@@ -305,7 +305,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<EducationModel> findEducationByUserId(Long userId) {
-        String sql = "SELECT * FROM EDUCATION WHERE USER_ID=? ORDER BY SORT ";
+        String sql = "SELECT * FROM EDUCATION WHERE USER_ID=? ORDER BY START_TIME DESC ";
         BeanPropertyRowMapper<EducationModel> argTypes = new BeanPropertyRowMapper<>(EducationModel.class);
         return jdbcTemplate.query(sql, new Object[]{userId}, argTypes);
     }
@@ -318,6 +318,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public int addFriends(FriendsModel friends) {
+        friends.setState(new Long(FriendsType.APPLYFRIENDS.getType()));
         Friends friend = beanMapper.map(friends, Friends.class);
         return jdbcTempateHelp.add(friend);
     }
@@ -332,10 +333,10 @@ public class UserServiceImpl implements UserService {
     public int updateFriends(FriendsModel friends) {
         Friends friend = beanMapper.map(friends, Friends.class);
         String sql = "UPDATE friends SET state=? where (user_id=? and friend_id=? or  user_id=? and friend_id=?)";
-        int id= jdbcTemplate.update(sql, FriendsType.ALREADYFRIENDS.getType(), friend.getUserId(), friend.getFriendId(), friend.getFriendId(), friend.getUserId());
-        if(id>0){
-            userNeoRepository.deleteFriend(friend.getUserId(),friend.getFriendId());
-            userNeoRepository.addFriend(friend.getUserId(),friend.getFriendId());
+        int id = jdbcTemplate.update(sql, FriendsType.ALREADYFRIENDS.getType(), friend.getUserId(), friend.getFriendId(), friend.getFriendId(), friend.getUserId());
+        if (id > 0) {
+            userNeoRepository.deleteFriend(friend.getUserId(), friend.getFriendId());
+            userNeoRepository.addFriend(friend.getUserId(), friend.getFriendId());
         }
         return id;
     }
@@ -361,7 +362,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<WorkingExperienceModel> findworkingExperienceByUserId(Long userId) {
-        String sql = "SELECT * FROM WORKING_EXPERIENCE WHERE USER_ID=? ORDER BY SORT";
+        String sql = "SELECT * FROM WORKING_EXPERIENCE WHERE USER_ID=? ORDER BY START_TIME DESC";
         BeanPropertyRowMapper<WorkingExperienceModel> argTypes = new BeanPropertyRowMapper<>(WorkingExperienceModel.class);
         return jdbcTemplate.query(sql, new Object[]{userId}, argTypes);
     }
@@ -374,7 +375,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<Long> findEducationIdByUserId(Long id) {
-        String sql = "SELECT ID FROM EDUCATION WHERE USER_ID=? ORDER BY SORT ";
+        String sql = "SELECT ID FROM EDUCATION WHERE USER_ID=? ORDER BY START_TIME DESC ";
         return jdbcTemplate.queryForList(sql, new Object[]{id}, Long.class);
     }
 
@@ -386,7 +387,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<Long> findworkingExperienceIdByUserId(Long id) {
-        String sql = "SELECT ID FROM WORKING_EXPERIENCE WHERE USER_ID=? ORDER BY SORT";
+        String sql = "SELECT ID FROM WORKING_EXPERIENCE WHERE USER_ID=? ORDER BY START_TIME DESC";
         return jdbcTemplate.queryForList(sql, new Object[]{id}, Long.class);
     }
 
@@ -426,6 +427,34 @@ public class UserServiceImpl implements UserService {
         return jdbcTemplate.queryForObject(sql, Integer.class, FriendsType.ALREADYFRIENDS.getType(), userId, userId);
     }
 
+
+    /**
+     * 模糊查找用户根据名称
+     *
+     * @param name
+     * @return
+     */
+    @Override
+    public List<UserModel> findUserByLikeName(String name) {
+        String sql = "SELECT * FROM USER WHERE NAME LIKE '%" + name + "%'";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(UserModel.class));
+    }
+
+    /**
+     * 模糊查找好友根据名称
+     *
+     * @param name
+     * @return
+     */
+    @Override
+    public List<UserModel> findFriendUserByLikeName(Long userId, String name) {
+        String sql = "SELECT B.* FROM (\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=1 AND USER_ID=?\n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=1 AND FRIEND_ID=? \n" +
+                " )A,`USER` B WHERE A.FRIEND_ID =B.ID AND b.`name` like  '%" + name + "%'";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(UserModel.class), userId, userId);
+    }
 
     /**
      * 根据用户编号朋友
@@ -752,19 +781,20 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public void register(UserModel user,String captcha) {
-        if (null == captcha||captcha.equals("")) {
+    public void register(UserModel user, String captcha) {
+        if (null == captcha || captcha.equals("")) {
             HRErrorCode.throwBusinessException(HRErrorCode.CAPTCHA_IS_NULL);
         }
-        if (null == user.getMobilePhone()|| user.getMobilePhone().equals("")) {
+        if (null == user.getMobilePhone() || user.getMobilePhone().equals("")) {
             HRErrorCode.throwBusinessException(HRErrorCode.USER_IS_NULL);
         }
-        if (null == user.getPassword()||user.getPassword().equals("")) {
+        if (null == user.getPassword() || user.getPassword().equals("")) {
             HRErrorCode.throwBusinessException(HRErrorCode.PASSWORD_ID_NULL);
         }
-       create(user);
+        create(user);
 
     }
+
     private UserModel findUserByAccount(String mobilePhone) {
         String sql = "select * from user where mobile_phone = ?";
         UserModel userModel = null;
