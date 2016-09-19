@@ -1,11 +1,11 @@
 package com.cci.projectx.core.controller;
 
+import com.cci.projectx.core.ResponseEnvelope;
 import com.cci.projectx.core.model.LndustryModel;
 import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.service.LndustryService;
 import com.cci.projectx.core.vo.LndustryVO;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
-import com.wlw.pylon.web.rest.ResponseEnvelope;
 import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

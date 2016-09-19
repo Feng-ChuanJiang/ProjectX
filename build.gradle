@@ -106,6 +106,7 @@ project("projectx-service-api") {
 	description = "The core module of projectx project"
 		
 	dependencies {
+		compile(fileTree(dir: "../lib", include: "*.jar"))
 		compile(libraries.pylon_core)
         compile(libraries.pylon_data)
 		compile(libraries.spring_data_elasticsearch)

@@ -8,17 +8,25 @@ import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.service.UserService;
 import com.cci.projectx.core.vo.*;
 import com.google.common.cache.Cache;
+import com.taobao.api.ApiException;
+import com.taobao.api.DefaultTaobaoClient;
+import com.taobao.api.TaobaoClient;
+import com.taobao.api.request.AlibabaAliqinFcSmsNumSendRequest;
+import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
+import com.wlw.pylon.core.exception.BusinessException;
 import com.wlw.pylon.web.rest.ResponseEnvelope;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +46,60 @@ public class UserRestApiController {
 	@Autowired
 	private Cache<String, Long> sessionCache;
 
+	@Value("${sms.serverUrl}")
+	private String serverUrl;
+	@Value("${sms.appKey}")
+	private String appKey;
+	@Value("${sms.appSecret}")
+	private String appSecret;
+	@Value("${sms.templateCode}")
+	private String templateCode;
+	@IgnoreAuth
+	@GetMapping(value = "/user/verifica/{phone}")
+	public ResponseEnvelope<String> userVerifica(@PathVariable String phone, HttpSession httpSession) {
+		//验证码
+		String vali= RandomUtil.createRandom(true,6);
+		httpSession.setAttribute(phone,vali);
+		TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
+		AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
+		req.setExtend("");
+		req.setSmsType("normal");
+		req.setSmsFreeSignName("未拓空间");
+		req.setSmsParamString(  "{number:'"+vali+"'}"  );
+		req.setRecNum(phone);
+		req.setSmsTemplateCode(templateCode);
+		AlibabaAliqinFcSmsNumSendResponse rsp = null;
+		try {
+			rsp = client.execute(req);
+		} catch (ApiException e) {
+			throw new BusinessException("500","短信发送失败");
+		}
+		ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(rsp.getBody(), true);
+		return responseEnv;
+	}
+
+	@IgnoreAuth
+	@PostMapping(value = "/user/register")
+	public ResponseEnvelope<String> userRegister(@RequestBody RegisterVO registerVO, HttpSession httpSession) {
+		Object vali =httpSession.getAttribute(registerVO.getMobilePhone());
+		if(null==vali||!vali.toString().equals(registerVO.getCaptcha())){
+			HRErrorCode.throwBusinessException(HRErrorCode.CAPTCHA_INCORRECT);
+		}
+		UserModel userModel = beanMapper.map(registerVO, UserModel.class);
+		userService.register(userModel,registerVO.getCaptcha());
+		ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>("ok",true);
+		return responseEnv;
+	}
+	@IgnoreAuth
+	@GetMapping(value = "/user/existed/{phone}")
+	public ResponseEnvelope<String> findUserByAccount(@PathVariable String phone) {
+		UserModel existedUser=userService.findUserByAccount(phone);
+		if (null != existedUser) {
+			HRErrorCode.throwBusinessException(HRErrorCode.USER_HAVE_EXISTED);
+		}
+		ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>("ok",true);
+		return responseEnv;
+	}
 	@IgnoreAuth
 	@PostMapping(value = "/user/login")
 	public ResponseEnvelope<UserInfoVO> userLogin(@RequestBody LoginVO loginVO) {
@@ -51,14 +113,7 @@ public class UserRestApiController {
 		ResponseEnvelope<UserInfoVO> responseEnv = new ResponseEnvelope<>(userInfoVO, true);
 		return responseEnv;
 	}
-	@IgnoreAuth
-	@PostMapping(value = "/user/register")
-	public ResponseEnvelope<String> userRegister(@RequestBody RegisterVO registerVO) {
-		UserModel userModel = beanMapper.map(registerVO, UserModel.class);
-		userService.register(userModel,registerVO.getCaptcha());
-		ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>("ok",true);
-		return responseEnv;
-	}
+
 	@GetMapping(value = "/user/{id}")
 	public ResponseEnvelope<UserVO> getUserById(@PathVariable Long id){
 		UserModel userModel = userService.findByPrimaryKey(id);

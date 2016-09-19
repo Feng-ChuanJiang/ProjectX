@@ -81,5 +81,6 @@ public interface UserService {
 
     public List<UserModel> findFriendUserByLikeName(Long userId, String name);
 
+    public UserModel findUserByAccount(String mobilePhone);
 
 }

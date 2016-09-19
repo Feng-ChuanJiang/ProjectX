@@ -791,11 +791,13 @@ public class UserServiceImpl implements UserService {
         if (null == user.getPassword() || user.getPassword().equals("")) {
             HRErrorCode.throwBusinessException(HRErrorCode.PASSWORD_ID_NULL);
         }
+
+
         create(user);
 
     }
-
-    private UserModel findUserByAccount(String mobilePhone) {
+    @Override
+    public UserModel findUserByAccount(String mobilePhone) {
         String sql = "select * from user where mobile_phone = ?";
         UserModel userModel = null;
         try {
