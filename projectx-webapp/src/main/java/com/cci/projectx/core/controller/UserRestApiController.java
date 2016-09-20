@@ -15,7 +15,7 @@ import com.taobao.api.request.AlibabaAliqinFcSmsNumSendRequest;
 import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
 import com.wlw.pylon.core.exception.BusinessException;
-import com.wlw.pylon.web.rest.ResponseEnvelope;
+import com.cci.projectx.core.ResponseEnvelope;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

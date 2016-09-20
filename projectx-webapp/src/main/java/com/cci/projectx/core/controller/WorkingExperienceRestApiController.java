@@ -4,7 +4,7 @@ import com.cci.projectx.core.model.WorkingExperienceModel;
 import com.cci.projectx.core.service.WorkingExperienceService;
 import com.cci.projectx.core.vo.WorkingExperienceVO;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
-import com.wlw.pylon.web.rest.ResponseEnvelope;
+import com.cci.projectx.core.ResponseEnvelope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

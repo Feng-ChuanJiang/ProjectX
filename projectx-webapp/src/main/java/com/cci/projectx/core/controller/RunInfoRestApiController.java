@@ -7,7 +7,7 @@ import com.cci.projectx.core.service.RunInfoService;
 import com.cci.projectx.core.vo.RunFriendsVO;
 import com.cci.projectx.core.vo.RunInfoVO;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
-import com.wlw.pylon.web.rest.ResponseEnvelope;
+import com.cci.projectx.core.ResponseEnvelope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

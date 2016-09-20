@@ -5,7 +5,7 @@ import com.cci.projectx.core.annotation.IgnoreAuth;
 import com.cci.projectx.core.model.PhotoModel;
 import com.cci.projectx.core.service.PhotoService;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
-import com.wlw.pylon.web.rest.ResponseEnvelope;
+import com.cci.projectx.core.ResponseEnvelope;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;

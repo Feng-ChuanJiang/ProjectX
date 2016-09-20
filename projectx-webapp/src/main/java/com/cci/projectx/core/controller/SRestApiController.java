@@ -4,7 +4,7 @@ import com.cci.projectx.core.model.SModel;
 import com.cci.projectx.core.service.SService;
 import com.cci.projectx.core.vo.SVO;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
-import com.wlw.pylon.web.rest.ResponseEnvelope;
+import com.cci.projectx.core.ResponseEnvelope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

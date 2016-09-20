@@ -10,7 +10,7 @@ import com.cci.projectx.core.service.UserInteractCircleService;
 import com.cci.projectx.core.vo.InteractPermissionVO;
 import com.cci.projectx.core.vo.InteractVO;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
-import com.wlw.pylon.web.rest.ResponseEnvelope;
+import com.cci.projectx.core.ResponseEnvelope;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

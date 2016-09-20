@@ -5,7 +5,7 @@ import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.service.CompanyService;
 import com.cci.projectx.core.vo.CompanyVO;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
-import com.wlw.pylon.web.rest.ResponseEnvelope;
+import com.cci.projectx.core.ResponseEnvelope;
 import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
