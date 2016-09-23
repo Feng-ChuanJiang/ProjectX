@@ -107,11 +107,11 @@ public class InteractServiceImpl implements InteractService {
     @Override
     public Page<InteractModel> selectPageByFriend(Long userId, Pageable pageable) {
         String sql = "  SELECT C.* FROM(\n" +
-                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.USER_ID AND B.FRIEND_ID=? AND B.STATE=1\n" +
+                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.USER_ID AND B.FRIEND_ID=? AND B.STATE=1 A.PRIVACY_PERMISSION=1\n" +
                 " UNION ALL\n" +
-                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.FRIEND_ID AND B.USER_ID=? AND B.STATE=1\n" +
+                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.FRIEND_ID AND B.USER_ID=? AND B.STATE=1  A.PRIVACY_PERMISSION=1\n" +
                 "UNION ALL\n" +
-                "SELECT A.* FROM INTERACT A,INTERACT_PERMISSION B WHERE A.ID=B.INTERACT_ID AND B.FRIEND_ID=?\n" +
+                "SELECT A.* FROM INTERACT A,INTERACT_PERMISSION B WHERE A.ID=B.INTERACT_ID AND B.FRIEND_ID=?  A.PRIVACY_PERMISSION=2\n" +
                 "UNION ALL\n" +
                 "SELECT  A.* FROM INTERACT A WHERE A.USER_ID=?\n" +
                 ")C WHERE C.USER_ID NOT IN (SELECT Z.ID FROM(\n" +
@@ -124,11 +124,11 @@ public class InteractServiceImpl implements InteractService {
                 "ORDER BY C.ID DESC LIMIT ? , ?";
 
         String sqlCount = "  SELECT COUNT(1) FROM(\n" +
-                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.USER_ID AND B.FRIEND_ID=? AND B.STATE=2\n" +
+                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.USER_ID AND B.FRIEND_ID=? AND B.STATE=1  A.PRIVACY_PERMISSION=1\n" +
                 " UNION ALL\n" +
-                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.FRIEND_ID AND B.USER_ID=? AND B.STATE=2\n" +
+                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.FRIEND_ID AND B.USER_ID=? AND B.STATE=1  A.PRIVACY_PERMISSION=1\n" +
                 "UNION ALL\n" +
-                "SELECT A.* FROM INTERACT A,INTERACT_PERMISSION B WHERE A.ID=B.INTERACT_ID AND B.FRIEND_ID=?\n" +
+                "SELECT A.* FROM INTERACT A,INTERACT_PERMISSION B WHERE A.ID=B.INTERACT_ID AND B.FRIEND_ID=?  A.PRIVACY_PERMISSION=2\n" +
                 "UNION ALL\n" +
                 "SELECT  A.* FROM INTERACT A WHERE A.USER_ID=?\n" +
                 ")C WHERE C.USER_ID NOT IN (SELECT Z.ID FROM(\n" +

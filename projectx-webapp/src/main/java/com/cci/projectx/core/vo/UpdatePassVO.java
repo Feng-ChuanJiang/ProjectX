@@ -7,6 +7,8 @@ public class UpdatePassVO {
 
     private String oldPassword;
     private String newPassword;
+    private String mobilePhone;
+    private String captcha;
 
     public String getNewPassword() {
         return newPassword;
@@ -22,5 +24,21 @@ public class UpdatePassVO {
 
     public void setOldPassword(String oldPassword) {
         this.oldPassword = oldPassword;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getCaptcha() {
+        return captcha;
+    }
+
+    public void setCaptcha(String captcha) {
+        this.captcha = captcha;
     }
 }

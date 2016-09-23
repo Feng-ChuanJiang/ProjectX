@@ -83,4 +83,6 @@ public interface UserService {
 
     public UserModel findUserByAccount(String mobilePhone);
 
+    public boolean isUserFriends(Long userId, Long friendId);
+
 }

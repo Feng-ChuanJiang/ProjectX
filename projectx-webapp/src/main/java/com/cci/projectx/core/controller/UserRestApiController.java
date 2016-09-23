@@ -113,7 +113,25 @@ public class UserRestApiController {
 		ResponseEnvelope<UserInfoVO> responseEnv = new ResponseEnvelope<>(userInfoVO, true);
 		return responseEnv;
 	}
+	@PutMapping(value = "/user/passrest")
+	public ResponseEnvelope<Integer> passrest(@RequestAttribute Long userId,
+											  @RequestBody UpdatePassVO updatePassVO,HttpSession httpSession) {
+		UserModel userModel = userService.findByPrimaryKey(userId);
+		Object vali =httpSession.getAttribute(updatePassVO.getMobilePhone());
+		if(null==vali||!vali.toString().equals(updatePassVO.getCaptcha())){
+			HRErrorCode.throwBusinessException(HRErrorCode.CAPTCHA_INCORRECT);
+		}
+		if (!DigestUtils.md5Hex(updatePassVO.getOldPassword()).equals(userModel.getPassword())) {
+			HRErrorCode.throwBusinessException(HRErrorCode.OLD_PASSWORD_INCORRECT);
+		}
 
+		UserModel param = new UserModel();
+		param.setId(userId);
+		param.setPassword(DigestUtils.md5Hex(updatePassVO.getNewPassword()));
+		Integer result = userService.updateByPrimaryKeySelective(param);
+		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result, true);
+		return responseEnv;
+	}
 	@GetMapping(value = "/user/{id}")
 	public ResponseEnvelope<UserVO> getUserById(@PathVariable Long id){
 		UserModel userModel = userService.findByPrimaryKey(id);
@@ -140,20 +158,7 @@ public class UserRestApiController {
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
         return responseEnv;
 	}
-	@PutMapping(value = "/user/passrest")
-	public ResponseEnvelope<Integer> passrest(@RequestAttribute Long userId,
-											  @RequestBody UpdatePassVO updatePassVO) {
-		UserModel userModel = userService.findByPrimaryKey(userId);
-		if (!DigestUtils.md5Hex(updatePassVO.getOldPassword()).equals(userModel.getPassword())) {
-			HRErrorCode.throwBusinessException(HRErrorCode.OLD_PASSWORD_INCORRECT);
-		}
-		UserModel param = new UserModel();
-		param.setId(userId);
-		param.setPassword(DigestUtils.md5Hex(updatePassVO.getNewPassword()));
-		Integer result = userService.updateByPrimaryKeySelective(param);
-		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result, true);
-		return responseEnv;
-	}
+
     @DeleteMapping(value = "/user/{id}")
 	public ResponseEnvelope<Integer> deleteUserByPrimaryKey(@PathVariable Long id){
 		Integer  result = userService.deleteByPrimaryKey(id);
@@ -185,11 +190,11 @@ public class UserRestApiController {
 		ResponseEnvelope<Page<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
 		return responseEnv;
 	}
-    //得到朋友信息，朋友信息不等于【单个或多个朋友编号】
+    //验证是不是朋友
 	@GetMapping(value = "/friends/{userId}/{friendsId}")
-	public ResponseEnvelope<Page<UserModel>> findUserFriendsNotId(@PathVariable Long userId,@PathVariable Long[] friendsId,Pageable pageable){
-		Page<UserModel> page=userService.findUserFriendsNotId(userId,friendsId,pageable);
-		ResponseEnvelope<Page<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
+	public ResponseEnvelope<Boolean> findUserFriendsNotId(@PathVariable Long userId,@PathVariable Long friendsId){
+		boolean isFriends=userService.isUserFriends(userId,friendsId);
+		ResponseEnvelope<Boolean> responseEnv = new ResponseEnvelope<>(isFriends,true);
 		return responseEnv;
 	}
 	@GetMapping(value = "/friends/{userId}/apply")

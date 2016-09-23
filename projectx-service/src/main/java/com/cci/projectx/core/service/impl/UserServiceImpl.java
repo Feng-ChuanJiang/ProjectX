@@ -456,6 +456,24 @@ public class UserServiceImpl implements UserService {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(UserModel.class), userId, userId);
     }
 
+
+    /**
+     * 根据用户编号朋友
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public boolean isUserFriends(Long userId, Long friendId) {
+        String sql = "SELECT COUNT(1) FROM (\n" +
+                "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? AND FRIEND_ID=? \n" +
+                "UNION\n" +
+                "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? AND  USER_ID=?\n" +
+                ")A ";
+
+        long count = jdbcTemplate.queryForObject(sql, Long.class, FriendsType.ALREADYFRIENDS.getType(), userId,friendId, FriendsType.ALREADYFRIENDS.getType(),userId,friendId);
+        return count>0;
+    }
     /**
      * 根据用户编号朋友
      *

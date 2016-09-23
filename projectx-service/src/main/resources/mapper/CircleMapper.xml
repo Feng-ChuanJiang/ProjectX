@@ -4,9 +4,10 @@
   <resultMap id="BaseResultMap" type="com.cci.projectx.core.entity.Circle">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="logo" jdbcType="VARCHAR" property="logo" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, group_name
+    id, group_name, logo
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -19,8 +20,10 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.cci.projectx.core.entity.Circle">
-    insert into circle (id, group_name)
-    values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR})
+    insert into circle (id, group_name, logo
+      )
+    values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Circle">
     insert into circle
@@ -31,6 +34,9 @@
       <if test="groupName != null">
         group_name,
       </if>
+      <if test="logo != null">
+        logo,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -38,6 +44,9 @@
       </if>
       <if test="groupName != null">
         #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null">
+        #{logo,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -47,12 +56,16 @@
       <if test="groupName != null">
         group_name = #{groupName,jdbcType=VARCHAR},
       </if>
+      <if test="logo != null">
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.cci.projectx.core.entity.Circle">
     update circle
-    set group_name = #{groupName,jdbcType=VARCHAR}
+    set group_name = #{groupName,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectCount" parameterType="com.cci.projectx.core.entity.Circle" resultType="java.lang.Integer">
@@ -63,6 +76,9 @@
       </if>
       <if test="groupName != null">
         and group_name = #{groupName,jdbcType=VARCHAR}
+      </if>
+      <if test="logo != null">
+        and logo = #{logo,jdbcType=VARCHAR}
       </if>
     </where>
   </select>
@@ -75,6 +91,9 @@
     </if>
     <if test="param1.groupName != null">
       and group_name = #{param1.groupName,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.logo != null">
+      and logo = #{param1.logo,jdbcType=VARCHAR}
     </if>
     <if test="param2.sort != null">
       order by 

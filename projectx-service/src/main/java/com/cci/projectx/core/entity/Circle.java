@@ -5,6 +5,8 @@ public class Circle {
 
     private String groupName;
 
+    private String logo;
+
     public Long getId() {
         return id;
     }
@@ -19,5 +21,13 @@ public class Circle {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }

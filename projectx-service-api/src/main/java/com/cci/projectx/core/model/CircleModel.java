@@ -3,10 +3,11 @@ package com.cci.projectx.core.model;
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 
 @MapClass("com.cci.projectx.core.entity.Circle")
-public class CircleModel{
+public class CircleModel {
 	
 	private Long id;
 	private String groupName;
+	private String logo;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -22,6 +23,14 @@ public class CircleModel{
 	
 	public String getGroupName(){
 		return this.groupName;
+	}
+		
+	public void setLogo(String logo){
+		this.logo = logo;
+	}
+	
+	public String getLogo(){
+		return this.logo;
 	}
 		
 		
