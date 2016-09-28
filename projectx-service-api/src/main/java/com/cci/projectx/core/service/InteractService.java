@@ -23,9 +23,9 @@ public interface InteractService {
 
     public long selectCount(InteractModel interactModel);
 
-    public List<InteractModel> selectPage(InteractModel interactModel, Pageable pageable);
+    public List<InteractModel> selectPage(InteractModel interactModel, Pageable pageable,Long userId);
 
-    public Page<InteractModel> selectPageByCircleId(Long circleId, Pageable pageable);
+    public Page<InteractModel> selectPageByCircleId(Long circleId, Pageable pageable,Long userId);
 
     public Page<InteractModel> selectPageByFriend(Long userId,Pageable pageable);
 

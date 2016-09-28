@@ -9,6 +9,8 @@ public class Comment {
 
     private Long interactId;
 
+    private Long commentId;
+
     private Date creatTime;
 
     private String comment;
@@ -16,6 +18,7 @@ public class Comment {
     private Integer audio;
 
     private Integer type;
+
 
     public Long getId() {
         return id;
@@ -39,6 +42,14 @@ public class Comment {
 
     public void setInteractId(Long interactId) {
         this.interactId = interactId;
+    }
+
+    public Long getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
     }
 
     public Date getCreatTime() {

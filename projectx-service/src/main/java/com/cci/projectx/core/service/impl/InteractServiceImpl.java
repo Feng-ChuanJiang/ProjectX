@@ -3,6 +3,7 @@ package com.cci.projectx.core.service.impl;
 import com.cci.projectx.core.entity.Interact;
 import com.cci.projectx.core.model.InteractModel;
 import com.cci.projectx.core.repository.InteractRepository;
+import com.cci.projectx.core.service.CommentService;
 import com.cci.projectx.core.service.InteractPermissionService;
 import com.cci.projectx.core.service.InteractService;
 import com.cci.projectx.core.service.UserInteractCircleService;
@@ -35,6 +36,9 @@ public class InteractServiceImpl implements InteractService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private CommentService commentService;
 
     @Transactional
     @Override
@@ -75,9 +79,17 @@ public class InteractServiceImpl implements InteractService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<InteractModel> selectPage(InteractModel interactModel, Pageable pageable) {
+    public List<InteractModel> selectPage(InteractModel interactModel, Pageable pageable,Long userId) {
         Interact interact = beanMapper.map(interactModel, Interact.class);
-        return beanMapper.mapAsList(interactRepo.selectPage(interact, pageable), InteractModel.class);
+        List<InteractModel> interactModels=beanMapper.mapAsList(interactRepo.selectPage(interact, pageable), InteractModel.class);
+        if(userId==interact.getUserId()){
+            interactModels=commentService.setAllCommentByInteract(interactModels);
+        }else{
+            interactModels=commentService.setFriendCommentByInteract(interactModels,userId);
+        }
+
+
+        return interactModels;
     }
 
     @Transactional
@@ -94,10 +106,11 @@ public class InteractServiceImpl implements InteractService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<InteractModel> selectPageByCircleId(Long circleId, Pageable pageable) {
+    public Page<InteractModel> selectPageByCircleId(Long circleId, Pageable pageable,Long userId) {
         String sql = "SELECT A.* FROM INTERACT A,USER_INTERACT_CIRCLE B WHERE A.ID=B.INTERACT_ID AND B.CIRCLE_ID=? ORDER BY A.ID DESC LIMIT ? , ?";
         String sqlCount = "SELECT COUNT(1) FROM INTERACT A,USER_INTERACT_CIRCLE B WHERE A.ID=B.INTERACT_ID AND B.CIRCLE_ID=? ORDER BY A.ID DESC";
         List<InteractModel> interactModels = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(InteractModel.class), circleId, pageable.getOffset(), pageable.getPageSize());
+        interactModels=commentService.setFriendCommentByInteract(interactModels,userId);
         int count = jdbcTemplate.queryForObject(sqlCount, Integer.class, circleId);
         Page<InteractModel> page = new PageImpl<>(interactModels, pageable, count);
         return page;
@@ -107,11 +120,11 @@ public class InteractServiceImpl implements InteractService {
     @Override
     public Page<InteractModel> selectPageByFriend(Long userId, Pageable pageable) {
         String sql = "  SELECT C.* FROM(\n" +
-                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.USER_ID AND B.FRIEND_ID=? AND B.STATE=1 A.PRIVACY_PERMISSION=1\n" +
+                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.USER_ID AND B.FRIEND_ID=? AND B.STATE=1 AND A.PRIVACY_PERMISSION=1\n" +
                 " UNION ALL\n" +
-                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.FRIEND_ID AND B.USER_ID=? AND B.STATE=1  A.PRIVACY_PERMISSION=1\n" +
+                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.FRIEND_ID AND B.USER_ID=? AND B.STATE=1 AND  A.PRIVACY_PERMISSION=1\n" +
                 "UNION ALL\n" +
-                "SELECT A.* FROM INTERACT A,INTERACT_PERMISSION B WHERE A.ID=B.INTERACT_ID AND B.FRIEND_ID=?  A.PRIVACY_PERMISSION=2\n" +
+                "SELECT A.* FROM INTERACT A,INTERACT_PERMISSION B WHERE A.ID=B.INTERACT_ID AND B.FRIEND_ID=? AND  A.PRIVACY_PERMISSION=2\n" +
                 "UNION ALL\n" +
                 "SELECT  A.* FROM INTERACT A WHERE A.USER_ID=?\n" +
                 ")C WHERE C.USER_ID NOT IN (SELECT Z.ID FROM(\n" +
@@ -124,11 +137,11 @@ public class InteractServiceImpl implements InteractService {
                 "ORDER BY C.ID DESC LIMIT ? , ?";
 
         String sqlCount = "  SELECT COUNT(1) FROM(\n" +
-                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.USER_ID AND B.FRIEND_ID=? AND B.STATE=1  A.PRIVACY_PERMISSION=1\n" +
+                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.USER_ID AND B.FRIEND_ID=? AND B.STATE=1 AND  A.PRIVACY_PERMISSION=1\n" +
                 " UNION ALL\n" +
-                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.FRIEND_ID AND B.USER_ID=? AND B.STATE=1  A.PRIVACY_PERMISSION=1\n" +
+                " SELECT A.* FROM INTERACT A,FRIENDS B WHERE  A.USER_ID=B.FRIEND_ID AND B.USER_ID=? AND B.STATE=1 AND  A.PRIVACY_PERMISSION=1\n" +
                 "UNION ALL\n" +
-                "SELECT A.* FROM INTERACT A,INTERACT_PERMISSION B WHERE A.ID=B.INTERACT_ID AND B.FRIEND_ID=?  A.PRIVACY_PERMISSION=2\n" +
+                "SELECT A.* FROM INTERACT A,INTERACT_PERMISSION B WHERE A.ID=B.INTERACT_ID AND B.FRIEND_ID=? AND A.PRIVACY_PERMISSION=2\n" +
                 "UNION ALL\n" +
                 "SELECT  A.* FROM INTERACT A WHERE A.USER_ID=?\n" +
                 ")C WHERE C.USER_ID NOT IN (SELECT Z.ID FROM(\n" +
@@ -141,6 +154,7 @@ public class InteractServiceImpl implements InteractService {
                 "ORDER BY C.ID DESC";
 
         List<InteractModel> interactModels = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(InteractModel.class), userId, userId, userId, userId, userId, userId, userId, pageable.getOffset(), pageable.getPageSize());
+        interactModels=commentService.setFriendCommentByInteract(interactModels,userId);
         int count = jdbcTemplate.queryForObject(sqlCount, Integer.class, userId, userId, userId, userId, userId, userId, userId);
         Page<InteractModel> page = new PageImpl<>(interactModels, pageable, count);
         return page;

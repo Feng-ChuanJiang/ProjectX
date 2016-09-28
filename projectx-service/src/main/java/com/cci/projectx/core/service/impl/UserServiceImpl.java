@@ -16,6 +16,11 @@ import com.cci.projectx.core.service.EducationService;
 import com.cci.projectx.core.service.LndustryService;
 import com.cci.projectx.core.service.UserService;
 import com.cci.projectx.core.service.WorkingExperienceService;
+import com.easemob.server.example.api.IMUserAPI;
+import com.easemob.server.example.comm.body.IMUserBody;
+import com.easemob.server.example.comm.body.ModifyNicknameBody;
+import com.easemob.server.example.comm.body.ResetPasswordBody;
+import com.easemob.server.example.comm.wrapper.BodyWrapper;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -70,23 +75,29 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private LndustryService lndustryService;
 
+    @Autowired
+    IMUserAPI imUserAPI;
+
     @Transactional
     @Override
     public int create(UserModel userModel) {
-        UserModel existedUser = findUserByAccount(userModel.getMobilePhone());
-        if (null != existedUser) {
-            HRErrorCode.throwBusinessException(HRErrorCode.USER_HAVE_EXISTED);
-        }
-        userModel.setCreateTime(new Date());
-        userModel.setPassword(DigestUtils.md5Hex(userModel.getPassword()));
         return createSelective(userModel);
     }
 
     @Transactional
     @Override
     public int createSelective(UserModel userModel) {
+        UserModel existedUser = findUserByAccount(userModel.getMobilePhone());
+        if (null != existedUser) {
+            HRErrorCode.throwBusinessException(HRErrorCode.USER_HAVE_EXISTED);
+        }
+        userModel.setCreateTime(new Date());
+        userModel.setPassword(DigestUtils.md5Hex(userModel.getPassword()));
         User user = beanMapper.map(userModel, User.class);
         int id = userRepo.insertSelective(user);
+        //添加环信账号
+        BodyWrapper userBody = new IMUserBody(user.getMobilePhone(), user.getPassword(), user.getName());
+        imUserAPI.createNewIMUserSingle(userBody);
         //添加教育信息
         if (CollectionUtils.isNotEmpty(userModel.getEducations())) {
             for (EducationModel education : userModel.getEducations()) {
@@ -145,16 +156,15 @@ public class UserServiceImpl implements UserService {
                     lndustryNeoRepository.deleteLndustryRelat(user.getId(), lndustryNeo.getLndustryId());
                 }
             }
-
         }
-
         int uid = userRepo.deleteByPrimaryKey(id);
-        if (uid > 0) {
-            elasticSearchHelp.deleteES(User.class, id);
-            //neo4j
-            UserNeo userNeo = userNeoRepository.findByUserId(id);
-            userNeoRepository.delete(userNeo.getId());
-        }
+        //es
+        elasticSearchHelp.deleteES(User.class, id);
+        //neo4j
+        UserNeo userNeo = userNeoRepository.findByUserId(id);
+        userNeoRepository.delete(userNeo.getId());
+        //删除环信账号
+        imUserAPI.deleteIMUserByUserName(user.getMobilePhone());
         return uid;
     }
 
@@ -212,32 +222,32 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public int updateByPrimaryKey(UserModel userModel) {
-        //更新行业关系
-        UserModel user = findByPrimaryKey(userModel.getId());
-        if (!StringUtils.equals(user.getLndustry(), userModel.getLndustry())) {
-            //查询mysql里面是否有
-            if (lndustryService.findCountByName(userModel.getLndustry()) == 0) {
-                LndustryModel lndustryModel = new LndustryModel();
-                lndustryModel.setName(userModel.getLndustry());
-                lndustryService.create(lndustryModel);
-            }
-            Long lndustyrId = lndustryService.findIdByName(user.getLndustry());
-            Long lndustyrIdM = lndustryService.findIdByName(userModel.getLndustry());
-            //修改关系
-            if (lndustyrId != null && lndustyrIdM != null) {
-                LndustryNeo lndustryNeo = lndustryNeoRepository.findByLndustryId(lndustyrId);
-                LndustryNeo lndustryNeoM = lndustryNeoRepository.findByLndustryId(lndustyrIdM);
-                lndustryNeoRepository.deleteLndustryRelat(user.getId(), lndustryNeo.getLndustryId());
-                lndustryNeoRepository.addLndustryRelat(user.getId(), lndustryNeoM.getLndustryId());
-            }
-
-        }
         return updateByPrimaryKeySelective(userModel);
     }
 
     @Transactional
     @Override
     public int updateByPrimaryKeySelective(UserModel userModel) {
+        //更新行业关系
+        UserModel userm = findByPrimaryKey(userModel.getId());
+        if (!StringUtils.equals(userm.getLndustry(), userModel.getLndustry())) {
+            //查询mysql里面是否有
+            if (lndustryService.findCountByName(userModel.getLndustry()) == 0) {
+                LndustryModel lndustryModel = new LndustryModel();
+                lndustryModel.setName(userModel.getLndustry());
+                lndustryService.create(lndustryModel);
+            }
+            Long lndustyrId = lndustryService.findIdByName(userm.getLndustry());
+            Long lndustyrIdM = lndustryService.findIdByName(userModel.getLndustry());
+            //修改关系
+            if (lndustyrId != null && lndustyrIdM != null) {
+                LndustryNeo lndustryNeo = lndustryNeoRepository.findByLndustryId(lndustyrId);
+                LndustryNeo lndustryNeoM = lndustryNeoRepository.findByLndustryId(lndustyrIdM);
+                lndustryNeoRepository.deleteLndustryRelat(userm.getId(), lndustryNeo.getLndustryId());
+                lndustryNeoRepository.addLndustryRelat(userm.getId(), lndustryNeoM.getLndustryId());
+            }
+
+        }
         User user = beanMapper.map(userModel, User.class);
         int id = userRepo.updateByPrimaryKeySelective(user);
         //更新教育信息
@@ -261,6 +271,12 @@ public class UserServiceImpl implements UserService {
 //            UserNeo userNeo = userNeoRepository.findByUserId(user.getId());
 //            userNeo.setName(user.getMobilePhone());
 //            userNeoRepository.save(userNeo);
+            //修改环信信息 昵称
+            BodyWrapper nicknameBody = new ModifyNicknameBody(user.getName());
+            imUserAPI.modifyIMUserNickNameWithAdminToken(user.getMobilePhone(),nicknameBody);
+            //修改环信信息 密码
+            BodyWrapper passwordBody = new ResetPasswordBody(userModel.getPassword());
+            imUserAPI.modifyIMUserPasswordWithAdminToken(userModel.getMobilePhone(),passwordBody);
         }
         return id;
     }
@@ -320,6 +336,11 @@ public class UserServiceImpl implements UserService {
     public int addFriends(FriendsModel friends) {
         friends.setState(new Long(FriendsType.APPLYFRIENDS.getType()));
         Friends friend = beanMapper.map(friends, Friends.class);
+        String sql="SELECT COUNT(1) FROM FRIENDS WHERE (USER_ID=? AND FRIEND_ID=? OR USER_ID=? AND FRIEND_ID=?)";
+        int count= jdbcTemplate.queryForObject(sql,Integer.class,friend.getUserId(),friend.getFriendId(),friend.getFriendId(),friend.getUserId());
+        if(count>0){
+            HRErrorCode.throwBusinessException(HRErrorCode.FRIEND_HAVE_EXISTED);
+        }
         return jdbcTempateHelp.add(friend);
     }
 
@@ -471,9 +492,10 @@ public class UserServiceImpl implements UserService {
                 "SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=? AND FRIEND_ID=? AND  USER_ID=?\n" +
                 ")A ";
 
-        long count = jdbcTemplate.queryForObject(sql, Long.class, FriendsType.ALREADYFRIENDS.getType(), userId,friendId, FriendsType.ALREADYFRIENDS.getType(),userId,friendId);
-        return count>0;
+        long count = jdbcTemplate.queryForObject(sql, Long.class, FriendsType.ALREADYFRIENDS.getType(), userId, friendId, FriendsType.ALREADYFRIENDS.getType(), userId, friendId);
+        return count > 0;
     }
+
     /**
      * 根据用户编号朋友
      *
@@ -814,6 +836,7 @@ public class UserServiceImpl implements UserService {
         create(user);
 
     }
+
     @Override
     public UserModel findUserByAccount(String mobilePhone) {
         String sql = "select * from user where mobile_phone = ?";

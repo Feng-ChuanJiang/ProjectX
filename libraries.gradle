@@ -45,10 +45,31 @@ ext {
 	springDataNeo4j                         = '4.1.1.RELEASE'
 	voodoodyneJackson                       ='1.1'
 	thumbnailatorVersion					= '0.4.8'
+	//环信客户的
+	jerseyClient                            ='2.9'
+	jerseyMediaJsonJackson                  ='2.9'
+	httpclient                              ='4.3.3'
+	httpmime                                ='4.3.3'
+	jerseyMediaMultipart                    ='2.9'
+	//极光个推
+	gson                                    ='2.2.4'
+	jpushClient                             ='3.2.9'
+
 
     libraries = [
+			//极光个推
+			gson:"com.google.code.gson:gson:${gson}",
+			jpush_client:"cn.jpush.api:jpush-client:${jpushClient}",
+			//环信
+			jersey_client: "org.glassfish.jersey.core:jersey-client:${jerseyClient}",
+			jersey_media_json_jackson:  "org.glassfish.jersey.media:jersey-media-json-jackson:${jerseyMediaJsonJackson}",
+			httpclient: "org.apache.httpcomponents:httpclient:${httpclient}",
+			httpmime: "org.apache.httpcomponents:httpmime:${httpmime}",
+			jersey_media_multipart: "org.glassfish.jersey.media:jersey-media-multipart:${jerseyMediaMultipart}",
+            //neo4j
 			spring_data_neo4j:         "org.springframework.data:spring-data-neo4j:${springDataNeo4j}",
 			voodoodyne_jackson:          "com.voodoodyne.jackson.jsog:jackson-jsog:${voodoodyneJackson}",
+			//elasticsearch
 			spring_data_elasticsearch: "org.springframework.data:spring-data-elasticsearch:${springDataElasticsearchVersion}",
 			//spring base
             spring_context_support:    	"org.springframework:spring-context-support:${springFrameworkVersion}",

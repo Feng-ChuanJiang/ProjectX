@@ -3,6 +3,7 @@ package com.cci.projectx.core.model;
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -134,6 +135,9 @@ public class UserModel{
 	}
 
 	public List<WorkingExperienceModel> getWorkingExperiences() {
+		if(workingExperiences==null){
+			workingExperiences=new ArrayList<>();
+		}
 		return workingExperiences;
 	}
 
@@ -142,6 +146,9 @@ public class UserModel{
 	}
 
 	public List<EducationModel> getEducations() {
+		if(educations==null){
+			educations=new ArrayList<>();
+		}
 		return educations;
 	}
 

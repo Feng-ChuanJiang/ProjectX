@@ -1,8 +1,9 @@
-package com.cci.projectx.core.model;
+package com.cci.projectx.core.vo;
 
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
-import java.util.Date;
+
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @MapClass("com.cci.projectx.core.entity.Interact")

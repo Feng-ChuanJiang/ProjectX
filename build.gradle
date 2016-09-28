@@ -113,7 +113,12 @@ project("projectx-service-api") {
 		compile(libraries.spring_data_neo4j)
 		compile(libraries.voodoodyne_jackson)
 		compile(libraries.thumbnailator)
-
+		//huanxin
+		compile(libraries.jersey_client)
+		compile(libraries.jersey_media_json_jackson)
+		compile(libraries.httpclient)
+		compile(libraries.httpmime)
+		compile(libraries.jersey_media_multipart)
 	}
 }
 
@@ -126,6 +131,8 @@ project("projectx-service") {
 		compile(libraries.c3p0)
 		compile(libraries.immortal_logback)
 		compile(libraries.ryantenney)
+		compile(libraries.gson)
+		compile(libraries.jpush_client)
 		testCompile(libraries.pylon_test)
 		
 	}

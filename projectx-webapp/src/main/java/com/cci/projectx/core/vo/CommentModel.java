@@ -1,4 +1,4 @@
-package com.cci.projectx.core.model;
+package com.cci.projectx.core.vo;
 
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 

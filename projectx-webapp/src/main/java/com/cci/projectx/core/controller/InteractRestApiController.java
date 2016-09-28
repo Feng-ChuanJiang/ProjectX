@@ -49,10 +49,10 @@ public class InteractRestApiController {
 	}
 
 	@GetMapping(value = "/interact")
-    public ResponseEnvelope<Page<InteractModel>> listInteract(InteractVO interactVO,Pageable pageable){
+    public ResponseEnvelope<Page<InteractModel>> listInteract(InteractVO interactVO,Pageable pageable,@RequestAttribute Long userId){
 
 		InteractModel param = beanMapper.map(interactVO, InteractModel.class);
-        List<InteractModel> interactModelModels = interactService.selectPage(param,pageable);
+        List<InteractModel> interactModelModels = interactService.selectPage(param,pageable,userId);
         long count=interactService.selectCount(param);
         Page<InteractModel> page = new PageImpl<>(interactModelModels,pageable,count);
         ResponseEnvelope<Page<InteractModel>> responseEnv = new ResponseEnvelope<>(page,true);
@@ -111,8 +111,8 @@ public class InteractRestApiController {
 	}
 
 	@GetMapping(value = "/interact/circle/{circleId}")
-	public ResponseEnvelope<Page<InteractModel>> selectPageByCircleId(@PathVariable Long circleId,Pageable pageable){
-		Page<InteractModel> page = interactService.selectPageByCircleId(circleId,pageable);
+	public ResponseEnvelope<Page<InteractModel>> selectPageByCircleId(@PathVariable Long circleId,Pageable pageable,@RequestAttribute Long userId){
+		Page<InteractModel> page = interactService.selectPageByCircleId(circleId,pageable,userId);
 		ResponseEnvelope<Page<InteractModel>> responseEnv = new ResponseEnvelope<>(page,true);
 		return responseEnv;
 	}

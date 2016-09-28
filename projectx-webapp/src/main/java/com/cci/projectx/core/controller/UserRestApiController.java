@@ -2,6 +2,7 @@ package com.cci.projectx.core.controller;
 
 import com.cci.projectx.core.HRErrorCode;
 import com.cci.projectx.core.RandomUtil;
+import com.cci.projectx.core.ResponseEnvelope;
 import com.cci.projectx.core.annotation.IgnoreAuth;
 import com.cci.projectx.core.model.FriendsModel;
 import com.cci.projectx.core.model.UserModel;
@@ -9,14 +10,13 @@ import com.cci.projectx.core.service.UserService;
 import com.cci.projectx.core.vo.*;
 import com.google.common.cache.Cache;
 import com.taobao.api.ApiException;
-import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
 import com.taobao.api.request.AlibabaAliqinFcSmsNumSendRequest;
 import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
 import com.wlw.pylon.core.exception.BusinessException;
-import com.cci.projectx.core.ResponseEnvelope;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +46,9 @@ public class UserRestApiController {
 	@Autowired
 	private Cache<String, Long> sessionCache;
 
-	@Value("${sms.serverUrl}")
-	private String serverUrl;
-	@Value("${sms.appKey}")
-	private String appKey;
-	@Value("${sms.appSecret}")
-	private String appSecret;
+	@Autowired
+	private TaobaoClient taobaoClient;
+
 	@Value("${sms.templateCode}")
 	private String templateCode;
 	@IgnoreAuth
@@ -60,7 +57,6 @@ public class UserRestApiController {
 		//验证码
 		String vali= RandomUtil.createRandom(true,6);
 		httpSession.setAttribute(phone,vali);
-		TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
 		AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
 		req.setExtend("");
 		req.setSmsType("normal");
@@ -70,7 +66,7 @@ public class UserRestApiController {
 		req.setSmsTemplateCode(templateCode);
 		AlibabaAliqinFcSmsNumSendResponse rsp = null;
 		try {
-			rsp = client.execute(req);
+			rsp = taobaoClient.execute(req);
 		} catch (ApiException e) {
 			throw new BusinessException("500","短信发送失败");
 		}
@@ -315,6 +311,31 @@ public class UserRestApiController {
 	public ResponseEnvelope<Map<String,Object>> findRelation(@RequestBody FriendPhoneVO phones){
 		Map<String,Object> page=userService.findRelation(phones.getUserId(),phones.getPhones());
 		ResponseEnvelope<Map<String,Object>> responseEnv = new ResponseEnvelope<>(page,true);
+		return responseEnv;
+	}
+
+	//根据电话邀请朋友
+	@PostMapping(value = "/friends/invite")
+	public ResponseEnvelope<String> findInvite(@RequestBody FriendPhoneVO phones){
+        UserModel userModel=userService.findUserShortById(phones.getUserId());
+		if(CollectionUtils.isNotEmpty(phones.getPhones())){
+			for (String s : phones.getPhones()) {
+				AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
+				req.setExtend("");
+				req.setSmsType("normal");
+				req.setSmsFreeSignName("未拓空间");
+			//	req.setSmsParamString(  "{number:'"+vali+"'}"  );
+				req.setRecNum(s);
+				req.setSmsTemplateCode(templateCode);
+				try {
+					taobaoClient.execute(req);
+				} catch (ApiException e) {
+					throw new BusinessException("500","短信发送失败");
+				}
+			}
+		}
+
+		ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>("ok",true);
 		return responseEnv;
 	}
 
