@@ -3,7 +3,7 @@ package com.cci.projectx.core.interceptor;
 import com.cci.projectx.core.HRErrorCode;
 import com.cci.projectx.core.annotation.IgnoreAuth;
 import com.google.common.cache.Cache;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,17 +45,17 @@ public class AuthInterceptor implements HandlerInterceptor {
             RestController restController = handlerMethod.getBeanType().getAnnotation(RestController.class);
             if (null != restController) {
 
-//                String authToken = request.getHeader(AUTHORIZATION);
-//                if (StringUtils.isEmpty(authToken)) {
-//                    HRErrorCode.throwBusinessException(HRErrorCode.UN_LOGIN);
-//                }
-//
-//                Long userId = sessionCache.getIfPresent(authToken);
-//                if(null==userId){
-//                    HRErrorCode.throwBusinessException(HRErrorCode.UN_LOGIN);
-//                }
-//
-//                request.setAttribute("userId", userId);
+                String authToken = request.getHeader(AUTHORIZATION);
+                if (StringUtils.isEmpty(authToken)) {
+                    HRErrorCode.throwBusinessException(HRErrorCode.UN_LOGIN);
+                }
+
+                Long userId = sessionCache.getIfPresent(authToken);
+                if(null==userId){
+                    HRErrorCode.throwBusinessException(HRErrorCode.UN_LOGIN);
+                }
+
+                request.setAttribute("userId", userId);
             }
         }
 
