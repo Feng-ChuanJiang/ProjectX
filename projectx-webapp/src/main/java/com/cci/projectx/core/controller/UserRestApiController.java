@@ -27,7 +27,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -232,22 +231,22 @@ public class UserRestApiController {
 		return responseEnv;
 	}
 
+//	@GetMapping(value = "/user/like")
+//	public ResponseEnvelope<List<UserModel>> getUserByUserProfile(UserVO userVO) throws UnsupportedEncodingException {
+//		UserModel user = beanMapper.map(userVO,UserModel.class);
+//		List<UserModel> listUser=userService.getUserByUserProfile(user);
+//		ResponseEnvelope<List<UserModel>> responseEnv = new ResponseEnvelope<>(listUser,true);
+//		return responseEnv;
+//	}
+	//搜索用户
 	@GetMapping(value = "/user/like")
-	public ResponseEnvelope<List<UserModel>> getUserByUserProfile(UserVO userVO) throws UnsupportedEncodingException {
-		UserModel user = beanMapper.map(userVO,UserModel.class);
-		List<UserModel> listUser=userService.getUserByUserProfile(user);
-		ResponseEnvelope<List<UserModel>> responseEnv = new ResponseEnvelope<>(listUser,true);
-		return responseEnv;
-	}
-	//共同同事
-	@GetMapping(value = "/user/like/{name}")
-	public ResponseEnvelope<List<UserModel>> findUserByLikeName(@PathVariable String name){
-		List<UserModel> page=userService.findUserByLikeName(name);
+	public ResponseEnvelope<List<UserModel>> findUserByLikeName(UserVO userVO){
+		List<UserModel> page=userService.findUserByLikeName(userVO.getName());
 		ResponseEnvelope<List<UserModel>> responseEnv = new ResponseEnvelope<>(page,true);
 		return responseEnv;
 	}
 
-	//共同同事
+	//搜索朋友
 	@GetMapping(value = "/user/like/{userId}/{name}")
 	public ResponseEnvelope<List<UserModel>> findFriendUserByLikeName(@PathVariable Long userId,@PathVariable String name){
 		List<UserModel> page=userService.findFriendUserByLikeName(userId,name);

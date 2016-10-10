@@ -1,5 +1,7 @@
 package com.cci.projectx.core.controller;
 
+import com.cci.projectx.core.JPushPush;
+import com.cci.projectx.core.ResponseEnvelope;
 import com.cci.projectx.core.model.DiscussModel;
 import com.cci.projectx.core.model.DiscussMyModel;
 import com.cci.projectx.core.model.UserModel;
@@ -8,7 +10,7 @@ import com.cci.projectx.core.service.UserService;
 import com.cci.projectx.core.vo.DiscussOnlyVO;
 import com.cci.projectx.core.vo.DiscussVO;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
-import com.cci.projectx.core.ResponseEnvelope;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class DiscussRestApiController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private JPushPush jPushPush;
 
 	@GetMapping(value = "/discuss/{id}")
 	public ResponseEnvelope<DiscussOnlyVO> getDiscussById(@PathVariable Long id){
@@ -85,6 +90,13 @@ public class DiscussRestApiController {
 	@PostMapping(value = "/discuss")
 	public ResponseEnvelope<Integer> createDiscuss(@RequestBody DiscussVO discussVO){
 		DiscussModel discussModel = beanMapper.map(discussVO, DiscussModel.class);
+		//推送
+        if(CollectionUtils.isNotEmpty(discussVO.getInviteUserIds())){
+			for (Long aLong : discussVO.getInviteUserIds()) {
+				UserModel userModel=userService.findUserShortById(discussVO.getUserId());
+				jPushPush.buildPushObject_all_alias_alert(aLong, userModel.getName() + JPushPush.SEMINAR_DISCUSS, jPushPush.convertBean(discussVO));
+			}
+		}
 		Integer  result = discussService.create(discussModel);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
         return responseEnv;

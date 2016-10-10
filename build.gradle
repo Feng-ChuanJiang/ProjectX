@@ -119,6 +119,7 @@ project("projectx-service-api") {
 		compile(libraries.httpclient)
 		compile(libraries.httpmime)
 		compile(libraries.jersey_media_multipart)
+		compile(libraries.jpush_client)
 	}
 }
 
@@ -132,7 +133,6 @@ project("projectx-service") {
 		compile(libraries.immortal_logback)
 		compile(libraries.ryantenney)
 		compile(libraries.gson)
-		compile(libraries.jpush_client)
 		testCompile(libraries.pylon_test)
 		
 	}

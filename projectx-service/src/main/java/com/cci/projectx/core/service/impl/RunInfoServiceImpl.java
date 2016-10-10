@@ -2,6 +2,7 @@ package com.cci.projectx.core.service.impl;
 
 import com.cci.projectx.core.FriendsType;
 import com.cci.projectx.core.HRErrorCode;
+import com.cci.projectx.core.JPushPush;
 import com.cci.projectx.core.JdbcTempateHelp;
 import com.cci.projectx.core.entity.RunInfo;
 import com.cci.projectx.core.model.FriendsModel;
@@ -43,6 +44,9 @@ public class RunInfoServiceImpl implements RunInfoService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JPushPush jPushPush;
 
     @Transactional
     @Override
@@ -109,6 +113,10 @@ public class RunInfoServiceImpl implements RunInfoService {
     @Transactional
     @Override
     public int addFriends(RunFriendsModel friend) {
+        //推送
+        UserModel userModel = userService.findUserShortById(friend.getUserId());
+        jPushPush.buildPushObject_all_alias_alert(friend.getFriendId(), userModel.getName() + JPushPush.RUN_APPLY, jPushPush.convertBean(userModel));
+        friend.setState(new Long(FriendsType.APPLYFRIENDS.getType()));
         return jdbcTempateHelp.add(friend);
     }
 
@@ -121,27 +129,30 @@ public class RunInfoServiceImpl implements RunInfoService {
     @Transactional
     @Override
     public int updateFriends(RunFriendsModel friend) {
-        if (friend.getState() == 1) {
-            //查询是佛已经是好友
-            String sql = "SELECT COUNT(1) FROM FRIENDS WHERE (USER_ID=? AND FRIEND_ID=? OR USER_ID=? AND FRIEND_ID=? )AND STATE =?";
-            int userCount = jdbcTemplate.queryForObject(sql, Integer.class, friend.getUserId(), friend.getFriendId(), friend.getFriendId(), friend.getUserId(), FriendsType.ALREADYFRIENDS.getType());
-            //查询是否等待验证
-            sql = "SELECT COUNT(1) FROM FRIENDS WHERE (USER_ID=? AND FRIEND_ID=? OR USER_ID=? AND FRIEND_ID=? )AND STATE =?";
-            int appUser = jdbcTemplate.queryForObject(sql, Integer.class, friend.getUserId(), friend.getFriendId(), friend.getFriendId(), friend.getUserId(), FriendsType.APPLYFRIENDS.getType());
-            FriendsModel friendsModel = new FriendsModel();
-            friendsModel.setFriendId(friend.getFriendId());
-            friendsModel.setUserId(friend.getUserId());
-            friendsModel.setState(new Long(FriendsType.ALREADYFRIENDS.getType()));
-            //添加好友
-            if (userCount == 0) {
-                userService.addFriends(friendsModel);
-            }
-            //更新好友状态
-            if (appUser == 0) {
-                userService.updateFriends(friendsModel);
-            }
+        //推送
+        UserModel userModel = userService.findUserShortById(friend.getUserId());
+        jPushPush.buildPushObject_all_alias_alert(friend.getFriendId(), userModel.getName() + JPushPush.RUN_CONSENT, jPushPush.convertBean(userModel));
+        friend.setState(new Long(FriendsType.APPLYFRIENDS.getType()));
+        //查询是佛已经是好友
+        String sql = "SELECT COUNT(1) FROM FRIENDS WHERE (USER_ID=? AND FRIEND_ID=? OR USER_ID=? AND FRIEND_ID=? )AND STATE =?";
+        int userCount = jdbcTemplate.queryForObject(sql, Integer.class, friend.getUserId(), friend.getFriendId(), friend.getFriendId(), friend.getUserId(), FriendsType.ALREADYFRIENDS.getType());
+        //查询是否等待验证
+        sql = "SELECT COUNT(1) FROM FRIENDS WHERE (USER_ID=? AND FRIEND_ID=? OR USER_ID=? AND FRIEND_ID=? )AND STATE =?";
+        int appUser = jdbcTemplate.queryForObject(sql, Integer.class, friend.getUserId(), friend.getFriendId(), friend.getFriendId(), friend.getUserId(), FriendsType.APPLYFRIENDS.getType());
+        FriendsModel friendsModel = new FriendsModel();
+        friendsModel.setFriendId(friend.getFriendId());
+        friendsModel.setUserId(friend.getUserId());
+        friendsModel.setState(new Long(FriendsType.ALREADYFRIENDS.getType()));
+        //添加好友
+        if (userCount == 0) {
+            userService.addFriends(friendsModel);
         }
-        String sql = "UPDATE run_friends SET state=? where (user_id=? and friend_id=? or  user_id=? and friend_id=?)";
+        //更新好友状态
+        if (appUser == 0) {
+            userService.updateFriends(friendsModel);
+        }
+
+        sql = "UPDATE run_friends SET state=? where (user_id=? and friend_id=? or  user_id=? and friend_id=?)";
         return jdbcTemplate.update(sql, FriendsType.ALREADYFRIENDS.getType(), friend.getUserId(), friend.getFriendId(), friend.getFriendId(), friend.getUserId());
     }
 
@@ -207,7 +218,7 @@ public class RunInfoServiceImpl implements RunInfoService {
      * @return
      */
     @Override
-    public List<UserModel> findAssignRunFriends(Long userId,Pageable pageable) {
+    public List<UserModel> findAssignRunFriends(Long userId, Pageable pageable) {
         RunInfoModel runInfoModel = new RunInfoModel();
         runInfoModel.setUserId(userId);
         List<RunInfoModel> runInfoModels = selectPage(runInfoModel, pageable);
@@ -238,7 +249,7 @@ public class RunInfoServiceImpl implements RunInfoService {
      * @return
      */
     private boolean isInPolygon(RunInfoModel runInfo, RunInfoModel runInfoTow) {
-        if(runInfo.getLongitude()==null||runInfo.getLatitude()==null){
+        if (runInfo.getLongitude() == null || runInfo.getLatitude() == null) {
             return false;
         }
         //需要计算的坐标

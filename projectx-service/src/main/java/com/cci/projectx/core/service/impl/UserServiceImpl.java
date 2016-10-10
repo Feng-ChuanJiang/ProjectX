@@ -1,9 +1,6 @@
 package com.cci.projectx.core.service.impl;
 
-import com.cci.projectx.core.ElasticSearchHelp;
-import com.cci.projectx.core.FriendsType;
-import com.cci.projectx.core.HRErrorCode;
-import com.cci.projectx.core.JdbcTempateHelp;
+import com.cci.projectx.core.*;
 import com.cci.projectx.core.domain.LndustryNeo;
 import com.cci.projectx.core.domain.UserNeo;
 import com.cci.projectx.core.entity.Friends;
@@ -78,6 +75,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     IMUserAPI imUserAPI;
 
+    @Autowired
+    JPushPush jPushPush;
+
     @Transactional
     @Override
     public int create(UserModel userModel) {
@@ -137,7 +137,6 @@ public class UserServiceImpl implements UserService {
                 lndustryNeoRepository.addLndustryRelat(user.getId(), lndustryNeo.getLndustryId());
             }
         }
-
 
         return id;
     }
@@ -246,7 +245,6 @@ public class UserServiceImpl implements UserService {
                 lndustryNeoRepository.deleteLndustryRelat(userm.getId(), lndustryNeo.getLndustryId());
                 lndustryNeoRepository.addLndustryRelat(userm.getId(), lndustryNeoM.getLndustryId());
             }
-
         }
         User user = beanMapper.map(userModel, User.class);
         int id = userRepo.updateByPrimaryKeySelective(user);
@@ -334,6 +332,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public int addFriends(FriendsModel friends) {
+        //推送
+        UserModel userModel=findUserShortById(friends.getUserId());
+        jPushPush.buildPushObject_all_alias_alert(friends.getFriendId(),userModel.getName()+JPushPush.FRIEND_APPLY,jPushPush.convertBean(userModel));
         friends.setState(new Long(FriendsType.APPLYFRIENDS.getType()));
         Friends friend = beanMapper.map(friends, Friends.class);
         String sql="SELECT COUNT(1) FROM FRIENDS WHERE (USER_ID=? AND FRIEND_ID=? OR USER_ID=? AND FRIEND_ID=?)";
@@ -345,14 +346,18 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 更新好友
+     * 通过验证
      *
      * @param friends
      * @return
      */
     @Override
     public int updateFriends(FriendsModel friends) {
+        //推送
         Friends friend = beanMapper.map(friends, Friends.class);
+        UserModel userModel=findUserShortById(friends.getUserId());
+        jPushPush.buildPushObject_all_alias_alert(friends.getFriendId(),userModel.getName()+JPushPush.FRIEND_CONSENT,jPushPush.convertBean(userModel));
+        friends.setState(new Long(FriendsType.APPLYFRIENDS.getType()));
         String sql = "UPDATE friends SET state=? where (user_id=? and friend_id=? or  user_id=? and friend_id=?)";
         int id = jdbcTemplate.update(sql, FriendsType.ALREADYFRIENDS.getType(), friend.getUserId(), friend.getFriendId(), friend.getFriendId(), friend.getUserId());
         if (id > 0) {

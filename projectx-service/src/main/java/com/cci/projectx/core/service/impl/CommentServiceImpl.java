@@ -1,10 +1,10 @@
 package com.cci.projectx.core.service.impl;
 
 import com.cci.projectx.core.entity.Comment;
-import com.cci.projectx.core.model.CommentModel;
-import com.cci.projectx.core.model.InteractModel;
+import com.cci.projectx.core.model.*;
 import com.cci.projectx.core.repository.CommentRepository;
 import com.cci.projectx.core.service.CommentService;
+import com.cci.projectx.core.service.UserService;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +26,9 @@ public class CommentServiceImpl implements CommentService {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private UserService userService;
 
 	@Transactional
 	@Override
@@ -93,15 +96,34 @@ public class CommentServiceImpl implements CommentService {
 			i.setComments(comment);
 			//得到评论的评论
 			for (CommentModel c : comment) {
+				if(c.getUserId()!=null){
+					//得到用户信息
+					UserModel userModel=userService.findUserShortById(c.getUserId());
+					c.setUser(beanMapper.map(userModel, CommentUserModel.class));
+				}
 				 sql="SELECT * FROM `COMMENT` WHERE  INTERACT_ID=? AND TYPE<>2 AND COMMENT_ID =? ORDER BY CREAT_TIME DESC";
 				 List<CommentModel> commen=jdbcTemplate.query(sql,bpr,i.getId(),c.getId());
+				for (CommentModel co : commen) {
+					if(co.getUserId()!=null) {
+						//得到用户信息
+						UserModel userModel1 = userService.findUserShortById(co.getUserId());
+						co.setUser(beanMapper.map(userModel1, CommentUserModel.class));
+					}
+					if(co.getFriendId()!=null) {
+						//得到朋友信息
+						UserModel userModel2 = userService.findUserShortById(co.getFriendId());
+						co.setFriend(beanMapper.map(userModel2, CommentUserModel.class));
+					}
+				}
 				 c.setCommentModels(commen);
 			}
 			//得到所有点赞
 			sql="SELECT * FROM `COMMENT` WHERE  INTERACT_ID=? AND TYPE=2 ORDER BY CREAT_TIME DESC";
 			List<CommentModel> praises=jdbcTemplate.query(sql,bpr,i.getId());
 			i.setPraises(praises);
-
+			//得到用户信息
+			UserModel userModel=userService.findUserShortById(i.getUserId());
+			i.setUser(beanMapper.map(userModel, InteractUserModel.class));
 		}
 
 		return interactModels;
@@ -125,8 +147,25 @@ public class CommentServiceImpl implements CommentService {
 			i.setComments(comment);
 			//得到评论的评论
 			for (CommentModel c : comment) {
+				if(c.getUserId()!=null){
+					//得到用户信息
+					UserModel userModel=userService.findUserShortById(c.getUserId());
+					c.setUser(beanMapper.map(userModel, CommentUserModel.class));
+				}
 				sql="SELECT * FROM `COMMENT` WHERE  INTERACT_ID=? AND TYPE<>2 AND COMMENT_ID =? ORDER BY CREAT_TIME DESC";
 				List<CommentModel> commen=jdbcTemplate.query(sql,bpr,i.getId(),c.getId());
+				for (CommentModel co : commen) {
+					if(co.getUserId()!=null) {
+						//得到用户信息
+						UserModel userModel1 = userService.findUserShortById(co.getUserId());
+						co.setUser(beanMapper.map(userModel1, CommentUserModel.class));
+					}
+					if(co.getFriendId()!=null) {
+						//得到朋友信息
+						UserModel userModel2 = userService.findUserShortById(co.getFriendId());
+						co.setFriend(beanMapper.map(userModel2, CommentUserModel.class));
+					}
+				}
 				c.setCommentModels(commen);
 			}
 			//得到所有点赞
@@ -134,6 +173,9 @@ public class CommentServiceImpl implements CommentService {
 			List<CommentModel> praises=jdbcTemplate.query(sql,bpr,i.getId());
 			i.setPraises(praises);
 
+			//得到用户信息
+			UserModel userModel=userService.findUserShortById(i.getUserId());
+			i.setUser(beanMapper.map(userModel, InteractUserModel.class));
 		}
 
 		return interactModels;

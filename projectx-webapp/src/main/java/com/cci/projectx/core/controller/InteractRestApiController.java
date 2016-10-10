@@ -1,12 +1,15 @@
 package com.cci.projectx.core.controller;
 
 import com.cci.projectx.core.InteractPermissionType;
+import com.cci.projectx.core.JPushPush;
 import com.cci.projectx.core.model.InteractModel;
 import com.cci.projectx.core.model.InteractPermissionModel;
 import com.cci.projectx.core.model.UserInteractCircleModel;
+import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.service.InteractPermissionService;
 import com.cci.projectx.core.service.InteractService;
 import com.cci.projectx.core.service.UserInteractCircleService;
+import com.cci.projectx.core.service.UserService;
 import com.cci.projectx.core.vo.InteractPermissionVO;
 import com.cci.projectx.core.vo.InteractVO;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
@@ -40,6 +43,12 @@ public class InteractRestApiController {
 	@Autowired
 	private InteractPermissionService interactPermissionService;
 
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private JPushPush jPushPush;
+
 	@GetMapping(value = "/interact/{id}")
 	public ResponseEnvelope<InteractVO> getInteractById(@PathVariable Long id){
 		InteractModel interactModel = interactService.findByPrimaryKey(id);
@@ -66,6 +75,13 @@ public class InteractRestApiController {
 
 		List<Long> circleIds=interactVO.getCircleIds();
 		List<Long> friendIds=interactVO.getFriendIds();
+		//推送
+		if(CollectionUtils.isNotEmpty(interactVO.getInvites())){
+			for (Long aLong : interactVO.getInvites()) {
+				UserModel userModel=userService.findUserShortById(interactVO.getUserId());
+				jPushPush.buildPushObject_all_alias_alert(aLong, userModel.getName() + JPushPush.INTERACT_INVITE, jPushPush.convertBean(interactVO));
+			}
+		}
 		//添加圈子
 		if(CollectionUtils.isNotEmpty(circleIds)){
 			for (Long circleId : circleIds) {

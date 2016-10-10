@@ -19,6 +19,7 @@ public class InteractModel{
 	private BigDecimal latitude;
 	private String addressDescribe;
 	private String picture;
+	private InteractUserModel user;
 	private List<CommentModel> comments;
 	private List<CommentModel> praises;
 
@@ -40,6 +41,14 @@ public class InteractModel{
 
 	public Long getUserId() {
 		return userId;
+	}
+
+	public InteractUserModel getUser() {
+		return user;
+	}
+
+	public void setUser(InteractUserModel user) {
+		this.user = user;
 	}
 
 	public void setUserId(Long userId) {

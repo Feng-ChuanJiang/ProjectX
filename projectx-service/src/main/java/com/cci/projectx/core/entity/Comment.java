@@ -7,6 +7,8 @@ public class Comment {
 
     private Long userId;
 
+    private Long friendId;
+
     private Long interactId;
 
     private Long commentId;
@@ -18,7 +20,6 @@ public class Comment {
     private Integer audio;
 
     private Integer type;
-
 
     public Long getId() {
         return id;
@@ -34,6 +35,14 @@ public class Comment {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Long getFriendId() {
+        return friendId;
+    }
+
+    public void setFriendId(Long friendId) {
+        this.friendId = friendId;
     }
 
     public Long getInteractId() {

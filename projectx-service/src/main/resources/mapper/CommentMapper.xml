@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.cci.projectx.core.entity.Comment">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="friend_id" jdbcType="BIGINT" property="friendId" />
     <result column="Interact_id" jdbcType="BIGINT" property="interactId" />
     <result column="comment_id" jdbcType="BIGINT" property="commentId" />
     <result column="creat_time" jdbcType="TIMESTAMP" property="creatTime" />
@@ -12,7 +13,7 @@
     <result column="type" jdbcType="INTEGER" property="type" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_id, Interact_id, comment_id, creat_time, comment, audio, type
+    id, user_id, friend_id, Interact_id, comment_id, creat_time, comment, audio, type
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -25,12 +26,14 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.cci.projectx.core.entity.Comment">
-    insert into comment (id, user_id, Interact_id, 
-      comment_id, creat_time, comment, 
-      audio, type)
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{interactId,jdbcType=BIGINT}, 
-      #{commentId,jdbcType=BIGINT}, #{creatTime,jdbcType=TIMESTAMP}, #{comment,jdbcType=VARCHAR}, 
-      #{audio,jdbcType=INTEGER}, #{type,jdbcType=INTEGER})
+    insert into comment (id, user_id, friend_id, 
+      Interact_id, comment_id, creat_time, 
+      comment, audio, type
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{friendId,jdbcType=BIGINT}, 
+      #{interactId,jdbcType=BIGINT}, #{commentId,jdbcType=BIGINT}, #{creatTime,jdbcType=TIMESTAMP}, 
+      #{comment,jdbcType=VARCHAR}, #{audio,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Comment">
     insert into comment
@@ -40,6 +43,9 @@
       </if>
       <if test="userId != null">
         user_id,
+      </if>
+      <if test="friendId != null">
+        friend_id,
       </if>
       <if test="interactId != null">
         Interact_id,
@@ -67,6 +73,9 @@
       <if test="userId != null">
         #{userId,jdbcType=BIGINT},
       </if>
+      <if test="friendId != null">
+        #{friendId,jdbcType=BIGINT},
+      </if>
       <if test="interactId != null">
         #{interactId,jdbcType=BIGINT},
       </if>
@@ -93,6 +102,9 @@
       <if test="userId != null">
         user_id = #{userId,jdbcType=BIGINT},
       </if>
+      <if test="friendId != null">
+        friend_id = #{friendId,jdbcType=BIGINT},
+      </if>
       <if test="interactId != null">
         Interact_id = #{interactId,jdbcType=BIGINT},
       </if>
@@ -117,6 +129,7 @@
   <update id="updateByPrimaryKey" parameterType="com.cci.projectx.core.entity.Comment">
     update comment
     set user_id = #{userId,jdbcType=BIGINT},
+      friend_id = #{friendId,jdbcType=BIGINT},
       Interact_id = #{interactId,jdbcType=BIGINT},
       comment_id = #{commentId,jdbcType=BIGINT},
       creat_time = #{creatTime,jdbcType=TIMESTAMP},
@@ -133,6 +146,9 @@
       </if>
       <if test="userId != null">
         and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="friendId != null">
+        and friend_id = #{friendId,jdbcType=BIGINT}
       </if>
       <if test="interactId != null">
         and Interact_id = #{interactId,jdbcType=BIGINT}
@@ -163,6 +179,9 @@
     </if>
     <if test="param1.userId != null">
       and user_id = #{param1.userId,jdbcType=BIGINT}
+    </if>
+    <if test="param1.friendId != null">
+      and friend_id = #{param1.friendId,jdbcType=BIGINT}
     </if>
     <if test="param1.interactId != null">
       and Interact_id = #{param1.interactId,jdbcType=BIGINT}

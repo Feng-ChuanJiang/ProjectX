@@ -10,12 +10,15 @@ public class CommentModel {
 	
 	private Long id;
 	private Long userId;
+	private Long friendId;
 	private Long interactId;
 	private Long commentId;
 	private Date creatTime;
 	private String comment;
 	private Integer audio;
 	private Integer type;
+	private CommentUserModel user;
+	private CommentUserModel friend;
 	private List<CommentModel> commentModels;
 		
 	public void setId(Long id){
@@ -41,7 +44,23 @@ public class CommentModel {
 	public Long getInteractId(){
 		return this.interactId;
 	}
-		
+
+	public CommentUserModel getUser() {
+		return user;
+	}
+
+	public void setUser(CommentUserModel user) {
+		this.user = user;
+	}
+
+	public CommentUserModel getFriend() {
+		return friend;
+	}
+
+	public void setFriend(CommentUserModel friend) {
+		this.friend = friend;
+	}
+
 	public void setCommentId(Long commentId){
 		this.commentId = commentId;
 	}
@@ -88,5 +107,13 @@ public class CommentModel {
 
 	public void setCommentModels(List<CommentModel> commentModels) {
 		this.commentModels = commentModels;
+	}
+
+	public Long getFriendId() {
+		return friendId;
+	}
+
+	public void setFriendId(Long friendId) {
+		this.friendId = friendId;
 	}
 }

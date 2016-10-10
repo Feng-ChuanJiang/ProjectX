@@ -21,6 +21,7 @@ public class InteractPermissionVO {
     private String picture;
     private List<Long> circleIds;
     private List<Long> friendIds;
+    private List<Long> invites;
 
     public void setId(Long id) {
         this.id = id;
@@ -117,5 +118,13 @@ public class InteractPermissionVO {
 
     public void setFriendIds(List<Long> friendIds) {
         this.friendIds = friendIds;
+    }
+
+    public List<Long> getInvites() {
+        return invites;
+    }
+
+    public void setInvites(List<Long> invites) {
+        this.invites = invites;
     }
 }

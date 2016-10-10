@@ -9,6 +9,7 @@ public class CommentVO {
 	
 	private Long id;
 	private Long userId;
+	private Long friendId;
 	private Long interactId;
 	private Long commentId;
 	private Date creatTime;
@@ -79,6 +80,12 @@ public class CommentVO {
 	public Integer getType(){
 		return this.type;
 	}
-		
-		
+
+	public Long getFriendId() {
+		return friendId;
+	}
+
+	public void setFriendId(Long friendId) {
+		this.friendId = friendId;
+	}
 }
