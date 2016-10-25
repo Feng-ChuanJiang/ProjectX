@@ -8,6 +8,8 @@ public class CommentUserModel {
 
     private String name;
 
+    private String photos;
+
     public Long getId() {
         return id;
     }
@@ -22,5 +24,13 @@ public class CommentUserModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(String photos) {
+        this.photos = photos;
     }
 }

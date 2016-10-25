@@ -4,6 +4,7 @@ import com.cci.projectx.core.FriendsType;
 import com.cci.projectx.core.HRErrorCode;
 import com.cci.projectx.core.JPushPush;
 import com.cci.projectx.core.JdbcTempateHelp;
+import com.cci.projectx.core.entity.RunFriends;
 import com.cci.projectx.core.entity.RunInfo;
 import com.cci.projectx.core.model.FriendsModel;
 import com.cci.projectx.core.model.RunFriendsModel;
@@ -113,11 +114,12 @@ public class RunInfoServiceImpl implements RunInfoService {
     @Transactional
     @Override
     public int addFriends(RunFriendsModel friend) {
+        RunFriends frien=beanMapper.map(friend,RunFriends.class);
         //推送
         UserModel userModel = userService.findUserShortById(friend.getUserId());
         jPushPush.buildPushObject_all_alias_alert(friend.getFriendId(), userModel.getName() + JPushPush.RUN_APPLY, jPushPush.convertBean(userModel));
-        friend.setState(new Long(FriendsType.APPLYFRIENDS.getType()));
-        return jdbcTempateHelp.add(friend);
+        frien.setState(new Long(FriendsType.APPLYFRIENDS.getType()));
+        return jdbcTempateHelp.add(frien);
     }
 
     /**
@@ -129,6 +131,7 @@ public class RunInfoServiceImpl implements RunInfoService {
     @Transactional
     @Override
     public int updateFriends(RunFriendsModel friend) {
+        RunFriends frien=beanMapper.map(friend,RunFriends.class);
         //推送
         UserModel userModel = userService.findUserShortById(friend.getUserId());
         jPushPush.buildPushObject_all_alias_alert(friend.getFriendId(), userModel.getName() + JPushPush.RUN_CONSENT, jPushPush.convertBean(userModel));

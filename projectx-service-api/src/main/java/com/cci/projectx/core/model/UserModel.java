@@ -4,6 +4,7 @@ import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -91,9 +92,18 @@ public class UserModel{
 	}
 	
 	public Integer getAge(){
-		return this.age;
+		if(getBirthday()==null){
+			return 0;
+		}
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		int year=c.get(Calendar.YEAR);
+		c.setTime(getBirthday());
+		int birthday=c.get(Calendar.YEAR);
+		return year-birthday;
 	}
-		
+
+
 	public void setLndustry(String lndustry){
 		this.lndustry = lndustry;
 	}

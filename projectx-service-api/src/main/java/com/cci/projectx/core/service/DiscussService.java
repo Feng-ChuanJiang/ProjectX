@@ -3,7 +3,6 @@ package com.cci.projectx.core.service;
 
 import com.cci.projectx.core.model.DiscussModel;
 import com.cci.projectx.core.model.DiscussMyModel;
-import com.cci.projectx.core.model.UserModel;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -26,7 +25,7 @@ public interface DiscussService {
 
     public List<DiscussMyModel> selectPage(DiscussModel discussModel, Pageable pageable);
 
-    public List<UserModel> findUserByPrimary(Long userId, String title);
+    public List<DiscussMyModel> findUserByPrimary(Long userId, String title);
 
     public List<DiscussMyModel> selectDiscussAll(Long userId);
 

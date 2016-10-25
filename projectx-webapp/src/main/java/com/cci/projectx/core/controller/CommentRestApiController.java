@@ -61,7 +61,7 @@ public class CommentRestApiController {
     }
 
     @PostMapping(value = "/comment")
-    public ResponseEnvelope<Integer> createComment(@RequestBody CommentVO commentVO) {
+    public ResponseEnvelope<Long> createComment(@RequestBody CommentVO commentVO) {
        InteractModel interactModel= interactService.findByPrimaryKey(commentVO.getInteractId());
         //推送
         if (commentVO.getType() != 2) {
@@ -81,7 +81,8 @@ public class CommentRestApiController {
 
         CommentModel commentModel = beanMapper.map(commentVO, CommentModel.class);
         Integer result = commentService.create(commentModel);
-        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result, true);
+
+        ResponseEnvelope<Long> responseEnv = new ResponseEnvelope<>(commentModel.getId(), true);
         return responseEnv;
     }
 

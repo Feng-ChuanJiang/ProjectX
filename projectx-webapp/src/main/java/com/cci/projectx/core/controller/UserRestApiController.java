@@ -50,6 +50,10 @@ public class UserRestApiController {
 
 	@Value("${sms.templateCode}")
 	private String templateCode;
+
+	@Value("${sms.templateInvite}")
+	private String templateInvite;
+
 	@IgnoreAuth
 	@GetMapping(value = "/user/verifica/{phone}")
 	public ResponseEnvelope<String> userVerifica(@PathVariable String phone, HttpSession httpSession) {
@@ -325,7 +329,7 @@ public class UserRestApiController {
 				req.setSmsFreeSignName("未拓空间");
 			//	req.setSmsParamString(  "{number:'"+vali+"'}"  );
 				req.setRecNum(s);
-				req.setSmsTemplateCode(templateCode);
+				req.setSmsTemplateCode(templateInvite);
 				try {
 					taobaoClient.execute(req);
 				} catch (ApiException e) {

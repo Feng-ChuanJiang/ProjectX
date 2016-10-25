@@ -33,13 +33,19 @@ public class CommentServiceImpl implements CommentService {
 	@Transactional
 	@Override
 	public int create(CommentModel commentModel) {
-		return commentRepo.insert(beanMapper.map(commentModel, Comment.class));
+		Comment comment=beanMapper.map(commentModel, Comment.class);
+		int tag=commentRepo.insert(comment);
+		commentModel.setId(comment.getId());
+		return tag;
 	}
 
 	@Transactional
 	@Override
 	public int createSelective(CommentModel commentModel) {
-		return commentRepo.insertSelective(beanMapper.map(commentModel, Comment.class));
+		Comment comment=beanMapper.map(commentModel, Comment.class);
+		int tag=commentRepo.insertSelective(comment);
+		commentModel.setId(comment.getId());
+		return tag;
 	}
 
 	@Transactional
@@ -120,6 +126,13 @@ public class CommentServiceImpl implements CommentService {
 			//得到所有点赞
 			sql="SELECT * FROM `COMMENT` WHERE  INTERACT_ID=? AND TYPE=2 ORDER BY CREAT_TIME DESC";
 			List<CommentModel> praises=jdbcTemplate.query(sql,bpr,i.getId());
+			for (CommentModel praise : praises) {
+				if(praise.getUserId()!=null){
+					//得到用户信息
+					UserModel userModel=userService.findUserShortById(praise.getUserId());
+					praise.setUser(beanMapper.map(userModel, CommentUserModel.class));
+				}
+			}
 			i.setPraises(praises);
 			//得到用户信息
 			UserModel userModel=userService.findUserShortById(i.getUserId());
@@ -142,8 +155,10 @@ public class CommentServiceImpl implements CommentService {
 			//得到朋友评论
 			String sql="SELECT * FROM (SELECT A.* FROM `COMMENT` A,FRIENDS B WHERE  A.USER_ID=B.USER_ID AND B.FRIEND_ID=? AND B.STATE=1 AND  A.INTERACT_ID=? AND A.TYPE<>2 AND A.COMMENT_ID IS NULL\n" +
 					"UNION ALL\n" +
-					"SELECT A.* FROM `COMMENT` A,FRIENDS B WHERE  A.USER_ID=B.FRIEND_ID AND B.USER_ID=? AND B.STATE=1 AND  A.INTERACT_ID=? AND A.TYPE<>2 AND A.COMMENT_ID IS NULL )C ORDER BY C.CREAT_TIME DESC";
-			List<CommentModel> comment=jdbcTemplate.query(sql,bpr,userId,i.getId(),userId,i.getId());
+					"SELECT A.* FROM `COMMENT` A,FRIENDS B WHERE  A.USER_ID=B.FRIEND_ID AND B.USER_ID=? AND B.STATE=1 AND  A.INTERACT_ID=? AND A.TYPE<>2 AND A.COMMENT_ID IS NULL \n" +
+					"UNION ALL\n" +
+					"SELECT A.* FROM `COMMENT` A WHERE  A.USER_ID=? AND  A.INTERACT_ID=? AND A.TYPE<>2 AND A.COMMENT_ID IS NULL )C ORDER BY C.CREAT_TIME DESC";
+			List<CommentModel> comment=jdbcTemplate.query(sql,bpr,userId,i.getId(),userId,i.getId(),userId,i.getId());
 			i.setComments(comment);
 			//得到评论的评论
 			for (CommentModel c : comment) {
@@ -171,6 +186,13 @@ public class CommentServiceImpl implements CommentService {
 			//得到所有点赞
 			sql="SELECT * FROM `COMMENT` WHERE  INTERACT_ID=? AND TYPE=2 ORDER BY CREAT_TIME DESC";
 			List<CommentModel> praises=jdbcTemplate.query(sql,bpr,i.getId());
+			for (CommentModel praise : praises) {
+				if(praise.getUserId()!=null){
+					//得到用户信息
+					UserModel userModel=userService.findUserShortById(praise.getUserId());
+					praise.setUser(beanMapper.map(userModel, CommentUserModel.class));
+				}
+			}
 			i.setPraises(praises);
 
 			//得到用户信息

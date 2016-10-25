@@ -43,7 +43,7 @@ public class DiscussRestApiController {
 		DiscussModel discussModel = discussService.findByPrimaryKey(id);
 		DiscussOnlyVO discussVO =beanMapper.map(discussModel, DiscussOnlyVO.class);
 		//查询这个研讨会用户信息
-        List<UserModel> userModels=discussService.findUserByPrimary(discussVO.getUserId(),discussVO.getTitle());
+        List<DiscussMyModel> userModels=discussService.findUserByPrimary(discussVO.getUserId(),discussVO.getTitle());
 		discussVO.setUsers(userModels);
 		//设置用户信息
 		UserModel user=userService.findUserShortById(discussVO.getUserId());
@@ -60,7 +60,7 @@ public class DiscussRestApiController {
         List<DiscussMyModel> discussModelModels = discussService.selectPage(param,pageable);
 		for (DiscussMyModel discussModelModel : discussModelModels) {
 			//查询这个研讨会用户信息
-			List<UserModel> userModels=discussService.findUserByPrimary(discussModelModel.getUserId(),discussModelModel.getTitle());
+			List<DiscussMyModel> userModels=discussService.findUserByPrimary(discussModelModel.getUserId(),discussModelModel.getTitle());
 			discussModelModel.setUsers(userModels);
 			//设置用户信息
 			UserModel user=userService.findUserShortById(discussModelModel.getUserId());
@@ -76,7 +76,7 @@ public class DiscussRestApiController {
 		List<DiscussMyModel> discussModelModels = discussService.selectDiscussAll(discussVO.getUserId());
 		for (DiscussMyModel discussModelModel : discussModelModels) {
 			//查询这个研讨会用户信息
-			List<UserModel> userModels=discussService.findUserByPrimary(discussModelModel.getUserId(),discussModelModel.getTitle());
+			List<DiscussMyModel> userModels=discussService.findUserByPrimary(discussModelModel.getUserId(),discussModelModel.getTitle());
 			discussModelModel.setUsers(userModels);
 			//设置用户信息
 			UserModel user=userService.findUserShortById(discussModelModel.getUserId());

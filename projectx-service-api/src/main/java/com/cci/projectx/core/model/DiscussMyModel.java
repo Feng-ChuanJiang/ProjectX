@@ -17,7 +17,7 @@ public class DiscussMyModel {
 	private String content;
 	private String remark;
 	private String joinType;
-    private List<UserModel> users;
+    private List<DiscussMyModel> users;
 
 	public Long getId() {
 		return id;
@@ -83,11 +83,11 @@ public class DiscussMyModel {
 		this.remark = remark;
 	}
 
-	public List<UserModel> getUsers() {
+	public List<DiscussMyModel> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<UserModel> users) {
+	public void setUsers(List<DiscussMyModel> users) {
 		this.users = users;
 	}
 

@@ -1,6 +1,6 @@
 package com.cci.projectx.core.vo;
 
-import com.cci.projectx.core.model.UserModel;
+import com.cci.projectx.core.model.DiscussMyModel;
 import com.wlw.pylon.core.beans.mapping.annotation.MapClass;
 
 import java.util.Date;
@@ -17,7 +17,7 @@ public class DiscussOnlyVO {
 	private Date createTime;
 	private String content;
 	private String remark;
-    private List<UserModel> users;
+    private List<DiscussMyModel> users;
 
 	public Long getId() {
 		return id;
@@ -83,11 +83,11 @@ public class DiscussOnlyVO {
 		this.remark = remark;
 	}
 
-	public List<UserModel> getUsers() {
+	public List<DiscussMyModel> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<UserModel> users) {
+	public void setUsers(List<DiscussMyModel> users) {
 		this.users = users;
 	}
 }

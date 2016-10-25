@@ -9,10 +9,7 @@ import com.cci.projectx.core.model.*;
 import com.cci.projectx.core.neorepository.LndustryNeoRepository;
 import com.cci.projectx.core.neorepository.UserNeoRepository;
 import com.cci.projectx.core.repository.UserRepository;
-import com.cci.projectx.core.service.EducationService;
-import com.cci.projectx.core.service.LndustryService;
-import com.cci.projectx.core.service.UserService;
-import com.cci.projectx.core.service.WorkingExperienceService;
+import com.cci.projectx.core.service.*;
 import com.easemob.server.example.api.IMUserAPI;
 import com.easemob.server.example.comm.body.IMUserBody;
 import com.easemob.server.example.comm.body.ModifyNicknameBody;
@@ -73,6 +70,9 @@ public class UserServiceImpl implements UserService {
     private LndustryService lndustryService;
 
     @Autowired
+    private UserCircleService userCircleService;
+
+    @Autowired
     IMUserAPI imUserAPI;
 
     @Autowired
@@ -112,6 +112,13 @@ public class UserServiceImpl implements UserService {
                 workingExperienceService.create(workingExperience);
             }
         }
+        //添加默认圈层
+        UserCircleModel userCircleModel=new UserCircleModel();
+        userCircleModel.setCircleId(new Long(1));
+        userCircleModel.setUserId(user.getId());
+        userCircleService.createSelective(userCircleModel);
+        userCircleModel.setCircleId(new Long(2));
+        userCircleService.createSelective(userCircleModel);
         //添加EliasticSearchHelp
         if (user.getId() != null) {
             elasticSearchHelp.mergeES(user, user.getId().toString());
@@ -463,7 +470,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserModel> findUserByLikeName(String name) {
         String sql = "SELECT * FROM USER WHERE NAME LIKE '%" + name + "%'";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(UserModel.class));
+        List<UserModel>  userModels= jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(UserModel.class));
+        for (UserModel userModel : userModels) {
+                List<WorkingExperienceModel> w = findworkingExperienceByUserId(userModel.getId());
+                List<EducationModel> e = findEducationByUserId(userModel.getId());
+                userModel.setWorkingExperiences(w);
+                userModel.setEducations(e);
+        }
+        return userModels;
     }
 
     /**
@@ -516,6 +530,10 @@ public class UserServiceImpl implements UserService {
                 ")A,`USER` B WHERE A.FRIEND_ID =B.ID LIMIT ? , ? ";
 
         List<UserModel> content = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(UserModel.class), FriendsType.ALREADYFRIENDS.getType(), userId, FriendsType.ALREADYFRIENDS.getType(), userId, pageable.getOffset(), pageable.getPageSize());
+        for (UserModel u : content) {
+                u.setEducations(findEducationByUserId(u.getId()));
+                u.setWorkingExperiences(findworkingExperienceByUserId(u.getId()));
+        }
         sql = "SELECT COUNT(1) FROM (\n" +
                 "SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=? AND USER_ID=? \n" +
                 "UNION\n" +
@@ -815,7 +833,6 @@ public class UserServiceImpl implements UserService {
         if (!DigestUtils.md5Hex(user.getPassword()).equals(existedUser.getPassword())) {
             HRErrorCode.throwBusinessException(HRErrorCode.PASSWORD_INCORRECT);
         }
-
         return users.size() > 0 ? users.get(0) : null;
     }
 

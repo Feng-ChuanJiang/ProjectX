@@ -33,7 +33,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 
 
     /**
-     * 环信配置文件
+     * 阿里大于
      *
      * @return
      */

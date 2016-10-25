@@ -155,16 +155,16 @@ public class DiscussServiceImpl implements DiscussService {
      */
 	@Transactional(readOnly = true)
 	@Override
-	public List<UserModel> findUserByPrimary(Long userId,String title) {
-        String sql="SELECT B.* FROM DISCUSS A,USER B WHERE A.USER_ID IN(             \n" +
+	public List<DiscussMyModel> findUserByPrimary(Long userId,String title) {
+        String sql="SELECT A.*,B.`NAME` USERNAME,B.MOBILE_PHONE USERPHOTO FROM DISCUSS A,USER B WHERE A.USER_ID IN(             \n" +
 				"SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=1 AND USER_ID=? \n" +
 				"UNION\n" +
 				"SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=1 AND FRIEND_ID=?\n" +
 				") AND A.TITLE=? AND A.USER_ID=B.ID";
-		BeanPropertyRowMapper<UserModel> bpr=new BeanPropertyRowMapper<>(UserModel.class);
-		List<UserModel> userModels=jdbcTemplate.query(sql,bpr,userId,userId,title);
+		BeanPropertyRowMapper<DiscussMyModel> bpr=new BeanPropertyRowMapper<>(DiscussMyModel.class);
+		List<DiscussMyModel> discussMyModels=jdbcTemplate.query(sql,bpr,userId,userId,title);
 
-		return userModels;
+		return discussMyModels;
 	}
 
 	@Transactional(readOnly = true)
