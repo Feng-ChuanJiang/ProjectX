@@ -165,7 +165,7 @@ public class DiscussServiceImpl implements DiscussService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<DiscussMyModel> findUserByPrimary(Long userId,String title) {
-        String sql="SELECT A.*,B.`NAME` USERNAME,B.MOBILE_PHONE USERPHOTO FROM DISCUSS A,USER B WHERE A.USER_ID IN(             \n" +
+        String sql="SELECT A.*,B.`NAME` USERNAME,B.MOBILE_PHONE USERPHOTO ,B.mobile_phone mobilePhone FROM DISCUSS A,USER B WHERE A.USER_ID IN(             \n" +
 				"SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=1 AND USER_ID=? \n" +
 				"UNION\n" +
 				"SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=1 AND FRIEND_ID=?\n" +

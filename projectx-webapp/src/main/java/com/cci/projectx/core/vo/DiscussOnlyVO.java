@@ -13,6 +13,7 @@ public class DiscussOnlyVO {
 	private Long userId;
 	private String userName;
 	private String userPhoto;
+	private String mobilePhone;
 	private String title;
 	private Date createTime;
 	private String content;
@@ -89,5 +90,13 @@ public class DiscussOnlyVO {
 
 	public void setUsers(List<DiscussMyModel> users) {
 		this.users = users;
+	}
+
+	public String getMobilePhone() {
+		return mobilePhone;
+	}
+
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
 	}
 }

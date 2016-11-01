@@ -48,6 +48,7 @@ public class DiscussRestApiController {
 		discussVO.setUsers(userModels);
 		//设置用户信息
 		UserModel user=userService.findUserShortById(discussVO.getUserId());
+		discussVO.setMobilePhone(user.getMobilePhone());
 		discussVO.setUserName(user.getName());
 		discussVO.setUserPhoto(user.getPhotos());
 		ResponseEnvelope<DiscussOnlyVO> responseEnv = new ResponseEnvelope<>(discussVO,true);
@@ -65,6 +66,7 @@ public class DiscussRestApiController {
 		UserModel user=userService.findUserShortById(discussVO.getUserId());
 		discussVO.setUserName(user.getName());
 		discussVO.setUserPhoto(user.getPhotos());
+		discussVO.setMobilePhone(user.getMobilePhone());
 		ResponseEnvelope<DiscussOnlyVO> responseEnv = new ResponseEnvelope<>(discussVO,true);
 		return responseEnv;
 	}
@@ -82,6 +84,7 @@ public class DiscussRestApiController {
 			UserModel user=userService.findUserShortById(discussModelModel.getUserId());
 			discussModelModel.setUserName(user.getName());
 			discussModelModel.setUserPhoto(user.getPhotos());
+			discussModelModel.setMobilePhone(user.getMobilePhone());
 		}
         ResponseEnvelope<List<DiscussMyModel>> responseEnv = new ResponseEnvelope<>(discussModelModels,true);
         return responseEnv;
@@ -96,6 +99,7 @@ public class DiscussRestApiController {
 			discussModelModel.setUsers(userModels);
 			//设置用户信息
 			UserModel user=userService.findUserShortById(discussModelModel.getUserId());
+			discussModelModel.setMobilePhone(user.getMobilePhone());
 			discussModelModel.setUserName(user.getName());
 			discussModelModel.setUserPhoto(user.getPhotos());
 		}

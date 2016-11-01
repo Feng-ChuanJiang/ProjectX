@@ -11,6 +11,7 @@ public class DiscussMyModel {
 	private Long id;
 	private Long userId;
 	private String userName;
+	private String mobilePhone;
 	private String userPhoto;
 	private String title;
 	private Date createTime;
@@ -97,5 +98,13 @@ public class DiscussMyModel {
 
 	public void setJoinType(String joinType) {
 		this.joinType = joinType;
+	}
+
+	public String getMobilePhone() {
+		return mobilePhone;
+	}
+
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
 	}
 }
