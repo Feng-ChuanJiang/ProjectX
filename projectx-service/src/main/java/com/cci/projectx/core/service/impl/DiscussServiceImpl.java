@@ -50,6 +50,7 @@ public class DiscussServiceImpl implements DiscussService {
 	public int createSelective(DiscussModel discussModel) {
 		Discuss discuss=beanMapper.map(discussModel, Discuss.class);
 		int tag=discussRepo.insertSelective(discuss);
+		discussModel.setId(discuss.getId());
 		List<Long> permissions=discussModel.getPermissionUserIds();
 		List<Long> incites=discussModel.getInviteUserIds();
 		if(discussModel.getType()==2){
@@ -92,6 +93,14 @@ public class DiscussServiceImpl implements DiscussService {
 		Discuss discuss = discussRepo.selectByPrimaryKey(id);
 		return beanMapper.map(discuss, DiscussModel.class);
 	}
+	@Transactional(readOnly = true)
+	@Override
+	public DiscussModel findByPrimaryKey(Long userId,String  name) {
+		String sql="select * from discuss where user_id=? and title =?";
+		List<DiscussModel> discuss=jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(DiscussModel.class),userId,name);
+		return discuss.size()>0?discuss.get(0):null;
+	}
+
 
 	@Transactional(readOnly = true)
 	@Override

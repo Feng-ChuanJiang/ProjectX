@@ -8,6 +8,7 @@ import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.service.DiscussService;
 import com.cci.projectx.core.service.UserService;
 import com.cci.projectx.core.vo.DiscussOnlyVO;
+import com.cci.projectx.core.vo.DiscussTitleVO;
 import com.cci.projectx.core.vo.DiscussVO;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
 import org.apache.commons.collections.CollectionUtils;
@@ -53,6 +54,21 @@ public class DiscussRestApiController {
 		return responseEnv;
 	}
 
+	@PostMapping(value= "/discuss/title")
+	public ResponseEnvelope<DiscussOnlyVO> getDiscussByName(@RequestBody  DiscussTitleVO discussTitleVO){
+		DiscussModel discussModel = discussService.findByPrimaryKey(discussTitleVO.getUserId(),discussTitleVO.getTitle());
+		DiscussOnlyVO discussVO =beanMapper.map(discussModel, DiscussOnlyVO.class);
+		//查询这个研讨会用户信息
+		List<DiscussMyModel> userModels=discussService.findUserByPrimary(discussVO.getUserId(),discussVO.getTitle());
+		discussVO.setUsers(userModels);
+		//设置用户信息
+		UserModel user=userService.findUserShortById(discussVO.getUserId());
+		discussVO.setUserName(user.getName());
+		discussVO.setUserPhoto(user.getPhotos());
+		ResponseEnvelope<DiscussOnlyVO> responseEnv = new ResponseEnvelope<>(discussVO,true);
+		return responseEnv;
+	}
+
 	@GetMapping(value = "/discuss")
     public ResponseEnvelope<List<DiscussMyModel>> listDiscuss(DiscussVO discussVO){
 		Pageable pageable =new PageRequest(0,Integer.MAX_VALUE);
@@ -88,7 +104,7 @@ public class DiscussRestApiController {
 	}
 
 	@PostMapping(value = "/discuss")
-	public ResponseEnvelope<Integer> createDiscuss(@RequestBody DiscussVO discussVO){
+	public ResponseEnvelope<Long> createDiscuss(@RequestBody DiscussVO discussVO){
 		DiscussModel discussModel = beanMapper.map(discussVO, DiscussModel.class);
 		//推送
         if(CollectionUtils.isNotEmpty(discussVO.getInviteUserIds())){
@@ -98,7 +114,7 @@ public class DiscussRestApiController {
 			}
 		}
 		Integer  result = discussService.create(discussModel);
-		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<>(result,true);
+		ResponseEnvelope<Long> responseEnv = new ResponseEnvelope<>(discussModel.getId(),true);
         return responseEnv;
 	}
 

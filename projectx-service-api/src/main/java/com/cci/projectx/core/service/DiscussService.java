@@ -15,6 +15,8 @@ public interface DiscussService {
 
     public DiscussModel findByPrimaryKey(Long id);
 
+    public DiscussModel findByPrimaryKey(Long userId,String  name);
+
     public int updateByPrimaryKey(DiscussModel discussModel);
 
     public int updateByPrimaryKeySelective(DiscussModel discussModel);
