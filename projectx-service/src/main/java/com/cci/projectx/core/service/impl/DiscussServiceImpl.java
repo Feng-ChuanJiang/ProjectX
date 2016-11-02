@@ -53,7 +53,7 @@ public class DiscussServiceImpl implements DiscussService {
 		discussModel.setId(discuss.getId());
 		List<Long> permissions=discussModel.getPermissionUserIds();
 		List<Long> incites=discussModel.getInviteUserIds();
-		if(discussModel.getType()==2){
+		if(discussModel.getPermissionType()==2){
 			if(permissions.size()==0){
 				HRErrorCode.throwBusinessException(HRErrorCode.Discuss_NOT_USERID);
 			}
