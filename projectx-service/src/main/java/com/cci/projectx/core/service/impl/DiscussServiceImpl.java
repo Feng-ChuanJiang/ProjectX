@@ -65,7 +65,7 @@ public class DiscussServiceImpl implements DiscussService {
 				permissionService.create(discussPermission);
 			}
 		}
-		if(incites.size()>0){
+		if(incites!=null&&incites.size()>0){
 			//添加邀请
 			for (Long incite : incites) {
 				DiscussInviteModel discussInvite=new DiscussInviteModel();
@@ -165,7 +165,7 @@ public class DiscussServiceImpl implements DiscussService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<DiscussMyModel> findUserByPrimary(Long userId,String title) {
-        String sql="SELECT A.*,B.`NAME` USERNAME,B.MOBILE_PHONE USERPHOTO ,B.mobile_phone mobilePhone FROM DISCUSS A,USER B WHERE A.USER_ID IN(             \n" +
+        String sql="SELECT A.*,B.`NAME` USERNAME,B.photos USERPHOTO ,B.mobile_phone mobilePhone FROM DISCUSS A,USER B WHERE A.USER_ID IN(             \n" +
 				"SELECT FRIEND_ID AS FRIEND_ID  FROM FRIENDS WHERE STATE=1 AND USER_ID=? \n" +
 				"UNION\n" +
 				"SELECT USER_ID AS FRIEND_ID FROM FRIENDS WHERE STATE=1 AND FRIEND_ID=?\n" +
@@ -191,25 +191,32 @@ public class DiscussServiceImpl implements DiscussService {
 				")E WHERE E.USER_ID<>?";
 		BeanPropertyRowMapper<DiscussMyModel> bpr=new BeanPropertyRowMapper<>(DiscussMyModel.class);
 		List<DiscussMyModel> discussModels=jdbcTemplate.query(sql,bpr,userId,userId,userId,userId);
-        sql="SELECT * FROM DISCUSS WHERE USER_ID=?";
+        sql="SELECT * FROM DISCUSS WHERE USER_ID=? and permission_type=1";
 		List<DiscussMyModel> discussMyModels=jdbcTemplate.query(sql,bpr,userId);
 		//设置未加入的研讨会
 		for (DiscussMyModel discussModel : discussModels) {
           Long inciteUserId=getInciteUserId(userId,discussModel.getId());
 			if(inciteUserId!=null){
-                 UserModel user=userService.findUserShortById(inciteUserId);
-				discussModel.setJoinType(user.getName()+"邀请你加入");
+				 //查询邀请人
+				 UserModel user=userService.findUserShortById(inciteUserId);
+				 //验证我有没有加入这个研讨会
+				 DiscussModel discussModel1=findByPrimaryKey(userId,discussModel.getTitle());
+				if(discussModel1!=null){
+					discussModel.setJoinType("已加入,"+user.getName()+"邀请你加入");
+				}else{
+					discussModel.setJoinType(user.getName()+"邀请你加入");
+				}
+			}else{
+				//验证我有没有加入这个研讨会
+				DiscussModel discussModel1=findByPrimaryKey(userId,discussModel.getTitle());
+				if(discussModel1!=null){
+					discussModel.setJoinType("已加入");
+				}
 			}
 		}
-		//设置已加入的研讨会
+		//设置自己原创的研讨会
 		for (DiscussMyModel discussModel : discussMyModels) {
-			Long inciteUserId=getInciteUserId(userId,discussModel.getId());
-			if(inciteUserId!=null){
-				UserModel user=userService.findUserShortById(inciteUserId);
-				discussModel.setJoinType("已加入,"+user.getName()+"邀请你加入");
-			}else{
-				discussModel.setJoinType("已加入");
-			}
+			discussModel.setJoinType("已加入");
 		}
 		discussModels.addAll(discussMyModels);
 

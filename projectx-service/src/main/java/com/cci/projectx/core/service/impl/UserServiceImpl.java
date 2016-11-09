@@ -236,7 +236,7 @@ public class UserServiceImpl implements UserService {
     public int updateByPrimaryKeySelective(UserModel userModel) {
         //更新行业关系
         UserModel userm = findByPrimaryKey(userModel.getId());
-        if (!StringUtils.equals(userm.getLndustry(), userModel.getLndustry())) {
+        if (!StringUtils.equals(userm.getLndustry(), userModel.getLndustry())&&userModel.getLndustry()!=null) {
             //查询mysql里面是否有
             if (lndustryService.findCountByName(userModel.getLndustry()) == 0) {
                 LndustryModel lndustryModel = new LndustryModel();
@@ -271,17 +271,19 @@ public class UserServiceImpl implements UserService {
         }
         //更新EliasticSearchHelp
         if (user.getId() != null) {
-            elasticSearchHelp.mergeES(user, user.getId().toString());
+            UserModel useres = findByPrimaryKey(user.getId());
+            User usere = beanMapper.map(useres, User.class);
+            elasticSearchHelp.mergeES(usere, usere.getId().toString());
             //neo4j 用户名不能改
 //            UserNeo userNeo = userNeoRepository.findByUserId(user.getId());
 //            userNeo.setName(user.getMobilePhone());
 //            userNeoRepository.save(userNeo);
             //修改环信信息 昵称
-            BodyWrapper nicknameBody = new ModifyNicknameBody(user.getName());
-            imUserAPI.modifyIMUserNickNameWithAdminToken(user.getMobilePhone(),nicknameBody);
+            BodyWrapper nicknameBody = new ModifyNicknameBody(usere.getName());
+            imUserAPI.modifyIMUserNickNameWithAdminToken(usere.getMobilePhone(),nicknameBody);
             //修改环信信息 密码
-            BodyWrapper passwordBody = new ResetPasswordBody(userModel.getPassword());
-            imUserAPI.modifyIMUserPasswordWithAdminToken(userModel.getMobilePhone(),passwordBody);
+            BodyWrapper passwordBody = new ResetPasswordBody(usere.getPassword());
+            imUserAPI.modifyIMUserPasswordWithAdminToken(usere.getMobilePhone(),passwordBody);
         }
         return id;
     }
