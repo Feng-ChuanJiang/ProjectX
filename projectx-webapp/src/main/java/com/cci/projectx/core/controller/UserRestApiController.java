@@ -138,6 +138,13 @@ public class UserRestApiController {
 		ResponseEnvelope<UserVO> responseEnv = new ResponseEnvelope<>(userVO,true);
 		return responseEnv;
 	}
+	@GetMapping(value = "/userByMobilePhone/{mobilePhone}")
+	public ResponseEnvelope<UserVO> findByPrimaryMobilePhone(@PathVariable String mobilePhone){
+		UserModel userModel = userService.findByPrimaryMobilePhone(mobilePhone);
+		UserVO userVO =beanMapper.map(userModel, UserVO.class);
+		ResponseEnvelope<UserVO> responseEnv = new ResponseEnvelope<>(userVO,true);
+		return responseEnv;
+	}
 
 	@GetMapping(value = "/user")
     public ResponseEnvelope<Page<UserModel>> listUser(UserVO userVO,Pageable pageable){

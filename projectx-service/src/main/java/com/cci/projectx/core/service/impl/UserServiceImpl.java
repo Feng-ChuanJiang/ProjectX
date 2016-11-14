@@ -188,6 +188,22 @@ public class UserServiceImpl implements UserService {
         return userModel;
     }
 
+
+
+    @Transactional(readOnly = true)
+    @Override
+    public UserModel findByPrimaryMobilePhone(String mobilePhone) {
+        String sql="select * from user where mobile_phone=?";
+        List<UserModel> userModels= jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(UserModel.class),mobilePhone);
+        UserModel userModel=userModels.size()>0?userModels.get(0):null;
+        if (userModel != null) {
+            List<WorkingExperienceModel> w = findworkingExperienceByUserId(userModel.getId());
+            List<EducationModel> e = findEducationByUserId(userModel.getId());
+            userModel.setWorkingExperiences(w);
+            userModel.setEducations(e);
+        }
+        return userModel;
+    }
     @Transactional(readOnly = true)
     @Override
     public long selectCount(UserModel userModel) {
