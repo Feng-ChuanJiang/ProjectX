@@ -19,6 +19,10 @@ public class Discuss {
 
     private String remark;
 
+    private String noSee;
+
+    private String noBack;
+
     public Long getId() {
         return id;
     }
@@ -81,5 +85,21 @@ public class Discuss {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getNoSee() {
+        return noSee;
+    }
+
+    public void setNoSee(String noSee) {
+        this.noSee = noSee;
+    }
+
+    public String getNoBack() {
+        return noBack;
+    }
+
+    public void setNoBack(String noBack) {
+        this.noBack = noBack;
     }
 }

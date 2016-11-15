@@ -191,7 +191,7 @@ public class DiscussServiceImpl implements DiscussService {
 				")E WHERE E.USER_ID<>?";
 		BeanPropertyRowMapper<DiscussMyModel> bpr=new BeanPropertyRowMapper<>(DiscussMyModel.class);
 		List<DiscussMyModel> discussModels=jdbcTemplate.query(sql,bpr,userId,userId,userId,userId);
-        sql="SELECT * FROM DISCUSS WHERE USER_ID=? and permission_type=1";
+        sql="SELECT * FROM DISCUSS WHERE USER_ID=? and type=1";
 		List<DiscussMyModel> discussMyModels=jdbcTemplate.query(sql,bpr,userId);
 		//设置未加入的研讨会
 		for (DiscussMyModel discussModel : discussModels) {

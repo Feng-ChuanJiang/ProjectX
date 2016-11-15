@@ -2,6 +2,7 @@
 package com.cci.projectx.core.service;
 
 import com.cci.projectx.core.model.CompanyModel;
+import com.cci.projectx.core.model.UserContactsModel;
 import com.cci.projectx.core.model.UserModel;
 import org.springframework.data.domain.Pageable;
 
@@ -33,5 +34,5 @@ public interface CompanyService {
 
     public List<UserModel> getOneRelatCompany(Long userId, String name);
 
-    public List<UserModel> getTwoRelatCompany(Long userId, String name);
+    public List<UserContactsModel> getTwoRelatCompany(Long userId, String name);
 }

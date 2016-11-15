@@ -5,22 +5,21 @@ import com.cci.projectx.core.domain.MajorNeo;
 import com.cci.projectx.core.domain.UserNeo;
 import com.cci.projectx.core.entity.major;
 import com.cci.projectx.core.model.MajorModel;
+import com.cci.projectx.core.model.UserContactsModel;
 import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.neorepository.MajorNeoRepository;
 import com.cci.projectx.core.repository.majorRepository;
 import com.cci.projectx.core.service.MajorService;
 import com.cci.projectx.core.service.UserService;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class majorServiceImpl implements MajorService {
@@ -169,14 +168,49 @@ public class majorServiceImpl implements MajorService {
     }
     @Transactional(readOnly = true)
     @Override
-    public List<UserModel> getTwoRelatCompany(Long userId ,String name) {
-        Collection<UserNeo> list = majorNeoRepository.getConnecTwoUserFromName(userId,name);
-        List<UserModel> userModels=new ArrayList<>();
-        for (UserNeo userNeo : list) {
-            UserModel userModel=   userService.findByPrimaryKey(userNeo.getUserId());
-            userModels.add(userModel);
+    public List<UserContactsModel> getTwoRelatCompany(Long userId ,String name) {
+        Collection<Map<String, Object>> list = majorNeoRepository.getConnecTwoUserFromName(userId, name);
+        Collection<UserNeo> listOneUser = majorNeoRepository.getConnecOneUserFromName(userId, name);
+
+        Map<Long, List<Long>> mapp = new LinkedHashMap<>();
+        if (list != null) {
+            for (Map<String, Object> map : list) {
+                Long firdId = new Long(map.get("fridId").toString());
+                Long muserId = new Long(map.get("userId").toString());
+                List<Long> userids = new ArrayList<>();
+                if (mapp.get(firdId) != null) {
+                    userids = mapp.get(firdId);
+                    userids.add(muserId);
+                    mapp.put(firdId, userids);
+                } else {
+                    userids.add(muserId);
+                    mapp.put(firdId, userids);
+                }
+            }
         }
-        return userModels;
+        Map<Long,String> neoMap=new HashedMap();
+        for (UserNeo userNeo : listOneUser) {
+            neoMap.put(userNeo.getUserId(),"");
+        }
+        List<UserContactsModel> users = new ArrayList<>();
+        for (Long key : mapp.keySet()) {
+            List<Long> userids=mapp.get(key);
+            UserModel userModel=   userService.findByPrimaryKey(key);
+            UserContactsModel userContactsModel = beanMapper.map(userModel, UserContactsModel.class);
+            List<UserModel> userModels = new ArrayList<>();
+            for (Long userid : userids) {
+                if(neoMap.get(userid)==null){
+                    userModels.add(userService.findByPrimaryKey(userid));
+                }else{
+                    UserModel userModel1=   userService.findByPrimaryKey(userid);
+                    userContactsModel = beanMapper.map(userModel1, UserContactsModel.class);
+                }
+
+            }
+            userContactsModel.setFriends(userModels);
+            users.add(userContactsModel);
+        }
+        return users;
     }
 
 }

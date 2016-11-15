@@ -7,6 +7,7 @@ import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by 33303 on 2016/9/11.
@@ -15,8 +16,8 @@ import java.util.Collection;
 public interface PostNeoRepository extends GraphRepository<PostNeo> {
     PostNeo findByPostId(Long postId);
     //根据用户和职位名称查找二度人脉
-    @Query("MATCH (p:User { userId:{0}})-[r:FRIEND]->(m:User)-[a:FRIEND]->(b:User),(b)-[s:POST]->(c:Post{name:{1}}) return b")
-    Collection<UserNeo> getConnecTwoUserFromName(Long userId, String postName);
+    @Query("MATCH (p:User { userId:{0}})-[r:FRIEND]->(m:User)-[a:FRIEND]->(b:User),(b)-[s:POST]->(c:Post{name:{1}}) where b.userId<>p.userId  return b.userId as userId,m.userId as fridId")
+    Collection<Map<String,Object>> getConnecTwoUserFromName(Long userId, String postName);
     //根据用户和职位名称查找一度度人脉
     @Query("MATCH (p:User{ userId:{0}})-[r:FRIEND]->(m:User),(m)-[s:POST]->(c:Post{name:{1}}) return m")
     Collection<UserNeo> getConnecOneUserFromName(Long userId, String postName);

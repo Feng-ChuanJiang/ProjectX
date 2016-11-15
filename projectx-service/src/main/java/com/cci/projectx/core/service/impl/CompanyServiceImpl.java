@@ -5,22 +5,21 @@ import com.cci.projectx.core.domain.CompanyNeo;
 import com.cci.projectx.core.domain.UserNeo;
 import com.cci.projectx.core.entity.Company;
 import com.cci.projectx.core.model.CompanyModel;
+import com.cci.projectx.core.model.UserContactsModel;
 import com.cci.projectx.core.model.UserModel;
 import com.cci.projectx.core.neorepository.CompanyNeoRepository;
 import com.cci.projectx.core.repository.CompanyRepository;
 import com.cci.projectx.core.service.CompanyService;
 import com.cci.projectx.core.service.UserService;
 import com.wlw.pylon.core.beans.mapping.BeanMapper;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
@@ -44,7 +43,6 @@ public class CompanyServiceImpl implements CompanyService {
     private UserService userService;
 
 
-
     /**
      * 根据名称找条数
      *
@@ -56,6 +54,7 @@ public class CompanyServiceImpl implements CompanyService {
         String sql = "SELECT COUNT(1) FROM COMPANY WHERE NAME=?";
         return jdbcTemplate.queryForObject(sql, Integer.class, name);
     }
+
     /**
      * 根据名称找编号
      *
@@ -65,11 +64,11 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Long findIdByName(String name) {
         String sql = "SELECT ID FROM COMPANY WHERE NAME=?";
-        List<Map<String, Object>> list=jdbcTemplate.queryForList(sql,name);
-        Long id=null;
-        if(list.size()>0){
-            Map<String,Object> map=list.get(0);
-            id=new Long(map.get("ID").toString());
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, name);
+        Long id = null;
+        if (list.size() > 0) {
+            Map<String, Object> map = list.get(0);
+            id = new Long(map.get("ID").toString());
         }
         return id;
     }
@@ -97,14 +96,14 @@ public class CompanyServiceImpl implements CompanyService {
     public int createSelective(CompanyModel companyModel) {
         Company company = beanMapper.map(companyModel, Company.class);
         int id = 0;
-        if (findCountByName(company.getName()) ==0) {
+        if (findCountByName(company.getName()) == 0) {
             //mysql
             id = companyRepo.insertSelective(company);
             if (company.getId() != null) {
                 //es
                 elasticSearchHelp.mergeES(company, company.getId().toString());
                 //neo4j
-                CompanyNeo companyNeo=new CompanyNeo();
+                CompanyNeo companyNeo = new CompanyNeo();
                 companyNeo.setName(company.getName());
                 companyNeo.setCompanyId(company.getId());
                 companyNeoRepository.save(companyNeo);
@@ -128,7 +127,7 @@ public class CompanyServiceImpl implements CompanyService {
             //es
             elasticSearchHelp.deleteES(Company.class, id);
             //neo4j
-            CompanyNeo companyNeo=companyNeoRepository.findByCompanyId(id);
+            CompanyNeo companyNeo = companyNeoRepository.findByCompanyId(id);
             companyNeoRepository.delete(companyNeo.getId());
         }
         return pid;
@@ -157,7 +156,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Transactional
     @Override
     public int updateByPrimaryKey(CompanyModel companyModel) {
-       return updateByPrimaryKeySelective(companyModel);
+        return updateByPrimaryKeySelective(companyModel);
     }
 
     @Transactional
@@ -170,12 +169,13 @@ public class CompanyServiceImpl implements CompanyService {
             //es
             elasticSearchHelp.mergeES(company, company.getId().toString());
             //neo4j
-            CompanyNeo companyNeo=companyNeoRepository.findByCompanyId(company.getId());
+            CompanyNeo companyNeo = companyNeoRepository.findByCompanyId(company.getId());
             companyNeo.setName(company.getName());
             companyNeoRepository.save(companyNeo);
         }
         return id;
     }
+
     @Transactional(readOnly = true)
     @Override
     public List<CompanyModel> getCompany(CompanyModel companyModel) {
@@ -187,24 +187,60 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<UserModel> getOneRelatCompany(Long userId ,String name) {
-        Collection<UserNeo> list = companyNeoRepository.getConnecOneUserFromName(userId,name);
-        List<UserModel> userModels=new ArrayList<>();
+    public List<UserModel> getOneRelatCompany(Long userId, String name) {
+        Collection<UserNeo> list = companyNeoRepository.getConnecOneUserFromName(userId, name);
+        List<UserModel> userModels = new ArrayList<>();
         for (UserNeo userNeo : list) {
-            UserModel userModel=   userService.findByPrimaryKey(userNeo.getUserId());
+            UserModel userModel = userService.findByPrimaryKey(userNeo.getUserId());
             userModels.add(userModel);
         }
         return userModels;
     }
+
     @Transactional(readOnly = true)
     @Override
-    public List<UserModel> getTwoRelatCompany(Long userId ,String name) {
-        Collection<UserNeo> list = companyNeoRepository.getConnecTwoUserFromName(userId,name);
-        List<UserModel> userModels=new ArrayList<>();
-        for (UserNeo userNeo : list) {
-            UserModel userModel=   userService.findByPrimaryKey(userNeo.getUserId());
-            userModels.add(userModel);
+    public List<UserContactsModel> getTwoRelatCompany(Long userId, String name) {
+        Collection<Map<String, Object>> list = companyNeoRepository.getConnecTwoUserFromName(userId, name);
+        Collection<UserNeo> listOneUser = companyNeoRepository.getConnecOneUserFromName(userId, name);
+
+        Map<Long, List<Long>> mapp = new LinkedHashMap<>();
+        if (list != null) {
+            for (Map<String, Object> map : list) {
+                Long firdId = new Long(map.get("fridId").toString());
+                Long muserId = new Long(map.get("userId").toString());
+                List<Long> userids = new ArrayList<>();
+                if (mapp.get(firdId) != null) {
+                    userids = mapp.get(firdId);
+                    userids.add(muserId);
+                    mapp.put(firdId, userids);
+                } else {
+                    userids.add(muserId);
+                    mapp.put(firdId, userids);
+                }
+            }
         }
-        return userModels;
+        Map<Long,String> neoMap=new HashedMap();
+        for (UserNeo userNeo : listOneUser) {
+            neoMap.put(userNeo.getUserId(),"");
+        }
+        List<UserContactsModel> users = new ArrayList<>();
+        for (Long key : mapp.keySet()) {
+            List<Long> userids=mapp.get(key);
+            UserModel userModel=   userService.findByPrimaryKey(key);
+            UserContactsModel userContactsModel = beanMapper.map(userModel, UserContactsModel.class);
+            List<UserModel> userModels = new ArrayList<>();
+            for (Long userid : userids) {
+                if(neoMap.get(userid)==null){
+                    userModels.add(userService.findByPrimaryKey(userid));
+                }else{
+                    UserModel userModel1=   userService.findByPrimaryKey(userid);
+                    userContactsModel = beanMapper.map(userModel1, UserContactsModel.class);
+                }
+
+            }
+            userContactsModel.setFriends(userModels);
+            users.add(userContactsModel);
+        }
+        return users;
     }
 }

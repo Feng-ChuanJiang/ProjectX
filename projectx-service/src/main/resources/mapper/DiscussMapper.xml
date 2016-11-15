@@ -10,9 +10,12 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="no_see" jdbcType="VARCHAR" property="noSee" />
+    <result column="no_back" jdbcType="VARCHAR" property="noBack" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_id, title, type, permission_type, create_time, content, remark
+    id, user_id, title, type, permission_type, create_time, content, remark, no_see, 
+    no_back
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -27,10 +30,12 @@
   <insert id="insert" parameterType="com.cci.projectx.core.entity.Discuss" keyProperty="id" useGeneratedKeys="true">
     insert into discuss (id, user_id, title, 
       type, permission_type, create_time, 
-      content, remark)
+      content, remark, no_see, 
+      no_back)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
       #{type,jdbcType=INTEGER}, #{permissionType,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{content,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+      #{content,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{noSee,jdbcType=VARCHAR}, 
+      #{noBack,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.cci.projectx.core.entity.Discuss" keyProperty="id" useGeneratedKeys="true">
     insert into discuss
@@ -59,6 +64,12 @@
       <if test="remark != null">
         remark,
       </if>
+      <if test="noSee != null">
+        no_see,
+      </if>
+      <if test="noBack != null">
+        no_back,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -84,6 +95,12 @@
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="noSee != null">
+        #{noSee,jdbcType=VARCHAR},
+      </if>
+      <if test="noBack != null">
+        #{noBack,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -111,6 +128,12 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="noSee != null">
+        no_see = #{noSee,jdbcType=VARCHAR},
+      </if>
+      <if test="noBack != null">
+        no_back = #{noBack,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -122,7 +145,9 @@
       permission_type = #{permissionType,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       content = #{content,jdbcType=VARCHAR},
-      remark = #{remark,jdbcType=VARCHAR}
+      remark = #{remark,jdbcType=VARCHAR},
+      no_see = #{noSee,jdbcType=VARCHAR},
+      no_back = #{noBack,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectCount" parameterType="com.cci.projectx.core.entity.Discuss" resultType="java.lang.Integer">
@@ -151,6 +176,12 @@
       </if>
       <if test="remark != null">
         and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+      <if test="noSee != null">
+        and no_see = #{noSee,jdbcType=VARCHAR}
+      </if>
+      <if test="noBack != null">
+        and no_back = #{noBack,jdbcType=VARCHAR}
       </if>
     </where>
   </select>
@@ -181,6 +212,12 @@
     </if>
     <if test="param1.remark != null">
       and remark = #{param1.remark,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.noSee != null">
+      and no_see = #{param1.noSee,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.noBack != null">
+      and no_back = #{param1.noBack,jdbcType=VARCHAR}
     </if>
     <if test="param2.sort != null">
       order by 
