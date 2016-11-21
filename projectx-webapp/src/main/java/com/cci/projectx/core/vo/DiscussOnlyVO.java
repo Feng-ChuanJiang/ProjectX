@@ -18,7 +18,25 @@ public class DiscussOnlyVO {
 	private Date createTime;
 	private String content;
 	private String remark;
+	private String noSee;
+	private String noBack;
     private List<DiscussMyModel> users;
+
+	public String getNoBack() {
+		return noBack;
+	}
+
+	public void setNoBack(String noBack) {
+		this.noBack = noBack;
+	}
+
+	public String getNoSee() {
+		return noSee;
+	}
+
+	public void setNoSee(String noSee) {
+		this.noSee = noSee;
+	}
 
 	public Long getId() {
 		return id;

@@ -17,8 +17,11 @@ public class DiscussMyModel {
 	private Date createTime;
 	private String content;
 	private String remark;
-	private String joinType;
+	private int joinType;
+	private String noSee;
+	private String noBack;
     private List<DiscussMyModel> users;
+	private List<UserModel> inviteUsers;
 
 	public Long getId() {
 		return id;
@@ -92,19 +95,43 @@ public class DiscussMyModel {
 		this.users = users;
 	}
 
-	public String getJoinType() {
-		return joinType;
-	}
-
-	public void setJoinType(String joinType) {
-		this.joinType = joinType;
-	}
-
 	public String getMobilePhone() {
 		return mobilePhone;
 	}
 
 	public void setMobilePhone(String mobilePhone) {
 		this.mobilePhone = mobilePhone;
+	}
+
+	public String getNoSee() {
+		return noSee;
+	}
+
+	public void setNoSee(String noSee) {
+		this.noSee = noSee;
+	}
+
+	public String getNoBack() {
+		return noBack;
+	}
+
+	public void setNoBack(String noBack) {
+		this.noBack = noBack;
+	}
+
+	public int getJoinType() {
+		return joinType;
+	}
+
+	public void setJoinType(int joinType) {
+		this.joinType = joinType;
+	}
+
+	public List<UserModel> getInviteUsers() {
+		return inviteUsers;
+	}
+
+	public void setInviteUsers(List<UserModel> inviteUsers) {
+		this.inviteUsers = inviteUsers;
 	}
 }

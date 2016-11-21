@@ -29,7 +29,7 @@ public class ElasticSearchHelp<T> {
      * @return
      */
     public String mergeES(T entity, String id) {
-        // elasticsearchTemplate.createIndex(Education.class);
+         elasticsearchTemplate.createIndex(entity.getClass());
         IndexQuery indexQuery = new IndexQuery();
         indexQuery.setId(id);
         indexQuery.setObject(entity);

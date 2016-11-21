@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableNeo4jRepositories(basePackages = "com.cci.projectx.core.neorepository")
 public class MyNeo4jConfiguration extends Neo4jConfiguration {
 
-    public static final String URL = System.getenv("NEO4J_URL") != null ? System.getenv("NEO4J_URL") : "http://neo4j:123456@120.26.234.78:7474";
+    public static final String URL = System.getenv("NEO4J_URL") != null ? System.getenv("NEO4J_URL") : "http://neo4j:123456@127.0.0.1:7474";
 
     @Bean
     public org.neo4j.ogm.config.Configuration getConfiguration() {
